@@ -1,6 +1,17 @@
+const path = require('path');
+const webpack = require('webpack');
+
 module.exports = {
   mode: 'development',
-  entry: './src/webapp/index.js',
+  entry: [
+    'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
+    './src/webapp/index.js',
+  ],
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'main.js',
+    publicPath: '',
+  },
   module: {
     rules: [{
       test: /\.scss$/,
@@ -11,4 +22,5 @@ module.exports = {
       ],
     }],
   },
+  plugins: [new webpack.HotModuleReplacementPlugin()],
 };

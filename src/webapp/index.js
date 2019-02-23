@@ -341,3 +341,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // XXX
   // document.getElementById('submit-location-button').click();
 });
+
+// if (module.hot) {
+//   module.hot.accept();
+// }

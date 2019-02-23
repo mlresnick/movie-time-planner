@@ -1,12 +1,38 @@
 import express from 'express';
 import { fetch } from 'cross-fetch';
 import path from 'path';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+import * as webpackConfigContainer from '../../webpack.config';
 import Moviefone from './moviefone';
 
+const webpackConfig = webpackConfigContainer.default;
+const compiler = webpack(webpackConfig);
 const root = path.resolve(`${__dirname}/../..`);
 
 const app = express();
 
+// HMR related plugins
+app.use(
+  webpackDevMiddleware(compiler, {
+    hot: true,
+    filename: 'main.js',
+    publicPath: '/',
+    stats: { colors: true },
+    historyApiFallback: true,
+  })
+);
+
+app.use(
+  webpackHotMiddleware(compiler, {
+    log: console.log, // eslint-disable-line no-console
+    path: '/__webpack_hmr',
+    heartbeat: 10 * 1000,
+  })
+);
+
+// Routes
 app.use(express.static(root));
 
 app.get('/zip-code/:zipCode', async (req, res) => {
@@ -27,7 +53,7 @@ app.get('/distancematrix', async (req, res) => {
       `origins=${req.query.origins}`,
       `destinations=${req.query.destinations}`,
       'units=imperial',
-      'key=***REMOVED***',
+      `key=${process.env.googleAPIKey}`,
     ];
 
     const url = `https://maps.googleapis.com/maps/api/distancematrix/json?${query.join('&')}`;
@@ -41,4 +67,5 @@ app.get('/distancematrix', async (req, res) => {
     console.error(`Error getting distance matrix: ${error}\n\nContinuing...\n`);
   }
 });
+
 app.listen(8080);
