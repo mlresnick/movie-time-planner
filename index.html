@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html> 
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' http://www.google.com">    <title>Movie Time Planner</title>
+ </head>
+  <body>
+    <div class="overlay"></div>
+    <div id="location" class="collapsable">
+      <div class="summary">
+        <h2><button type="button" class="collapsable expand">+</button> Location <span id="location-values"></span></h2>
+      </div>
+      <form id="location-form" class="content">
+        <!--
+          -- TODO
+          --  1. remember this information in cookies
+          --  2. remember favorite list of theaters
+          --  3. add date picker
+          -->
+        <h2><button type="button" class="collapsable collapse">-</button> Location</h2>
+        <label for="zip-code">ZIP code&trade;</label>
+        <input type="text" name="zip-code"
+          minlength="5" maxlength="5" size="5" required="required"
+          pattern="\d{5}"
+        />
+        <label for="max-distance">Maximum distance to search</label>
+        <input type="number" name="max-distance" value="5"/>
+        miles
+        <button id="submit-location-button">Submit</button>
+      </form>
+    </div>
+
+    <div id="selection" class="collapsable collapsed">
+      <div class="summary">
+        <h2><button type="button" class="collapsable expand">+</button> Selection</h2>
+        <div class="list-container">
+            <div id="movie-selected-list" class="selection-list-section">
+                <h3>Movies</h3>
+                <ul class="selected-list"></ul>
+            </div>
+            <div id="theater-selected-list" class="selection-list-section">
+                <h3>Theaters</h3>
+                <ul class="selected-list"></ul>
+            </div>
+          </div>
+        </div>
+      <form id="selection-form" class="content">
+        <h2><button type="button" class="collapsable collapse">-</button> Selection</h2>
+        <div class="list-container">
+          <div id="movie-selection-list" class="selection-list-section">
+            <table class border=0 cellspacing=0 cellpadding=0>
+              <tbody>
+                <tr>
+                  <th><input type="checkbox" id="all-movies" class="all"></th>
+                  <th><label for="all-movies">Movies</label></th>
+                </tr>
+              </tbody>
+              <tbody class="selection-list"></tbody>
+            </table>
+          </div>
+          <div id="theater-selection-list" class="selection-list-section">
+            <table class border=0 cellspacing=0 cellpadding=0>
+              <tbody>
+                <tr>
+                  <th><input type="checkbox" id="all-theaters" class="all"></th>
+                  <th><label for="all-theaters">Theaters</label></th>
+                </tr>
+              </tbody>
+              <tbody class="selection-list"></tbody>
+            </table>
+          </div>
+        </div>
+        <button id="select-button">Select</button>
+        <button type="button" id="plan-button">Plan</button>
+      </form>
+    </div>
+
+
+    <div id="results" class="collapsable collapsed">
+      <div class="summary">
+        <h2><button type="button" class="collapsable expand">+</button> Results</h2>
+      </div>
+      <div class="content">
+        <h2><button type="button" class="collapsable collapse">-</button> Results</h2>
+        <div>
+          <table border="0" cellspacing="1" cellpadding="1">
+            <tbody id="result-list"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div id="itineraries" class="collapsable collapsed">
+      <div class="summary">
+          <h2><button type="button" class="collapsable expand">+</button> Itineraries</h2>
+        </div>
+        <div class="content">
+            <h2><button type="button" class="collapsable collapse">-</button> Itineraries</h2>
+            <div>
+              <table cellspacing="1" cellpadding="1" border="0">
+                <tbody id="result-list">
+                  <tr>
+                    <td class="showtime">6:30pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/aquaman/20090926/main/" target="movie">Aquaman</a></td>
+                    <td class="rating-running-time">PG-13 ◆ 2h23m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/amc-burlington-cinema-10/2078/showtimes/"
+                          target="theater">AMC Burlington Cinema 10</a></span>
+                      ◆
+                      <span class="theater-address">20 South Avenue, Burlington, MA 01803</span>
+                      ◆
+                      <span class="theater-phone">(781) 229-1931</span>
+                    </td>
+                  </tr>
+<!--
+                  <tr>
+                    <td class="showtime">&nbsp;</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/vice/7H11JPyLl2xaWzbxWgZyL2/main/" target="movie">Vice</a></td>
+                    <td class="rating-running-time">R ◆ 2h12m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/lexington-venue/2042/showtimes/" target="theater">Lexington
+                          Venue</a></span>
+                      ◆
+                      <span class="theater-address">1794 Massachussetts Ave., Lexington, MA 02420</span>
+                      ◆
+                      <span class="theater-phone">(781) 861-6161</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">6:35pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/mary-poppins-returns/5bPFYnXlLrHAoFlY7WDTj7/main/"
+                        target="movie">Mary Poppins Returns</a></td>
+                    <td class="rating-running-time">PG ◆ 2h10m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/amc-burlington-cinema-10/2078/showtimes/"
+                          target="theater">AMC Burlington Cinema 10</a></span>
+                      ◆
+                      <span class="theater-address">20 South Avenue, Burlington, MA 01803</span>
+                      ◆
+                      <span class="theater-phone">(781) 229-1931</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">7:00pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/aquaman/20090926/main/" target="movie">Aquaman</a></td>
+                    <td class="rating-running-time">PG-13 ◆ 2h23m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/embassy-cinema/2050/showtimes/" target="theater">Embassy
+                          Cinema</a></span>
+                      ◆
+                      <span class="theater-address">16 Pine St., Waltham, MA 02453</span>
+                      ◆
+                      <span class="theater-phone">(781) 736-7852</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">7:10pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/vice/7H11JPyLl2xaWzbxWgZyL2/main/" target="movie">Vice</a></td>
+                    <td class="rating-running-time">R ◆ 2h12m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/embassy-cinema/2050/showtimes/" target="theater">Embassy
+                          Cinema</a></span>
+                      ◆
+                      <span class="theater-address">16 Pine St., Waltham, MA 02453</span>
+                      ◆
+                      <span class="theater-phone">(781) 736-7852</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">7:20pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/vice/7H11JPyLl2xaWzbxWgZyL2/main/" target="movie">Vice</a></td>
+                    <td class="rating-running-time">R ◆ 2h12m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/amc-burlington-cinema-10/2078/showtimes/"
+                          target="theater">AMC Burlington Cinema 10</a></span>
+                      ◆
+                      <span class="theater-address">20 South Avenue, Burlington, MA 01803</span>
+                      ◆
+                      <span class="theater-phone">(781) 229-1931</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">7:30pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/aquaman/20090926/main/" target="movie">Aquaman</a></td>
+                    <td class="rating-running-time">PG-13 ◆ 2h23m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/amc-burlington-cinema-10/2078/showtimes/"
+                          target="theater">AMC Burlington Cinema 10</a></span>
+                      ◆
+                      <span class="theater-address">20 South Avenue, Burlington, MA 01803</span>
+                      ◆
+                      <span class="theater-phone">(781) 229-1931</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">&nbsp;</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/mary-poppins-returns/5bPFYnXlLrHAoFlY7WDTj7/main/"
+                        target="movie">Mary Poppins Returns</a></td>
+                    <td class="rating-running-time">PG ◆ 2h10m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/belmont-studio-cinema/2051/showtimes/"
+                          target="theater">Belmont Studio Cinema</a></span>
+                      ◆
+                      <span class="theater-address">376 Trapelo Rd., Belmont, MA 02478</span>
+                      ◆
+                      <span class="theater-phone">(617) 484-1706</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">7:35pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/spider-man-into-the-spider-verse/m3XkDXrCMpk88zQrQn4lN6/main/"
+                        target="movie">Spider-Man: Into the Spider-Verse</a></td>
+                    <td class="rating-running-time">PG ◆ 1h57m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/amc-burlington-cinema-10/2078/showtimes/"
+                          target="theater">AMC Burlington Cinema 10</a></span>
+                      ◆
+                      <span class="theater-address">20 South Avenue, Burlington, MA 01803</span>
+                      ◆
+                      <span class="theater-phone">(781) 229-1931</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">7:40pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/mary-poppins-returns/5bPFYnXlLrHAoFlY7WDTj7/main/"
+                        target="movie">Mary Poppins Returns</a></td>
+                    <td class="rating-running-time">PG ◆ 2h10m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/amc-burlington-cinema-10/2078/showtimes/"
+                          target="theater">AMC Burlington Cinema 10</a></span>
+                      ◆
+                      <span class="theater-address">20 South Avenue, Burlington, MA 01803</span>
+                      ◆
+                      <span class="theater-phone">(781) 229-1931</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">8:15pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/mary-poppins-returns/5bPFYnXlLrHAoFlY7WDTj7/main/"
+                        target="movie">Mary Poppins Returns</a></td>
+                    <td class="rating-running-time">PG ◆ 2h10m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/amc-burlington-cinema-10/2078/showtimes/"
+                          target="theater">AMC Burlington Cinema 10</a></span>
+                      ◆
+                      <span class="theater-address">20 South Avenue, Burlington, MA 01803</span>
+                      ◆
+                      <span class="theater-phone">(781) 229-1931</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">9:15pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/vice/7H11JPyLl2xaWzbxWgZyL2/main/" target="movie">Vice</a></td>
+                    <td class="rating-running-time">R ◆ 2h12m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/lexington-venue/2042/showtimes/" target="theater">Lexington
+                          Venue</a></span>
+                      ◆
+                      <span class="theater-address">1794 Massachussetts Ave., Lexington, MA 02420</span>
+                      ◆
+                      <span class="theater-phone">(781) 861-6161</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">9:30pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/aquaman/20090926/main/" target="movie">Aquaman</a></td>
+                    <td class="rating-running-time">PG-13 ◆ 2h23m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/embassy-cinema/2050/showtimes/" target="theater">Embassy
+                          Cinema</a></span>
+                      ◆
+                      <span class="theater-address">16 Pine St., Waltham, MA 02453</span>
+                      ◆
+                      <span class="theater-phone">(781) 736-7852</span>l
+                    </td>
+                  </tr>
+-->
+<tr>
+                    <td class="showtime">9:40pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/mary-poppins-returns/5bPFYnXlLrHAoFlY7WDTj7/main/"
+                        target="movie">Mary Poppins Returns</a></td>
+                    <td class="rating-running-time">PG ◆ 2h10m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/amc-burlington-cinema-10/2078/showtimes/"
+                          target="theater">AMC Burlington Cinema 10</a></span>
+                      ◆
+                      <span class="theater-address">20 South Avenue, Burlington, MA 01803</span>
+                      ◆
+                      <span class="theater-phone">(781) 229-1931</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">&nbsp;</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/vice/7H11JPyLl2xaWzbxWgZyL2/main/" target="movie">Vice</a></td>
+                    <td class="rating-running-time">R ◆ 2h12m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/embassy-cinema/2050/showtimes/" target="theater">Embassy
+                          Cinema</a></span>
+                      ◆
+                      <span class="theater-address">16 Pine St., Waltham, MA 02453</span>
+                      ◆
+                      <span class="theater-phone">(781) 736-7852</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">9:45pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/aquaman/20090926/main/" target="movie">Aquaman</a></td>
+                    <td class="rating-running-time">PG-13 ◆ 2h23m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/amc-burlington-cinema-10/2078/showtimes/"
+                          target="theater">AMC Burlington Cinema 10</a></span>
+                      ◆
+                      <span class="theater-address">20 South Avenue, Burlington, MA 01803</span>
+                      ◆
+                      <span class="theater-phone">(781) 229-1931</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">10:20pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/aquaman/20090926/main/" target="movie">Aquaman</a></td>
+                    <td class="rating-running-time">PG-13 ◆ 2h23m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/amc-burlington-cinema-10/2078/showtimes/"
+                          target="theater">AMC Burlington Cinema 10</a></span>
+                      ◆
+                      <span class="theater-address">20 South Avenue, Burlington, MA 01803</span>
+                      ◆
+                      <span class="theater-phone">(781) 229-1931</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">10:30pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/vice/7H11JPyLl2xaWzbxWgZyL2/main/" target="movie">Vice</a></td>
+                    <td class="rating-running-time">R ◆ 2h12m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/amc-burlington-cinema-10/2078/showtimes/"
+                          target="theater">AMC Burlington Cinema 10</a></span>
+                      ◆
+                      <span class="theater-address">20 South Avenue, Burlington, MA 01803</span>
+                      ◆
+                      <span class="theater-phone">(781) 229-1931</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="showtime">10:45pm</td>
+                    <td class="title" $=""><a href="https://www.moviefone.com/movie/spider-man-into-the-spider-verse/m3XkDXrCMpk88zQrQn4lN6/main/"
+                        target="movie">Spider-Man: Into the Spider-Verse</a></td>
+                    <td class="rating-running-time">PG ◆ 1h57m</td>
+                  </tr>
+                  <tr class="theater-details">
+                    <td>&nbsp;</td>
+                    <td colspan="2">
+                      <span class="theater-name"><a href="https://www.moviefone.com/theater/amc-burlington-cinema-10/2078/showtimes/"
+                          target="theater">AMC Burlington Cinema 10</a></span>
+                      ◆
+                      <span class="theater-address">20 South Avenue, Burlington, MA 01803</span>
+                      ◆
+                      <span class="theater-phone">(781) 229-1931</span>
+                    </td>
+                  </tr>
+                </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+  </body>
+  <script src="dist/main.js" type="module"></script>
+  <!-- <script src="main.js"></script> -->
+</html>

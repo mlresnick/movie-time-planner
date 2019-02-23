@@ -1,0 +1,10 @@
+dist
+lib
+testlib
+node_modules
+*~
+\#*#
+.#*#
+.cache
+docu/assets
+out

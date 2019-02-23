@@ -1,0 +1,83 @@
+import Duration from 'duration-js';
+import context from './context';
+import Util from './util';
+
+/*
+ * Regular expression to see if the title ends with the current year in parentheses.
+ */
+const titleExpr = new RegExp(
+  `(.+)(\\s+\\(${(new Date()).getFullYear().toString()}\\))`,
+);
+
+/**
+ * Remove the year in parentheses at the end of the title if it is the current year.
+ *
+ * Exported for unit testing.
+ *
+ * @param {string} title - Movie name to be searched.
+ *
+ * @returns {string} The filtered movie name.
+ *
+ * @private
+ */
+export function removeThisYear(title) {
+  const result = titleExpr.exec(title);
+  return (result ? result[1] : title);
+}
+
+/**
+ * Infiormation about a movie being shown.
+ */
+class Movie {
+  /**
+   * Collect information from an HTMLElement and put it into a more convenient format.
+   *
+   * @param {HTMLElement} moviedataEl - Element scraped from a web page.
+   */
+  constructor(moviedataEl) {
+    /** @property {Duration} */
+    this.runningTime = new Duration(0);
+
+    /** @property {string} */
+    this.title = '';
+
+    /** @property {string} - Unique identifieer for this movie. */
+    this.url = '';
+
+    /** @property {string} - MPAA rating. */
+    this.rating = '';
+
+    let hours;
+    let minutes;
+
+    if (typeof moviedataEl !== 'undefined') {
+      // Get the element containg both the movie's running time and rating.
+      const movieRatingRuntime = Util.innerHTML(
+        moviedataEl.querySelector('.movierating-runtime'),
+      );
+
+      // Parse the string into meaningful bits.
+      const results = movieRatingRuntime.match(/(.+) \|( *(\d+) hr)?( *(\d+) min)?/);
+      if (Array.isArray(results)) {
+        [, this.rating, , hours, , minutes] = results;
+        this.runningTime = new Duration(`${hours || 0}h${minutes || 0}m`);
+        this.title = removeThisYear(
+          Util.innerHTML(moviedataEl.querySelector('.movietitle a')),
+        );
+        this.url = moviedataEl.querySelector('.movietitle a').getAttribute('href');
+
+        context.movies.set(this.url, this);
+      }
+    }
+  }
+
+  /**
+   * @returns {string} A readable version of this object.
+   */
+  toString() {
+    const [, hours, minutes] = this.runningTime.toString().match(/^(\d+)h(\d+)m$/);
+    return `${this.title} - ${hours}:${minutes.padStart(2, '0')} | ${this.rating}`;
+  }
+}
+
+export default Movie;
