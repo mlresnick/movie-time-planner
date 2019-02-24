@@ -18,7 +18,7 @@ app.use(
   webpackDevMiddleware(compiler, {
     hot: true,
     filename: 'main.js',
-    publicPath: '/',
+    publicPath: webpackConfig.output.publicPath,
     stats: { colors: true },
     historyApiFallback: true,
   })
@@ -68,4 +68,5 @@ app.get('/distancematrix', async (req, res) => {
   }
 });
 
-app.listen(8080);
+const port = 8080;
+app.listen(port, () => console.log(`Listening on port #${port}`)); // eslint-disable-line no-console
