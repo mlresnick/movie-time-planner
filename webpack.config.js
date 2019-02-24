@@ -12,6 +12,9 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'main.js',
     publicPath: '/',
+    // Following 2 lines fix 404 errors during hot module replacement updates.
+    hotUpdateChunkFilename: 'hot-update.js',
+    hotUpdateMainFilename: 'hot-update.json',
   },
   module: {
     rules: [{
