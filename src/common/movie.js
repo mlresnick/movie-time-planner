@@ -72,6 +72,15 @@ class Movie {
   }
 
   /**
+   * Synonym for <kbd>title</kbd>.
+   *
+   * @returns {string} - The movie's title.
+   */
+  get name() {
+    return this.title;
+  }
+
+  /**
    * @returns {string} A readable version of this object.
    */
   toString() {
