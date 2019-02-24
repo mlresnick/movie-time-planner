@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 
 module.exports = {
   mode: 'development',
@@ -22,5 +23,8 @@ module.exports = {
       ],
     }],
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new WebpackCleanupPlugin(),
+  ],
 };
