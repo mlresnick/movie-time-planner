@@ -87,6 +87,8 @@ input {
           vertical-align: top;
           
           a { @include name-link; }
+
+          label[data-disabled] a { color: silver; }
         }
       }
       
