@@ -26,7 +26,7 @@ export function removeThisYear(title) {
 }
 
 /**
- * Infiormation about a movie being shown.
+ * Information about a movie being shown.
  */
 class Movie {
   /**
@@ -35,17 +35,17 @@ class Movie {
    * @param {HTMLElement} moviedataEl - Element scraped from a web page.
    */
   constructor(moviedataEl) {
-    /** @property {Duration} */
+    /** @member {string} - MPAA rating. */
+    this.rating = '';
+
+    /** @member {Duration} */
     this.runningTime = new Duration(0);
 
-    /** @property {string} */
+    /** @member {string} */
     this.title = '';
 
-    /** @property {string} - Unique identifieer for this movie. */
+    /** @member {string} - Unique identifier for this movie. */
     this.url = '';
-
-    /** @property {string} - MPAA rating. */
-    this.rating = '';
 
     let hours;
     let minutes;
@@ -72,17 +72,15 @@ class Movie {
   }
 
   /**
-   * Synonym for <kbd>title</kbd>.
-   *
-   * @returns {string} - The movie's title.
+   * @member {string} name - Synonym for {@linkcode title}.
+   * @memberof Movie
+   * @instance
    */
-  get name() {
-    return this.title;
-  }
+  get name() { return this.title; }
 
-  /**
-   * @returns {string} A readable version of this object.
-   */
+  set name(title) { this.title = title; }
+
+  /** @returns {string} A readable version of this object. */
   toString() {
     const [, hours, minutes] = this.runningTime.toString().match(/^(\d+)h(\d+)m$/);
     return `${this.title} - ${hours}:${minutes.padStart(2, '0')} | ${this.rating}`;

@@ -16,9 +16,9 @@ const { JSDOM } = jsdom;
  */
 class Moviefone {
   constructor(location, maxDistance) {
-    /** @property {string} location - see constructor doc. */
+    /** @member {string} location - see constructor doc. */
     this.location = location;
-    /** @property {number} maxDistance - see constructor doc. */
+    /** @member {number} maxDistance - see constructor doc. */
     this.maxDistance = (typeof maxDistance !== 'undefined') ? maxDistance : 10;
   }
 

@@ -8,6 +8,7 @@ module.exports = {
     'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
     './src/webapp/index.js',
   ],
+  devtool: 'eval-source-map',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'main.js',

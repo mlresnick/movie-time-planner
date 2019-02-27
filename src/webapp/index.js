@@ -76,7 +76,7 @@ function getLink(object) {
   return `<a href="${object.url}" target="${target}">${object.name}</a>`;
 }
 
-function renderSelectionList(type) {
+function renderSelectionList(type, isDisabledAttr) {
   const listEl = document.querySelector(`#${type}-selection-list .selection-list`);
 
   document.querySelector(`#all-${type}s`).checked = false;
@@ -86,17 +86,50 @@ function renderSelectionList(type) {
     .map((entry) => {
       const [url, item] = entry;
       const newId = `${type}=${url}`;
+      const disabled = isDisabledAttr(item);
       return '<tr>'
-        + `<td><input type="checkbox" id="${newId}" value="${url}"/></td>`
-        + `<td><label for="${newId}">${getLink(item)}</label></td>`
+        + `<td><input type="checkbox" id="${newId}" value="${url}"${disabled ? ' disable=""' : ''}/></td>`
+        + `<td><label for="${newId}"${disabled ? ' data-disabled=""' : ''}>${getLink(item)}</label></td>`
       + '</tr>';
     })
     .join('');
 }
 
+function showingsAfterNow(showing) {
+  // XXX
+  const now = new Showtime(new Date());
+
+  // if (context.debug.showtimeFilterOff) {
+  //   // Set to 6am to get a whole days worth of listings
+  //   now.date.setHours(22/* 6 */);
+  //   now.date.setMinutes(0);
+  // }
+
+  console.log(`requestedDate=${JSON.stringify(new Showtime(context.requestedDate).toLocalISOString())}`);
+  console.log(`requestedDate=${JSON.stringify(context.requestedDate.toString())}`);
+  console.log(`now=${JSON.stringify(now.toLocalISOString())}, showing=${JSON.stringify(showing.toLocalISOString())}`);
+  console.log(`Showtime.compare(now, showing)=${JSON.stringify(Showtime.compare(now, showing))}`);
+  console.log(`(now.valueOf() <= showing.valueOf())=(${now.valueOf()} <= ${showing.valueOf()})=${JSON.stringify(now.valueOf() <= showing.valueOf())}`);
+  return (now <= showing);
+  // return Showtime.compare(now, showing) > 0;
+}
+
 function renderSelectionForm() {
-  renderSelectionList('movie');
-  renderSelectionList('theater');
+  renderSelectionList('movie', (movie) => {
+    // console.log(`JSON.stringify(movie)=${JSON.stringify(movie)}`);
+    let hasMoreShowings = false;
+    if (!context.listings.some(
+      listing => (movie.url === listing.movie.url)
+        // && (listing.showtimes.length !== 0)
+        && listing.showtimes.some(showingsAfterNow)
+    )) {
+      console.log('none were found');
+      hasMoreShowings = true;
+    }
+    else { console.log('SOME  were found'); }
+    return hasMoreShowings;
+  });
+  renderSelectionList('theater', () => '');
 }
 
 function collapseSection(section) {
@@ -133,8 +166,7 @@ function createSelected() {
 }
 
 /*
- * Initializat
- ion - to be done after page has completed loading
+ * Initialization - to be done after page has completed loading
  */
 document.addEventListener('DOMContentLoaded', async () => {
   // Initialize expand/collapse buttons

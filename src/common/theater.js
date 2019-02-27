@@ -9,17 +9,22 @@ import Util from './util';
  */
 class Theater {
   constructor(theaterEl) {
-    /**  @property {string} name */
+    /**  @member {string} */
     this.name = '';
-    /** @property {string} url */
+
+    /** @member {string} */
     this.url = '';
-    /** @property {string} address */
+
+    /** @member {string} */
     this.address = '';
-    /** @property {string} phone */
+
+    /** @member {string} */
     this.phone = '';
+
     this._distance = 0;
     this.distanceUnit = '';
-    /** @property {MovieListing[]} movieListings */
+
+    /** @member {MovieListing[]} */
     this.movieListings = [];
 
     if (typeof theaterEl !== 'undefined') {
@@ -38,28 +43,26 @@ class Theater {
   }
 
   /**
-   * Distance of theater from the requested location. It is a string containing both the numrical
-   * distance and the units, separated by a space. For example, "6.5 mi.".
-   *
-   * @param {string} distanceString - a string containing both the numrical distance and the
-   *                                  units, separated by a space.
-   *
+   * @member {number} distance - The numeric distance of the theater from the requested location.
    * @memberof Theater
+   * @instance
+   * @readonly
    */
+  get distance() { return this._distance; }
+
+  /**
+   * @member {string} distanceString - Distance of theater from the requested location. It is a
+   *                                   string containing both the numrical distance and the units,
+   *                                   separated by a space. For example, "6.5 mi.".
+   * @memberof Theater
+   * @instance
+   */
+  get distanceString() { return `${this._distance} ${this.distanceUnit}`; }
+
   set distanceString(distanceString) {
     [this._distance, this.distanceUnit] = distanceString.split(' ');
     this._distance = Number.parseFloat(this._distance, 10);
   }
-
-  /**
-   * The numeric distance of the theater from the requested location.
-   *
-   * @readonly
-   * @memberof Theater
-   */
-  get distance() { return this._distance; }
-
-  get distanceString() { return `${this._distance} ${this.distanceUnit}`; }
 }
 
 export default Theater;

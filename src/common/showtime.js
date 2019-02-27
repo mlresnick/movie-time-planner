@@ -14,7 +14,7 @@ class Showtime {
    *                       set to 0.</p>
    */
   constructor(...args) {
-    /** @property {Date} date - The date and time of the showing. */
+    /** @member {Date} - The date and time of the showing. */
     this.date = null;
     let superArgs;
     const { requestedDate } = context;
@@ -64,18 +64,41 @@ class Showtime {
   }
 
   toLocalISOString(includeTimezone = false) {
-    const pad = (num, length = 2) => num.toString().padStart('0', length);
+    const pad = num => (num < 10 ? `0${num}` : num);
+    const adjustedDate = new Date(this.date);
+    const timezoneOffset = this.date.getTimezoneOffset();
+    let timezone = '';
 
-    const td = this.date;
+    adjustedDate.setMinutes(adjustedDate.getMinutes() - timezoneOffset);
 
-    const tzo = -td.getTimezoneOffset();
-    const dif = tzo >= 0 ? '+' : '-';
+    if (includeTimezone) {
+      if (timezoneOffset === 0) {
+        timezone = 'Z';
+      }
+      else {
+        const sign = timezoneOffset < 0 ? '+' : '-';
+        const tz = Math.abs(timezoneOffset);
+        const tzm = Math.floor(tz / 60);
+        const tzs = tz % 60;
+        timezone = `${sign}${pad(tzm)}:${pad(tzs)}`;
+      }
+    }
 
-    const date = `${pad(td.getFullYear(), 4)}-${pad(td.getMonth())}-${pad(td.getDate())}`;
-    const time = `${pad(td.getHours())}:${pad(td.getMinutes())}:${pad(td.getSeconds())}`;
-    const timezone = includeTimezone ? `${dif}${pad(tzo / 60)}:${pad(tzo % 60)}` : '';
+    return adjustedDate.toISOString().replace('Z', timezone);
+    // const pad = (num, length = 2) => num.toString().padStart('0', length);
 
-    return `${date}T${time}${timezone}`;
+    // const td = this.date;
+
+    // const tzoffsetMinutes = td.getTimezoneOffset();
+    // c
+    // const dif = tzo >= 0 ? '+' : '-';
+
+    // // const date = `${pad(td.getFullYear(), 4)}-${pad(td.getMonth())}-${pad(td.getDate())}`;
+    // const date = `${pad(td.getFullYear())}-${pad(td.getMonth())}-${pad(td.getDate())}`;
+    // const time = `${pad(td.getHours())}:${pad(td.getMinutes())}:${pad(td.getSeconds())}`;
+    // const timezone = includeTimezone ? `${dif}${pad(Math.abs(tzo) / 60)}:${pad(Math.abs(tzo) % 60)}` : '';
+
+    // return `${date}T${time}${timezone}`;
   }
 
   /**
@@ -150,7 +173,7 @@ class Showtime {
 
     if (context.debug.showtimeFilterOff) {
       // Set to 6am to get a whole days worth of listings
-      now.date.setHours(6);
+      now.date.setHours(22/* 6 */);
       now.date.setMinutes(0);
     }
 
@@ -165,7 +188,11 @@ class Showtime {
         // Look at the showtimes for each listing. For each showtime after
         // 'now', add a separate entry to the accumulator.
         listing.showtimes
-          .filter(showtime => (Showtime.compare(now, showtime) <= 0))
+        // .filter(showtime => (Showtime.compare(now, showtime) <= 0))
+          .filter((showtime) => {
+            console.log(`Showtime.compare(now=${now.toISOString()}, showtime=${showtime.toISOString()}) <= 0 = ${(Showtime.compare(now, showtime) <= 0)}`);
+            return (Showtime.compare(now, showtime) <= 0);
+          })
           .forEach(showtime => showings.push({ showtime, listing }));
         return showings;
       }, [])

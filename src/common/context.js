@@ -95,6 +95,7 @@ class Context {
 
       /** @member {Date} - Requested date of listings. */
       this.requestedDate = new Date();
+      console.log(`this.requestedDate.toString()=${this.requestedDate.toString()}`);
 
       /**
        * @member {Object} - Time durations used to calculatetime needed between movies.
@@ -113,8 +114,8 @@ class Context {
 
       // DEBUG
       this.debug = {
-        // showtimeFilterOff: false,
-        showtimeFilterOff: true,
+        showtimeFilterOff: false,
+        // showtimeFilterOff: true,
       };
 
       Context.instance = this;

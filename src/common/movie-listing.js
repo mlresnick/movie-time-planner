@@ -13,13 +13,18 @@ import context from './context';
  */
 class MovieListing {
   constructor(movieListingEl, theaterURL) {
+    /** @member {string} */
     this.movieURL = '';
+
+    /** @member {Showtime[]} - List of showtimes for this.movie at this.theater. */
     this.showtimes = [];
+
+    /** @member {string} - ID of theater for this list. */
     this.theaterURL = theaterURL || '';
+
     if (typeof movieListingEl !== 'undefined') {
       const moviedataEl = movieListingEl.querySelector('.moviedata');
       const movieURL = moviedataEl.querySelector('.movietitle a').getAttribute('href');
-
 
       if (!context.movies.includes(movieURL)) {
         context.movies.set(movieURL, new Movie(moviedataEl));
@@ -44,11 +49,14 @@ class MovieListing {
   }
 
   /**
-   * Set the movie for this listing.
-   *
-   * @param {(Movie|string)} movieArg - Either a Movie object to be stored, or a string
-   *                                    containing the URL for the movie.
+   * @member {Movie} - Movie for this listing. It may assigned to either a {@linkcode Movie} or a
+   *                   {@linkcode string}. When refrerenced the valluei is always
+   *                   a {@linkcode Movie}.
+   * @memberof MovieListing
+   * @instance
    */
+  get movie() { return context.movies.get(this.movieURL); }
+
   set movie(movieArg) {
     if ((typeof movieArg === 'string') || (movieArg instanceof String)) {
       this.movieURL = movieArg;
@@ -61,23 +69,15 @@ class MovieListing {
     }
   }
 
-  /** @type {Movie} */
-  get movie() {
-    return context.movies.get(this.movieURL);
-  }
-
-
   /**
    * The theater for this movie listing.
    *
    * @type {Theater}
+   * @memberof MovieListing
    * @instance
    * @readonly
-   * @memberof MovieListing
    */
-  get theater() {
-    return context.theaters.get(this.theaterURL);
-  }
+  get theater() { return context.theaters.get(this.theaterURL); }
 }
 
 export default MovieListing;
