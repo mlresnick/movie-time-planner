@@ -150,8 +150,7 @@ class Showtime {
   * @returns {Showtime[]} A list of showtimes n the form of a movie llisting object.
   */
   static getSortedShowings(selected) {
-    // XXX
-    const now = new Showtime();
+    const now = context.debug.now || new Showtime();
 
     if (context.debug.showtimeFilterOff) {
       // Set to 6am to get a whole days worth of listings

@@ -80,7 +80,9 @@ class MovieListing {
   get theater() { return context.theaters.get(this.theaterURL); }
 
   showtimesAfter(timeArg) {
-    const testTime = new Showtime(timeArg);
+    const testTime = context.debug.now
+      ? new Showtime(context.debug.now)
+      : new Showtime(timeArg);
 
     return this.showtimes.filter(showtime => (Showtime.compare(testTime, showtime) < 0));
   }
