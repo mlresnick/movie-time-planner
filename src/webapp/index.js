@@ -43,8 +43,7 @@ function reviver(key, value) {
       break;
 
     case 'runningTime':
-      // eslint-disable-next-line no-underscore-dangle
-      retval = new Duration(value._milliseconds);
+      retval = new Duration(value._milliseconds); // eslint-disable-line no-underscore-dangle
       break;
 
     case 'showtimes':
@@ -95,38 +94,16 @@ function renderSelectionList(type, isDisabledAttr) {
     .join('');
 }
 
-function showingsAfterNow(showing) {
-  // XXX
-  const now = new Showtime(new Date());
-
-  // if (context.debug.showtimeFilterOff) {
-  //   // Set to 6am to get a whole days worth of listings
-  //   now.date.setHours(22/* 6 */);
-  //   now.date.setMinutes(0);
-  // }
-
-  console.log(`requestedDate=${JSON.stringify(new Showtime(context.requestedDate).toLocalISOString())}`);
-  console.log(`requestedDate=${JSON.stringify(context.requestedDate.toString())}`);
-  console.log(`now=${JSON.stringify(now.toLocalISOString())}, showing=${JSON.stringify(showing.toLocalISOString())}`);
-  console.log(`Showtime.compare(now, showing)=${JSON.stringify(Showtime.compare(now, showing))}`);
-  console.log(`(now.valueOf() <= showing.valueOf())=(${now.valueOf()} <= ${showing.valueOf()})=${JSON.stringify(now.valueOf() <= showing.valueOf())}`);
-  return (now <= showing);
-  // return Showtime.compare(now, showing) > 0;
-}
-
 function renderSelectionForm() {
   renderSelectionList('movie', (movie) => {
-    // console.log(`JSON.stringify(movie)=${JSON.stringify(movie)}`);
-    let hasMoreShowings = false;
-    if (!context.listings.some(
-      listing => (movie.url === listing.movie.url)
-        // && (listing.showtimes.length !== 0)
-        && listing.showtimes.some(showingsAfterNow)
-    )) {
-      console.log('none were found');
-      hasMoreShowings = true;
-    }
-    else { console.log('SOME  were found'); }
+    const now = new Date();
+
+    const hasMoreShowings = !context
+      .listings
+      .some(
+        // The listing is for the requested movie and there are showings left.
+        listing => ((movie.url === listing.movie.url) && (listing.showingsAfter(now).length !== 0))
+      );
     return hasMoreShowings;
   });
   renderSelectionList('theater', () => '');
@@ -187,7 +164,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       // When "All" is clicked, set the rest to whatever value it has.
       allCheckboxEl.addEventListener('click', () => {
         selectionListEl.querySelectorAll('input[type="checkbox"]').forEach((checkboxEl) => {
-          checkboxEl.checked = allCheckboxEl.checked; /* eslint-disable-line no-param-reassign */
+          checkboxEl.checked = allCheckboxEl.checked; // eslint-disable-line no-param-reassign
         });
       });
 
@@ -228,10 +205,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       expandSection('selection');
     }
 
-    // DEBUG - for giggles, click a few entries in the selection form.
+    // // DEBUG - for giggles, click a few entries in the selection form.
     // ['movie', 'theater'].forEach((id) => {
     //   const els = document.querySelectorAll(`#${id}-selection-list input[type="checkbox"]`);
-    //   for (let i = 0; i < 4; i++) { // eslint-disable-line no-plusplus
+    //   for (let i = 0; i < 4; i++) {
     //     els.item(i).click();
     //   }
     //   document.getElementById('select-button').click();

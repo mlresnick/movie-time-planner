@@ -50,20 +50,18 @@ describe('Util', () => {
 
   describe('validates number intervals', () => {
     test.each([
-      /* eslint-disable array-bracket-spacing, no-multi-spaces */
-      // value interval         expected
-      [   5,   '[0,9]',         true  ],
-      [   5,   '[-9,0]',        false ],
-      [   1,   '[-1,1]',        true  ],
-      [   1,   '[-1,1)',        false ],
-      [  -1,   '(-1,1)',        false ],
-      [   0,   '(-1,1)',        true  ],
-      [   1,   '[-1,1[',        false ],
-      [  -1,   ']-1,1[',        false ],
-      [   0,   ']-1,1[',        true  ],
-      [  17.5, '[2.3,8.4]',     false ],
-      [ -17.5, '[-17.9,-16.9]', true ],
-      /* eslint-enable  array-bracket-spacing, no-multi-spaces */
+      // [value, interval, expected]
+      [5, '[0,9]', true],
+      [5, '[-9,0]', false],
+      [1, '[-1,1]', true],
+      [1, '[-1,1)', false],
+      [-1, '(-1,1)', false],
+      [0, '(-1,1)', true],
+      [1, '[-1,1[', false],
+      [-1, ']-1,1[', false],
+      [0, ']-1,1[', true],
+      [17.5, '[2.3,8.4]', false],
+      [-17.5, '[-17.9,-16.9]', true],
     ])(
       'isInInterval(%i, \'%s\')',
       (value, interval, expected) => expect(Util.isInInterval(value, interval)).toBe(expected)
@@ -72,14 +70,12 @@ describe('Util', () => {
 
   describe('extracts inner HTML', () => {
     test.each([
-      // name HTML expected
-      /* eslint-disable  no-multi-spaces */
-      ['in a simple case',       '<p>mares eat oats</p>',          'mares eat oats'],
-      ['when padded before',     ' <p>mares eat oats</p>',         'mares eat oats'],
-      ['when padded after',      '<p>mares eat oats </p>',         'mares eat oats'],
-      ['when padded inside',     '<p>mares eat  oats</p>',         'mares eat oats'],
+      // [name, HTML, expected]
+      ['in a simple case', '<p>mares eat oats</p>', 'mares eat oats'],
+      ['when padded before', ' <p>mares eat oats</p>', 'mares eat oats'],
+      ['when padded after', '<p>mares eat oats </p> ', 'mares eat oats'],
+      ['when padded inside', '<p>mares eat  oats</p>', 'mares eat oats'],
       ['when padded all around', '   <p>mares  eat \toats</p>   ', 'mares eat oats'],
-      /* eslint-enable  no-multi-spaces */
     ])(
       '%s',
       (testName, html, expected) => {

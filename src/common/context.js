@@ -5,12 +5,12 @@ export class ContextMap extends Map {
   /**
    * @constructor
    * @param {*} [iterable] - Arguments for the
-   *                         {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#Syntax Map class constructor}.
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map#Syntax Map class constructor}.
    */
-  // constructor(iterable) { super(iterable); } // eslint-disable-line no-useless-constructor
 
   /**
-   * Convenience method. A synonym for {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/has Map#has}.
+   * Convenience method. A synonym for
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/has Map#has}.
    *
    * @param {*} key - The key of the element to test for presence in the <code>Map</code> object.
    *
@@ -95,7 +95,6 @@ class Context {
 
       /** @member {Date} - Requested date of listings. */
       this.requestedDate = new Date();
-      console.log(`this.requestedDate.toString()=${this.requestedDate.toString()}`);
 
       /**
        * @member {Object} - Time durations used to calculatetime needed between movies.
@@ -112,12 +111,24 @@ class Context {
         exit: 5,
       };
 
-      // DEBUG
+      /**
+       * DEBUG
+       *
+       * @member {Object} debug
+       * @property {?boolean} showtimeFilterOff - allows
+       * @property {?string[]} nowVals - another
+       *
+       * @memberof Context
+       * @instance
+       */
+      // Comment out what is not to be used.
       this.debug = {
-        showtimeFilterOff: false,
         // showtimeFilterOff: true,
+        // nowVals: [2019, 0, 1, 2, 3, 4, 567],
       };
-
+      if (this.debug.nowVals) {
+        this.debug.now = new Date(...this.durations.debug.nowVals);
+      }
       Context.instance = this;
     }
 

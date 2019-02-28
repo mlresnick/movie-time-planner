@@ -6,6 +6,8 @@ import Showtime from '../../src/common/showtime';
 import Movie from '../../src/common/movie';
 
 describe('movie listing', () => {
+  const nowDate = new Date();
+  const dateArgs = [nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate()];
   const movieListingHTML = `
     <div class="movie-listing">
         <div class="moviePoster">
@@ -33,7 +35,7 @@ describe('movie listing', () => {
           </div>
         </div>
       </div>`;
-  context.requestedDate = new Date(2019, 1, 1);
+
   const movieListingEl = (new JSDOM(movieListingHTML)).window.document.querySelector('div');
 
   it('can be created', () => {
@@ -48,12 +50,14 @@ describe('movie listing', () => {
 
   it('can be created with arguments', () => {
     const obj = new MovieListing(movieListingEl, 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/');
+    const now = new Showtime();
+
     expect(obj).toEqual({
       movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
       showtimes: [
-        new Showtime(2019, 1, 1, 14),
-        new Showtime(2019, 1, 1, 16, 30),
-        new Showtime(2019, 1, 1, 19),
+        new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 14, 0, 0, 0),
+        new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 16, 30, 0, 0),
+        new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 19, 0, 0, 0),
       ],
       theaterURL: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
     });
@@ -64,12 +68,12 @@ describe('movie listing', () => {
       it('a URL', () => {
         const obj = new MovieListing(movieListingEl, 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/');
         obj.movie = 'https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/';
-        expect(obj).toEqual({
+        expect(obj).toEqual(/* expected */ {
           movieURL: 'https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
           showtimes: [
-            new Showtime(2019, 1, 1, 14),
-            new Showtime(2019, 1, 1, 16, 30),
-            new Showtime(2019, 1, 1, 19),
+            new Showtime(...dateArgs, 14),
+            new Showtime(...dateArgs, 16, 30),
+            new Showtime(...dateArgs, 19),
           ],
           theaterURL: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
         });
@@ -98,9 +102,9 @@ describe('movie listing', () => {
         expect(obj).toEqual({
           movieURL: 'https://www.moviefone.com/movie/solo-a-star-wars-story/uIv4AtOo8b9KZwtAZ3dU11/main/',
           showtimes: [
-            new Showtime(2019, 1, 1, 14),
-            new Showtime(2019, 1, 1, 16, 30),
-            new Showtime(2019, 1, 1, 19),
+            new Showtime(...dateArgs, 14),
+            new Showtime(...dateArgs, 16, 30),
+            new Showtime(...dateArgs, 19),
           ],
           theaterURL: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
         });
@@ -118,7 +122,6 @@ describe('movie listing', () => {
     });
   });
 
-  // TODO - once theater is working.
   describe('theater getter works', () => {
     const theaterURL = 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/';
     const theaterObj = {
@@ -134,5 +137,39 @@ describe('movie listing', () => {
     const obj = new MovieListing(movieListingEl, theaterURL);
     const { theater } = obj;
     expect(theater).toEqual(theaterObj);
+  });
+
+  function mapit(hm) {
+    const r = new Showtime(context.requestedDate);
+    r.setHours(hm[0]);
+    r.setMinutes(hm[1]);
+    r.setSeconds(0);
+    r.setMilliseconds(0);
+    return r; // .toISOString();
+  }
+
+  describe('showtimes can be filtered', () => {
+    const testlist = [
+      ['before all', 13, [[14, 0], [16, 30], [19, 0]].map(mapit)],
+      ['after first', 15, [[16, 30], [19, 0]].map(mapit)],
+      ['after second', 17, [[19, 0]].map(mapit)],
+      ['after all', 20, []],
+    ];
+
+    const obj = new MovieListing(
+      movieListingEl,
+      'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/'
+    );
+
+    test.each(testlist)(
+      '%s',
+      (testName, hours, expected) => {
+        const testDate = new Date();
+        testDate.setHours(hours, 0, 0, 0);
+        const testShowtime = new Showtime(testDate);
+        expect(obj.showtimesAfter(testShowtime)/* .map(showtime => showtime.toISOString()) */)
+          .toEqual(expected);
+      },
+    );
   });
 });

@@ -78,6 +78,12 @@ class MovieListing {
    * @readonly
    */
   get theater() { return context.theaters.get(this.theaterURL); }
+
+  showtimesAfter(timeArg) {
+    const testTime = new Showtime(timeArg);
+
+    return this.showtimes.filter(showtime => (Showtime.compare(testTime, showtime) < 0));
+  }
 }
 
 export default MovieListing;

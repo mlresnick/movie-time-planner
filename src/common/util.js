@@ -78,9 +78,14 @@ class Util {
    *
    * @param  {...any} args - Any arguments that can be passed to {@link console#error}.
    */
-  static logError(...args) {
-    console.error(...args); // eslint-disable-line no-console
-  }
+  static logError(...args) { console.error(...args); } // eslint-disable-line no-console
+
+  /**
+   * Wrapper around console.log().
+   *
+   * @param  {...any} args - Any arguments that can be passed to {@link console#error}.
+   */
+  static log(...args) { console.log(...args); } // eslint-disable-line no-console
 }
 
 export default Util;
