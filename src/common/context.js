@@ -99,10 +99,10 @@ class Context {
       /**
        * @member {Object} - Time durations used to calculatetime needed between movies.
        *
-       * @property {integer} durations.preview  - Expected length of movie previews.
-       * @property {integer} durations.entrance - Expected time it takes to geet from car to
+       * @property {integer} preview  - Expected length of movie previews.
+       * @property {integer} entrance - Expected time it takes to geet from car to
        *                                          auditorium.
-       * @property {integer} durations.exit     - Expected time it taqkes to get from auditorium
+       * @property {integer} exit     - Expected time it taqkes to get from auditorium
        *                                          to car.
        */
       this.durations = {
@@ -115,8 +115,11 @@ class Context {
        * DEBUG
        *
        * @member {Object} debug
-       * @property {?boolean} showtimeFilterOff - allows
-       * @property {?string[]} nowVals - another
+       * @property {?boolean} showtimeFilterOff - If falsey , only showtimes after now will be
+       *           inclouded in the results, otherewise all showtimes for a film will be incuded.
+       * @property {?number[]} nowVals - The six values passed to {@link Date}() and
+       *           {@klink Showtime}() constructors.
+       * @property {?Date} now - the value created by using the {@link nowVals} property.
        *
        * @memberof Context
        * @instance
@@ -124,10 +127,11 @@ class Context {
       // Comment out what is not to be used.
       this.debug = {
         // showtimeFilterOff: true,
-        // nowVals: [2019, 0, 1, 2, 3, 4, 567],
+        // nowVals: [2019, 1, 28, 20, 0, 0, 0],
+        // autoFillLists: true,
       };
       if (this.debug.nowVals) {
-        this.debug.now = new Date(...this.durations.debug.nowVals);
+        this.debug.now = new Date(...this.debug.nowVals);
       }
       Context.instance = this;
     }

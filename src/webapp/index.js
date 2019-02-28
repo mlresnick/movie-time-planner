@@ -205,14 +205,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       expandSection('selection');
     }
 
-    // // DEBUG - for giggles, click a few entries in the selection form.
-    // ['movie', 'theater'].forEach((id) => {
-    //   const els = document.querySelectorAll(`#${id}-selection-list input[type="checkbox"]`);
-    //   for (let i = 0; i < 4; i++) {
-    //     els.item(i).click();
-    //   }
-    //   document.getElementById('select-button').click();
-    // });
+    // DEBUG - for giggles, click a few entries in the selection form.
+    if (context.debug.autoFillLists) {
+      ['movie', 'theater'].forEach((id) => {
+        const els = document.querySelectorAll(`#${id}-selection-list input[type="checkbox"]`);
+        for (let i = 0; i < 4; i++) {
+          els.item(i).click();
+        }
+        document.getElementById('select-button').click();
+      });
+    }
   });
 
   document.getElementById('selection-form').addEventListener('submit', (event) => {
