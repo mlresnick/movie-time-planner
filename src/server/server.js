@@ -6,6 +6,7 @@ import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
 import * as webpackConfigContainer from '../../webpack.config';
 import Moviefone from './moviefone';
+import Util from '../common/util';
 
 const webpackConfig = webpackConfigContainer.default;
 const compiler = webpack(webpackConfig);
@@ -26,7 +27,7 @@ app.use(
 
 app.use(
   webpackHotMiddleware(compiler, {
-    log: console.log, // eslint-disable-line no-console
+    log: Util.logError,
     path: '/__webpack_hmr',
     heartbeat: 10 * 1000,
   })
@@ -42,8 +43,7 @@ app.get('/zip-code/:zipCode', async (req, res) => {
     res.json(result);
   }
   catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(`Error collecting listing: ${error}\n\nContinuing...\n`);
+    Util.logError(`Error collecting listing: ${error}\n\nContinuing...\n`);
   }
 });
 
@@ -63,10 +63,9 @@ app.get('/distancematrix', async (req, res) => {
     res.json(distanceMatrix);
   }
   catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(`Error getting distance matrix: ${error}\n\nContinuing...\n`);
+    Util.logError(`Error getting distance matrix: ${error}\n\nContinuing...\n`);
   }
 });
 
 const port = 8080;
-app.listen(port, () => console.log(`Listening on port #${port}`)); // eslint-disable-line no-console
+app.listen(port, () => Util.log(`Listening on port #${port}`));

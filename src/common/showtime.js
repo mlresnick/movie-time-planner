@@ -20,10 +20,9 @@ class Showtime {
     const { requestedDate } = context;
 
     if ((args.length === 1)
-      && (typeof args[0] === 'object')
-      && (typeof args[0].constructor !== 'undefined')
-      && /HTML.*Element/.test(args[0].constructor.name))
-    {                                            // eslint-disable-line brace-style,no-multi-spaces
+        && (typeof args[0] === 'object')
+        && (typeof args[0].constructor !== 'undefined')
+        && /HTML.*Element/.test(args[0].constructor.name)) {
       const showtimeEl = args[0];
       const showtimeRE = /^(\d?\d):(\d\d)((a|p)m)$/;
       const timeString = Util.innerHTML(showtimeEl);
@@ -49,22 +48,29 @@ class Showtime {
     else {
       superArgs = Array.from(args);
     }
+
     this.date = new Date(...superArgs);
-    this.date.setSeconds(0);
-    this.date.setMilliseconds(0);
+    // XXX this.date.setSeconds(0, 0);
   }
 
   /**
-   * @summary Translates the internal format to an ISO 8601 formatted string.
+   * @summary Translates the internal format to an ISO 8601 formatted string for the GMT timezone.
    *
-   * @returns {string} A string in the form "yyyy-mm-ddTmm:hh:ss".
+   * @returns {string} A string in the form "yyyy-mm-ddTmm:hh:ssZ".
    */
   toISOString() {
     return this.date.toISOString();
   }
 
+  /**
+   * Get an ISO formatted datetime for the current timezone. The timezone may optionally
+   * be included.
+   *
+   * @param {boolean} [includeTimezone=false] - If true the ISO formatted timezone is included.
+   */
   toLocalISOString(includeTimezone = false) {
-    const pad = num => (num < 10 ? `0${num}` : num);
+    const pad = num => num.toString().padStart(2, '0');
+
     const adjustedDate = new Date(this.date);
     const timezoneOffset = this.date.getTimezoneOffset();
     let timezone = '';
@@ -85,20 +91,6 @@ class Showtime {
     }
 
     return adjustedDate.toISOString().replace('Z', timezone);
-    // const pad = (num, length = 2) => num.toString().padStart('0', length);
-
-    // const td = this.date;
-
-    // const tzoffsetMinutes = td.getTimezoneOffset();
-    // c
-    // const dif = tzo >= 0 ? '+' : '-';
-
-    // // const date = `${pad(td.getFullYear(), 4)}-${pad(td.getMonth())}-${pad(td.getDate())}`;
-    // const date = `${pad(td.getFullYear())}-${pad(td.getMonth())}-${pad(td.getDate())}`;
-    // const time = `${pad(td.getHours())}:${pad(td.getMinutes())}:${pad(td.getSeconds())}`;
-    // const timezone = includeTimezone ? `${dif}${pad(Math.abs(tzo) / 60)}:${pad(Math.abs(tzo) % 60)}` : '';
-
-    // return `${date}T${time}${timezone}`;
   }
 
   /**
@@ -120,17 +112,7 @@ class Showtime {
    *                   positive value if <kbd>lhs</kbd> collates after <kbd>rhs</kbd>. 0 if the
    *                   two values are equal.
    */
-  static compare(lhs, rhs) {
-    let result = 0;
-    // if (lhs.date < rhs.date) {
-    //   result = -1;
-    // }
-    // else if (lhs.date > rhs.date) {
-    //   result = 1;
-    // }
-    result = Math.sign(lhs.date - rhs.date);
-    return result;
-  }
+  static compare(lhs, rhs) { return Math.sign(lhs.date - rhs.date); }
 
   toString() {
     let period = 'am';
@@ -188,11 +170,7 @@ class Showtime {
         // Look at the showtimes for each listing. For each showtime after
         // 'now', add a separate entry to the accumulator.
         listing.showtimes
-        // .filter(showtime => (Showtime.compare(now, showtime) <= 0))
-          .filter((showtime) => {
-            console.log(`Showtime.compare(now=${now.toISOString()}, showtime=${showtime.toISOString()}) <= 0 = ${(Showtime.compare(now, showtime) <= 0)}`);
-            return (Showtime.compare(now, showtime) <= 0);
-          })
+          .filter(showtime => (Showtime.compare(now, showtime) <= 0))
           .forEach(showtime => showings.push({ showtime, listing }));
         return showings;
       }, [])
@@ -423,22 +401,33 @@ class Showtime {
  *      or
  *          Showtime.prototype[setMethod] = ...
  */
-['FullYear', 'Month', 'Date', 'Hours', 'Minutes'/* , 'Seconds', 'Milliseconds' XXX */].forEach((unit) => {
+['FullYear', 'Month', 'Date', 'Hours', 'Minutes', 'Seconds', 'Milliseconds'].forEach((unit) => {
   const setMethod = `set${unit}`;
   const getMethod = `get${unit}`;
   let addMethod;
-  /* eslint-disable no-multi-spaces */
+
   switch (unit) {
-    case 'FullYear': addMethod = 'addYears';   break;
-    case 'Month':    addMethod = 'addMonths';  break;
-    case 'Date':     addMethod = 'addDays';    break;
-    default:         addMethod = `add${unit}`; break;
+    case 'FullYear':
+      addMethod = 'addYears';
+      break;
+
+    case 'Month':
+      addMethod = 'addMonths';
+      break;
+
+    case 'Date':
+      addMethod = 'addDays';
+      break;
+
+    default:
+      addMethod = `add${unit}`;
   }
-  /* eslint-enable no-multi-spaces */
-  Showtime.prototype[setMethod] = function set(value) { this.date[setMethod](value); };
+
   Showtime.prototype[addMethod] = function add(value) {
     this.date[setMethod](this.date[getMethod]() + value);
   };
+  Showtime.prototype[getMethod] = function get() { return this.date[getMethod](); };
+  Showtime.prototype[setMethod] = function set(...args) { this.date[setMethod](...args); };
 });
 
 export default Showtime;
