@@ -50,7 +50,7 @@ class Showtime {
     }
 
     this.date = new Date(...superArgs);
-    // XXX this.date.setSeconds(0, 0);
+    this.date.setSeconds(0, 0);
   }
 
   /**
@@ -79,13 +79,13 @@ class Showtime {
     }
     else {
       const sign = timezoneOffset < 0 ? '+' : '-';
-      const tz = Math.abs(timezoneOffset);
-      const tzm = Math.floor(tz / 60);
-      const tzs = tz % 60;
-      timezone = `${sign}${pad(tzm)}:${pad(tzs)}`;
+      const tzo = Math.abs(timezoneOffset);
+      const tzh = Math.floor(tzo / 60);
+      const tzm = tzo % 60;
+      timezone = `${sign}${pad(tzh)}:${pad(tzm)}`;
     }
-
-    return adjustedDate.toISOString().replace('Z', timezone);
+    const result = adjustedDate.toISOString().replace('Z', timezone);
+    return result;
   }
 
   /**
