@@ -144,7 +144,6 @@ class Context {
     this.movies.clear();
     this.theaters.clear();
     this.listings.length = 0;
-    this.requestedDate = null;
   }
 }
 
