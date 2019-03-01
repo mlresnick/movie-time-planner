@@ -84,8 +84,8 @@ class Showtime {
       const tzm = tzo % 60;
       timezone = `${sign}${pad(tzh)}:${pad(tzm)}`;
     }
-    const result = adjustedDate.toISOString().replace('Z', timezone);
-    return result;
+
+    return adjustedDate.toISOString().replace('Z', timezone);
   }
 
   /**

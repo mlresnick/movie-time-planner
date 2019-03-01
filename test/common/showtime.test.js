@@ -42,7 +42,7 @@ describe('Showtime', () => {
   });
 
   // TODO add extra arguments
-  fdescribe('supported setters work', () => {
+  describe('supported setters work', () => {
     test.each([
       ['years', 'setFullYear', 2002, [2002, 0, 1, 1, 1, 0, 0]],
       ['months', 'setMonth', 5, [2019, 5, 1, 1, 1, 0, 0]],
@@ -83,7 +83,7 @@ describe('Showtime', () => {
 
   describe('supported adders work', () => {
     test.each([
-      ['years', 'addYears', 2, '2021-01-01T05:01:00.000Z'],
+      ['years', 'addYears', 2, '2021-01-01T06:01:00.000Z'],
       ['months', 'addMonths', 5, '2019-06-01T05:01:00.000Z'],
       ['days', 'addDays', 5, '2019-01-06T06:01:00.000Z'],
       ['hours', 'addHours', 5, '2019-01-01T11:01:00.000Z'],
