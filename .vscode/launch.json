@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Launch server",
       "runtimeArgs": ["-r", "esm"],
-      "program": "${workspaceFolder}/server/server.js"
+      "program": "${workspaceFolder}/src/server/server.js"
     }
   ]
 }
