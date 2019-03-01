@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     //   theaters: getSelectedSet('#theater-selection-list .selection-list input[type="checkbox"]'),
     // };
 
-    // Build the deisplay list of selected items for each item type.
+    // Build the display list of selected items for each item type.
     ['movies', 'theaters']
       .forEach((itemType) => {
         const singular = itemType.substring(0, itemType.length - 1);

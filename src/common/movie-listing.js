@@ -50,7 +50,7 @@ class MovieListing {
 
   /**
    * @member {Movie} - Movie for this listing. It may assigned to either a {@linkcode Movie} or a
-   *                   {@linkcode string}. When refrerenced the valluei is always
+   *                   {@linkcode string}. When refrerenced the vallue is always
    *                   a {@linkcode Movie}.
    * @memberof MovieListing
    * @instance
