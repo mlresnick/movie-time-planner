@@ -102,7 +102,7 @@ function renderSelectionForm() {
       .listings
       .some(
         // The listing is for the requested movie and there are showings left.
-        listing => ((movie.url === listing.movie.url) && (listing.showingsAfter(now).length !== 0))
+        listing => ((movie.url === listing.movie.url) && (listing.showtimesAfter(now).length !== 0))
       );
     return hasMoreShowings;
   });
@@ -232,17 +232,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     //   theaters: getSelectedSet('#theater-selection-list .selection-list input[type="checkbox"]'),
     // };
 
+    // Build the deisplay list of selected items for each item type.
     ['movies', 'theaters']
-      .forEach((item) => {
-        const singular = item.substring(0, item.length - 1);
-        document
-          .querySelector(`#${singular}-selected-list ul.selected-list`)
-          .innerHTML = Array.from(selected[item].entries())
-            .map((entry) => {
-              const [url] = entry;
-              return `<li>${context[item].get(url).name}</li>`;
-            })
-            .join('');
+      .forEach((itemType) => {
+        const singular = itemType.substring(0, itemType.length - 1);
+
+        const htmlItemList = Array.from(selected[itemType].entries())
+          .map((entry) => {
+            const [url] = entry;
+            return `<li>${context[itemType].get(url).name}</li>`;
+          })
+          .join('');
+        document.querySelector(`#${singular}-selected-list ul.selected-list`)
+          .innerHTML = htmlItemList;
       });
 
     document.getElementById('result-list').innerHTML = Showtime.getSortedShowings(selected)
