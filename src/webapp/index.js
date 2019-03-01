@@ -2,11 +2,11 @@
 
 import Duration from 'duration-js';
 import context, { ContextArray, ContextMap } from '../common/context';
-// import getDistanceMatrix from '../common/distance-matrix';
+// TODO import getDistanceMatrix from '../common/distance-matrix';
 import Movie from '../common/movie';
 import MovieListing from '../common/movie-listing';
 import Theater from '../common/theater';
-// import Scheduler from '../common/scheduler';
+// TODO import Scheduler from '../common/scheduler';
 import Showtime from '../common/showtime';
 import Util from '../common/util';
 
@@ -87,8 +87,8 @@ function renderSelectionList(type, isDisabledAttr) {
       const newId = `${type}=${url}`;
       const disabled = isDisabledAttr(item);
       return '<tr>'
-        + `<td><input type="checkbox" id="${newId}" value="${url}"${disabled ? ' disable=""' : ''}/></td>`
-        + `<td><label for="${newId}"${disabled ? ' data-disabled=""' : ''}>${getLink(item)}</label></td>`
+        + `<td><input type="checkbox" id="${newId}" value="${url}"${disabled ? ' disabled="" title="No remaining showings today"' : ''}/></td>`
+        + `<td><label for="${newId}"${disabled ? ' data-disabled="" title="No remaining showings today"' : ''}>${getLink(item)}</label></td>`
       + '</tr>';
     })
     .join('');
@@ -106,7 +106,16 @@ function renderSelectionForm() {
       );
     return hasMoreShowings;
   });
-  renderSelectionList('theater', () => '');
+
+  renderSelectionList('theater', (theater) => {
+    const now = new Date();
+    const hasMoreShowings = context
+      .listings
+      .some(listing => (
+        (theater.url === listing.theater.url) && (listing.showtimesAfter(now).length !== 0)
+      ));
+    return hasMoreShowings;
+  });
 }
 
 function collapseSection(section) {
@@ -163,9 +172,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       // When "All" is clicked, set the rest to whatever value it has.
       allCheckboxEl.addEventListener('click', () => {
-        selectionListEl.querySelectorAll('input[type="checkbox"]').forEach((checkboxEl) => {
-          checkboxEl.checked = allCheckboxEl.checked; // eslint-disable-line no-param-reassign
-        });
+        selectionListEl.querySelectorAll('input[type="checkbox"]:not(:disabled')
+          .forEach((checkboxEl) => {
+            checkboxEl.checked = allCheckboxEl.checked; // eslint-disable-line no-param-reassign
+          });
       });
 
       // When any others are clicked, clear the "All"
@@ -175,6 +185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
   document.getElementById('location-form').addEventListener('submit', async (event) => {
+  // XXX RINN
   // document.getElementById('submit-location-button').addEventListener('click', async (event) => {
     event.stopImmediatePropagation();
     event.preventDefault();
