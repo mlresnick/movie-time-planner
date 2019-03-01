@@ -118,8 +118,8 @@ class Context {
        * @property {?boolean} showtimeFilterOff - If falsey , only showtimes after now will be
        *           inclouded in the results, otherewise all showtimes for a film will be incuded.
        * @property {?number[]} nowVals - The six values passed to {@link Date}() and
-       *           {@klink Showtime}() constructors.
-       * @property {?Date} now - the value created by using the {@link nowVals} property.
+       *           {@link Date} constructors.
+       * @property {?Date} now - The value created by using the {@link nowVals} property.
        *
        * @memberof Context
        * @instance
