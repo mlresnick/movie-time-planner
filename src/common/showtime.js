@@ -63,12 +63,9 @@ class Showtime {
   }
 
   /**
-   * Get an ISO formatted datetime for the current timezone. The timezone may optionally
-   * be included.
-   *
-   * @param {boolean} [includeTimezone=false] - If true the ISO formatted timezone is included.
+   * Get an ISO formatted datetime for the current timezone.
    */
-  toLocalISOString(includeTimezone = false) {
+  toLocalISOString() {
     const pad = num => num.toString().padStart(2, '0');
 
     const adjustedDate = new Date(this.date);
@@ -77,17 +74,15 @@ class Showtime {
 
     adjustedDate.setMinutes(adjustedDate.getMinutes() - timezoneOffset);
 
-    if (includeTimezone) {
-      if (timezoneOffset === 0) {
-        timezone = 'Z';
-      }
-      else {
-        const sign = timezoneOffset < 0 ? '+' : '-';
-        const tz = Math.abs(timezoneOffset);
-        const tzm = Math.floor(tz / 60);
-        const tzs = tz % 60;
-        timezone = `${sign}${pad(tzm)}:${pad(tzs)}`;
-      }
+    if (timezoneOffset === 0) {
+      timezone = 'Z';
+    }
+    else {
+      const sign = timezoneOffset < 0 ? '+' : '-';
+      const tz = Math.abs(timezoneOffset);
+      const tzm = Math.floor(tz / 60);
+      const tzs = tz % 60;
+      timezone = `${sign}${pad(tzm)}:${pad(tzs)}`;
     }
 
     return adjustedDate.toISOString().replace('Z', timezone);
@@ -99,7 +94,7 @@ class Showtime {
    * @returns {string} A string in the form "yyyy-mm-ddTmm:hh:ss".
    */
   toJSON() {
-    return this.toISOString();
+    return this.toLocalISOString();
   }
 
   /**
