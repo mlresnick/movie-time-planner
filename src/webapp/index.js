@@ -7,6 +7,7 @@ import Movie from '../common/movie';
 import MovieListing from '../common/movie-listing';
 import Theater from '../common/theater';
 // TODO import Scheduler from '../common/scheduler';
+import Showing from '../common/showing';
 import Showtime from '../common/showtime';
 import Util from '../common/util';
 
@@ -37,6 +38,14 @@ function reviver(key, value) {
   switch (key) {
     case 'listings':
       retval = new ContextArray();
+      value.forEach((v) => {
+        const listing = Object.setPrototypeOf(v, MovieListing.prototype);
+        retval.push(listing);
+      });
+      break;
+
+    case 'movieListings':
+      retval = [];
       value.forEach((v) => {
         const listing = Object.setPrototypeOf(v, MovieListing.prototype);
         retval.push(listing);
@@ -114,6 +123,7 @@ function renderSelectionForm() {
 
   renderSelectionList('theater', (theater) => {
     const now = Showtime.now();
+    const hasMoreShowings = !context
       .listings
       .some(listing => (
         (theater.url === listing.theater.url) && (listing.showtimesAfter(now).length !== 0)
@@ -223,17 +233,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     // DEBUG - for giggles, click a few entries in the selection form.
     if (context.debug.autoFillLists) {
       ['movie', 'theater'].forEach((id) => {
-        const els = document.querySelectorAll(`#${id}-selection-list input[type="checkbox"]`);
+        const els = document.querySelectorAll(`#${id}-selection-list input[type="checkbox"]:not(:disabled)`);
         for (let i = 0; i < 4; i++) {
-          els.item(i).click();
+          if (els.item(i)) {
+            els.item(i).click();
+          }
         }
         document.getElementById('select-button').click();
       });
     }
   });
-
   document.getElementById('selection-form').addEventListener('submit', (event) => {
-    let lastShowtime = new Showtime(0, 0, 0, 0, 0, 0, 0);
+    let previousShowtime = new Showtime(0, 0, 0, 0, 0, 0, 0);
 
     event.stopImmediatePropagation();
     event.preventDefault();
@@ -257,12 +268,42 @@ document.addEventListener('DOMContentLoaded', async () => {
           .innerHTML = htmlItemList;
       });
 
-    document.getElementById('result-list').innerHTML = Showtime.getSortedShowings(selected)
+    function mapTheaterToListings(allListings, theaterURL) {
+      const theater = context.theaters.get(theaterURL);
+      const listingsForTheater = theater
+        .movieListings
+        .filter((listing) => {
+          const retval = selected.movies.has(listing.movieURL);
+          return retval;
+        });
+      return allListings.concat(listingsForTheater);
+    }
+
+    function mapListingsToShowings(allShowings, listing) {
+      const showingsForListing = listing.showtimesAfter(Showtime.now()).map(
+        showtime => new Showing(listing.theaterURL, listing.movieURL, showtime)
+      );
+      return allShowings.concat(showingsForListing);
+    }
+
+    function compareShowings(lhs, rhs) {
+      return Showtime.compare(lhs.showtime, rhs.showtime)
+        || rhs.theater.distance - rhs.theater.distance
+        || Util.compareWOArticles(lhs.movie.title, rhs.movie.title)
+        || Util.compareWOArticles(lhs.theater.name, rhs.theater.name);
+    }
+
+    const sortedShowings = Array.from(selected.theaters)
+      .reduce(mapTheaterToListings, [])
+      .reduce(mapListingsToShowings, [])
+      .sort(compareShowings);
+
+    document.getElementById('result-list').innerHTML = sortedShowings
       .map(
         (showing) => {
-          const { movie, theater } = showing.listing;
-          const showtime = (Showtime.compare(showing.showtime, lastShowtime) !== 0) ? showing.showtime : '&nbsp;';
-          lastShowtime = showing.showtime;
+          const { movie, theater } = showing;
+          const showtime = (Showtime.compare(showing.showtime, previousShowtime) !== 0) ? showing.showtime : '&nbsp;';
+          previousShowtime = showing.showtime;
 
           return `<tr>
             <td class="showtime">${showtime}</td>
@@ -277,6 +318,8 @@ document.addEventListener('DOMContentLoaded', async () => {
               <span class="theater-address">${theater.address}</span>
               &#x25c6;
               <span class=theater-phone>${theater.phone}</span>
+              &#x25c6;
+              <span class=theater-distance>${theater.distance}</span>
             </td>
           </tr>`;
         }
@@ -285,4 +328,3 @@ document.addEventListener('DOMContentLoaded', async () => {
     expandSection('results');
   });
 });
-
