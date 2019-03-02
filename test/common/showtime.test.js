@@ -61,6 +61,7 @@ describe('Showtime', () => {
   });
 
   describe('supported getters work', () => {
+    // TODO should this really be Showtime.now();
     const nowDate = new Date();
     nowDate.setHours(0, 0, 0, 0);
     const nowShowtime = new Showtime(nowDate);
