@@ -63,6 +63,17 @@ class Showtime {
   }
 
   /**
+   * Current time (encapsulates debug code).
+   *
+   * @returns {Date} - Either the current time or the time defined in context.debug.now.
+   *
+   */
+  static now() {
+    return (context.debug.now ? new Showtime(context.debug.now) : new Showtime());
+  }
+
+
+  /**
    * Get an ISO formatted datetime for the current timezone.
    */
   toLocalISOString() {
@@ -145,13 +156,7 @@ class Showtime {
   * @returns {Showtime[]} A list of showtimes n the form of a movie llisting object.
   */
   static getSortedShowings(selected) {
-    const now = context.debug.now || new Showtime();
-
-    if (context.debug.showtimeFilterOff) {
-      // Set to 6am to get a whole days worth of listings
-      now.date.setHours(22/* 6 */);
-      now.date.setMinutes(0);
-    }
+    const now = this.now();
 
     const showtimes = context.listings
     // Is it a movie in a theater that were both selected?
