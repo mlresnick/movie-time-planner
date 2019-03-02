@@ -1,11 +1,12 @@
 const path = require('path');
-const webpack = require('webpack');
+// const webpack = require('webpack');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 
 module.exports = {
   mode: 'development',
   entry: [
-    'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
+    // XXX RINN
+    // 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
     './src/webapp/index.js',
   ],
   devtool: 'eval-source-map',
@@ -13,9 +14,10 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'main.js',
     publicPath: '/',
-    // Following 2 lines fix 404 errors during hot module replacement updates.
-    hotUpdateChunkFilename: 'hot-update.js',
-    hotUpdateMainFilename: 'hot-update.json',
+    // XXX RINN
+    // // Following 2 lines fix 404 errors during hot module replacement updates.
+    // hotUpdateChunkFilename: 'hot-update.js',
+    // hotUpdateMainFilename: 'hot-update.json',
   },
   module: {
     rules: [{
@@ -28,7 +30,8 @@ module.exports = {
     }],
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    // XXX RINN
+    // new webpack.HotModuleReplacementPlugin(),
     new WebpackCleanupPlugin(),
   ],
 };
