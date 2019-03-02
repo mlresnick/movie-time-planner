@@ -31,7 +31,7 @@ class MovieListing {
       }
 
       this.movieURL = movieURL;
-      // DEBUG
+
       this.showtimes = Array.from(movieListingEl
         .querySelectorAll('.showtimes-list .stDisplay.future, .showtimes-list .showtime-display a'))
         .map(showtimeEl => new Showtime(showtimeEl));
