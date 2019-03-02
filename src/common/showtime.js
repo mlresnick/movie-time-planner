@@ -1,3 +1,4 @@
+import debug from './debug';
 import context, { ContextMap } from './context';
 import Util from './util';
 
@@ -65,11 +66,11 @@ class Showtime {
   /**
    * Current time (encapsulates debug code).
    *
-   * @returns {Date} - Either the current time or the time defined in context.debug.now.
+   * @returns {Date} - Either the current time or the time defined in debug.now.
    *
    */
   static now() {
-    return (context.debug.now ? new Showtime(context.debug.now) : new Showtime());
+    return (debug.now ? new Showtime(debug.now) : new Showtime());
   }
 
 

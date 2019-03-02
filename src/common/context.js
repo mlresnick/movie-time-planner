@@ -1,3 +1,5 @@
+import debug from './debug';
+
 /**
  * Augmented  {@link https://devdocs.io/javascript/global_objects/map Map} class.
  */
@@ -93,7 +95,7 @@ class Context {
       this.theaters = new ContextMap();
 
       /** @member {Date} - Requested date of listings. */
-      this.requestedDate = new Date();
+      this.requestedDate = debug.requestedDate || new Date();
 
       /**
        * @member {Object} - Time durations used to calculatetime needed between movies.
@@ -110,28 +112,6 @@ class Context {
         exit: 5,
       };
 
-      /**
-       * DEBUG
-       *
-       * @member {Object} debug
-       * @property {?boolean} showtimeFilterOff - If falsey , only showtimes after now will be
-       *           inclouded in the results, otherewise all showtimes for a film will be incuded.
-       * @property {?number[]} nowVals - The six values passed to {@link Date}() and
-       *           {@link Date} constructors.
-       * @property {?Date} now - The value created by using the {@link nowVals} property.
-       *
-       * @memberof Context
-       * @instance
-       */
-      // Comment out what is not to be used.
-      this.debug = {
-        // showtimeFilterOff: true,
-        // nowVals: [2019, 1, 28, 20, 0, 0, 0],
-        // autoFillLists: true,
-      };
-      if (this.debug.nowVals) {
-        this.debug.now = new Date(...this.debug.nowVals);
-      }
       Context.instance = this;
     }
 

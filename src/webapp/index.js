@@ -1,6 +1,7 @@
 /* eslint-env browser */
 
 import Duration from 'duration-js';
+import debug from '../common/debug';
 import context, { ContextArray, ContextMap } from '../common/context';
 // TODO import getDistanceMatrix from '../common/distance-matrix';
 import Movie from '../common/movie';
@@ -231,7 +232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // DEBUG - for giggles, click a few entries in the selection form.
-    if (context.debug.autoFillLists) {
+    if (debug.autoFillLists) {
       ['movie', 'theater'].forEach((id) => {
         const els = document.querySelectorAll(`#${id}-selection-list input[type="checkbox"]:not(:disabled)`);
         for (let i = 0; i < 4; i++) {
@@ -250,8 +251,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     event.preventDefault();
 
     const selected = createSelected();
-
-    // TODO add distance to theaters name in the Selection form
 
     // Build the display list of selected items for each item type.
     ['movies', 'theaters']
@@ -305,6 +304,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           const showtime = (Showtime.compare(showing.showtime, previousShowtime) !== 0) ? showing.showtime : '&nbsp;';
           previousShowtime = showing.showtime;
 
+          const phone = theater.phone
+            ? `&#x25c6; <span class="theater-address">${theater.address}</span>`
+            : '';
+
           return `<tr>
             <td class="showtime">${showtime}</td>
             <td class="title"$>${getLink(movie)}</td>
@@ -316,10 +319,9 @@ document.addEventListener('DOMContentLoaded', async () => {
               <span class="theater-name">${getLink(theater)}</span>
               &#x25c6;
               <span class="theater-address">${theater.address}</span>
+              ${phone}
               &#x25c6;
-              <span class=theater-phone>${theater.phone}</span>
-              &#x25c6;
-              <span class=theater-distance>${theater.distance}</span>
+              <span class=theater-distance>${theater.distanceString}</span>
             </td>
           </tr>`;
         }
