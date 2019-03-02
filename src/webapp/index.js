@@ -101,7 +101,7 @@ function renderSelectionList(type, isDisabledAttr) {
 
 function renderSelectionForm() {
   renderSelectionList('movie', (movie) => {
-    const now = new Date();
+    const now = Showtime.now();
 
     const hasMoreShowings = !context
       .listings
@@ -113,8 +113,7 @@ function renderSelectionForm() {
   });
 
   renderSelectionList('theater', (theater) => {
-    const now = new Date();
-    const hasMoreShowings = context
+    const now = Showtime.now();
       .listings
       .some(listing => (
         (theater.url === listing.theater.url) && (listing.showtimesAfter(now).length !== 0)
@@ -192,8 +191,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
   document.getElementById('location-form').addEventListener('submit', async (event) => {
-  // XXX RINN
-  // document.getElementById('submit-location-button').addEventListener('click', async (event) => {
     event.stopImmediatePropagation();
     event.preventDefault();
 
