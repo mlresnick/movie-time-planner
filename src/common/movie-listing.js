@@ -1,7 +1,7 @@
 /* global Theater */ // To avoid ciurular import dependencies.
 import Movie from './movie';
-import Showtime from './showtime';
 import context from './context';
+import Showtime from './showtime';
 
 /**
  * The list of show times for a given movie at a given theater.
@@ -80,11 +80,8 @@ class MovieListing {
   get theater() { return context.theaters.get(this.theaterURL); }
 
   showtimesAfter(timeArg) {
-    const testTime = context.debug.now
-      ? new Showtime(context.debug.now)
-      : new Showtime(timeArg);
-
-    return this.showtimes.filter(showtime => (Showtime.compare(testTime, showtime) < 0));
+    return this.showtimes
+      .filter(showtime => (Showtime.compare(new Showtime(timeArg), showtime) < 0));
   }
 }
 
