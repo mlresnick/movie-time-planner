@@ -29,6 +29,11 @@ function reviver(key, value) {
 
   let retval;
 
+  // TODO remove context.listings
+  /*
+   * TODO add backlinks from showings to movielisting, then change accessors in Showing to use link
+   * to listing and listing's link to theater
+   */
   switch (key) {
     case 'listings':
       retval = new ContextArray();
@@ -133,8 +138,10 @@ function expandSection(theSection) {
   });
 }
 
-// Look though the list items. If a list item has a checked
-// element record that elements value in a Set.
+/*
+ * Look though the list items. If a list item has a checked
+ * element record that elements value in a Set.
+ */
 function getSelectedSet(selector) {
   const listAll = (document.querySelectorAll(`${selector}:checked`).length === 0);
   const selectedArr = Array.from(document.querySelectorAll(selector))
@@ -238,11 +245,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // TODO add distance to theaters name in the Selection form
 
-    // const selected = {
-    //     movies: getSelectedSet('#movie-selection-list .selection-list input[type="checkbox"]'),
-    //   theaters: getSelectedSet('#theater-selection-list .selection-list input[type="checkbox"]'),
-    // };
-
     // Build the display list of selected items for each item type.
     ['movies', 'theaters']
       .forEach((itemType) => {
@@ -283,89 +285,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       )
       .join('');
-    /*
-    // document.getElementById('result-list').innerHTML = context.listings
-    //   // Is it a movie in a theater that were both selected?
-    //   .filter(listing => selected.movies.has(listing.movieURL)
-    //     && selected.theaters.has(listing.theaterURL)
-    //     // Is there at least one showing left?
-    //     && listing.showtimes.length
-    //     && (Showtime.compare(now, listing.showtimes[listing.showtimes.length - 1]) <= 0))
-    //   .reduce((showings, listing) => {
-    //     // Look at the showtimes for each listing. For each showtime after
-    //     // 'now', add a separate entry to the accumulator.
-    //     listing.showtimes
-    //       .filter(showtime => (Showtime.compare(now, showtime) <= 0))
-    //       .forEach(showtime => showings.push({ showtime, listing }));
-    //     return showings;
-    //   }, [])
-    //   .sort((lhs, rhs) => Showtime.compare(lhs.showtime, rhs.showtime)
-    //       || rhs.listing.theater.distance - rhs.listing.theater.distance
-    //       || compareWOArticles(lhs.listing.movie.title, rhs.listing.movie.title)
-    //       || compareWOArticles(lhs.listing.theater.name, rhs.listing.theater.name))
-    //   .map(
-    //     (showing) => {
-    //       const { movie, theater } = showing.listing;
-    //       const showtime = (Showtime.compare(showing.showtime, lastShowtime) !== 0) ?
-    //             showing.showtime : '&nbsp;';
-    //       lastShowtime = showing.showtime;
-
-    //       return `<tr>
-    //         <td class="showtime">${showtime}</td>
-    //         <td class="title"$>${getLink(movie)}</td>
-    //         <td class="rating-running-time">${movie.rating} &#x25c6; ${movie.runningTime
-    //           .toString()}</td>
-    //       </tr>
-    //       <tr class="theater-details">
-    //         <td>&nbsp;</td>
-    //         <td colspan="2">
-    //           <span class="theater-name">${getLink(theater)}</span>
-    //           &#x25c6;
-    //           <span class="theater-address">${theater.address}</span>
-    //           &#x25c6;
-    //           <span class=theater-phone>${theater.phone}</span>
-    //         </td>
-    //       </tr>`;
-    //     }
-    //   )
-      // .join('');
-    */
     expandSection('results');
   });
-
-  // document.getElementById('plan-button').addEventListener('click', async () => {
-  //   const selected = createSelected();
-
-  //   const addresses = Array.from(selected.theaters)
-  //     .map(url => context.theaters.get(url).address);
-
-  //   document.querySelector('body').classList.add('waiting');
-  //   const distanceMatrix = await getDistanceMatrix(addresses);
-  //   document.querySelector('body').classList.remove('waiting');
-
-  //   const origins = distanceMatrix.origin_addresses;
-  //   const matrix = {};
-
-  //   for (let i = 0; i < origins.length; i += 1) {
-  //     const fromURL = selected.theaters[i];
-  //     matrix[fromURL] = {};
-  //     const results = distanceMatrix.rows[i].elements;
-  //     for (let j = 0; j < results.length; j += 1) {
-  //       const toURL = selected.theaters[j];
-  //       matrix[fromURL][toURL] = results[j];
-  //     }
-  //   }
-
-  //   Scheduler.run(selected, distanceMatrix);
-
-  //   // XXX
-  //   console.log(`JSON.stringify(matrix)=${JSON.stringify(matrix, null, 2)}`);
-  // });
-
-  // XXX
-  // document.getElementById('submit-location-button').click();
 });
 
-// if (module.hot) {
-//   module.hot.accept();
-// }

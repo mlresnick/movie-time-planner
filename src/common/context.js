@@ -36,7 +36,6 @@ export class ContextMap extends Map {
     return this;
   }
 
-
   /**
    * Called by {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify JSON.stringify} to serialize the this object.
    *
