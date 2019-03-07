@@ -1,0 +1,9 @@
+{
+  "debug": true,
+  "src": ["./src/**/*.js" ],
+  "dest": "./doc",
+  "jsdoc": {
+    "access": "all"
+  },
+  "undescribed": true
+}
