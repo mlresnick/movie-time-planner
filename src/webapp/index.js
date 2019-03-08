@@ -270,6 +270,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelector(`#${singular}-selected-list ul.selected-list`)
           .innerHTML = htmlItemList;
       });
+
     function compareShowings(lhs, rhs) {
       return Showtime.compare(lhs.showtime, rhs.showtime)
         || (rhs.theater.distance - rhs.theater.distance)
