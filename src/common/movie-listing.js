@@ -1,50 +1,57 @@
 /* global Theater */ // To avoid ciurular import dependencies.
+import IdObject from './id-object';
 import Movie from './movie';
 import context from './context';
+import Showing from './showing';
 import Showtime from './showtime';
 
 /**
  * The list of show times for a given movie at a given theater.
  *
  * Maps the contents of an HTML element into a more convenient representation.
- *
- * @param {HTMLElement} movieListingEl - Movie listing from the web page.
- * @param {string} theaterURL - Theater at which this listing is appearing.
  */
-class MovieListing {
-  constructor(movieListingEl, theaterURL) {
-    /** @member {string} */
+class MovieListing extends IdObject {
+  /**
+   * @param {Theater} theater - Theater at which this listing is appearing.
+   * @param {HTMLElement} movieListingEl - Movie listing from the web page.
+   */
+  constructor(theater, movieListingEl) {
+    super(theater);
+
+    /**
+     * @member {string}
+     * @private
+     */
     this.movieURL = '';
 
-    /** @member {Showtime[]} - List of showtimes for this.movie at this.theater. */
-    this.showtimes = [];
-
-    /** @member {string} - ID of theater for this list. */
-    this.theaterURL = theaterURL || '';
+    /**
+     * @member {Showing[]} - List of showtimes for this.movie at this.theater.
+     */
+    this.showings = [];
 
     if (typeof movieListingEl !== 'undefined') {
       const moviedataEl = movieListingEl.querySelector('.moviedata');
-      const movieURL = moviedataEl.querySelector('.movietitle a').getAttribute('href');
+      this.movieURL = moviedataEl.querySelector('.movietitle a').getAttribute('href');
 
-      if (!context.movies.includes(movieURL)) {
-        context.movies.set(movieURL, new Movie(moviedataEl));
+      if (!context.movies.includes(this.movieURL)) {
+        context.movies.set(new Movie(moviedataEl));
       }
 
-      this.movieURL = movieURL;
+      movieListingEl
+        .querySelectorAll('.showtimes-list .stDisplay.future, .showtimes-list .showtime-display a')
+        .forEach(function addShowing(showtimeEl, index) {
+          const newShowing = new Showing(this, showtimeEl);
 
-      this.showtimes = Array.from(movieListingEl
-        .querySelectorAll('.showtimes-list .stDisplay.future, .showtimes-list .showtime-display a'))
-        .map(showtimeEl => new Showtime(showtimeEl));
-      this.showtimes.forEach((showtime, index, showtimes) => {
-        // Does the previous showtime in the list appear to be after this one?
-        // If so, then it's really a time for tomorrow.
-        if ((index > 0) && (Showtime.compare(showtimes[index - 1], showtime) > 1)) {
-          // Add a day to the current showtime.
-          showtime.addDays(1);
-        }
-      });
-
-      context.listings.set(null, this);
+          if (index > 0) {
+            // Does the previous showtime in the list appear to be after this one?
+            // If so, then this one is really a showtime for tomorrow.
+            const previousShowing = this.showings[this.showings.length - 1];
+            if (Showing.compare(previousShowing, newShowing) > 1) {
+              newShowing.showtime.addDays(1);
+            }
+          }
+          this.showings.push(newShowing);
+        }, this);
     }
   }
 
@@ -77,12 +84,30 @@ class MovieListing {
    * @instance
    * @readonly
    */
-  get theater() { return context.theaters.get(this.theaterURL); }
-
-  showtimesAfter(timeArg) {
-    return this.showtimes
-      .filter(showtime => (Showtime.compare(new Showtime(timeArg), showtime) < 0));
+  get theater() {
+    return context.theaters.get(this.parentId);
   }
+
+  /**
+   * Get an {@link Array} of {@link Showing} objects that have shoiwtimes after a given time.
+   *
+   * @param {Showtime} showtime - Earliest time for showngs to be returned.
+   *
+   * @returns {Showing[]} - Filtered list of showings.
+   *
+   * @memberof MovieListing
+   */
+  showingsAfter(showtime) {
+    return this.showings
+      .filter(showing => (Showtime.compare(showtime, showing.showtime) < 0));
+  }
+
+  /**
+   * @member {string} id - Unique identifier for this object.
+   * @memberof MovieListing
+   * @instance
+   */
+  get id() { return `${this.theater.id},${this.movie.id}`; }
 }
 
 export default MovieListing;

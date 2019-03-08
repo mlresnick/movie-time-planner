@@ -4,6 +4,7 @@ import context from '../../src/common/context';
 import MovieListing from '../../src/common/movie-listing';
 import Showtime from '../../src/common/showtime';
 import Movie from '../../src/common/movie';
+import Theater from '../../src/common/theater';
 
 describe('movie listing', () => {
   const nowDate = new Date();
@@ -36,46 +37,99 @@ describe('movie listing', () => {
         </div>
       </div>`;
 
-  const movieListingEl = (new JSDOM(movieListingHTML)).window.document.querySelector('div');
+  const mockTheater = new Theater();
+  mockTheater.url = 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/';
+  context.theaters.set(mockTheater);
 
-  it('can be created', () => {
-    const obj = new MovieListing();
-    expect(obj).toBeDefined();
-    expect(obj).toEqual({
-      movieURL: '',
-      showtimes: [],
-      theaterURL: '',
+  const mockMovie = new Movie();
+  mockMovie.url = 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/';
+  context.movies.set(mockMovie);
+
+  const movieListingDoc = new JSDOM(movieListingHTML).window.document;
+  const movieListingEl = movieListingDoc.querySelector('div.movie-listing');
+
+  describe('can be created with', () => {
+    it('no arguments', () => {
+      const obj = new MovieListing();
+      expect(obj).toBeDefined();
+      expect(obj).toEqual({
+        movieURL: '',
+        parentId: null,
+        showings: [],
+      });
+    });
+
+    it('an empty movie listing element', () => {
+      const obj = new MovieListing(mockTheater, movieListingEl/* XXX RINN , 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/' */);
+      const now = new Showtime();
+
+      expect(obj).toEqual({
+        movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+        showings: [
+          {
+            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+            showtime: new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 14, 0, 0, 0),
+          },
+          {
+            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+            showtime: new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 16, 30, 0, 0),
+          },
+          {
+            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+            showtime: new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 19, 0, 0, 0),
+          },
+        ],
+        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/', /* XXX RINN 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/', */
+      });
+    });
+
+    it('a movie listing element', () => {
+      const obj = new MovieListing(mockTheater, movieListingEl/* XXX RINN , 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/' */);
+      const now = new Showtime();
+
+      expect(obj).toEqual({
+        movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+        showings: [
+          {
+            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+            showtime: new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 14, 0, 0, 0),
+          },
+          {
+            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+            showtime: new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 16, 30, 0, 0),
+          },
+          {
+            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+            showtime: new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 19, 0, 0, 0),
+          },
+        ],
+        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
+      });
     });
   });
 
-  it('can be created with arguments', () => {
-    const obj = new MovieListing(movieListingEl, 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/');
-    const now = new Showtime();
-
-    expect(obj).toEqual({
-      movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-      showtimes: [
-        new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 14, 0, 0, 0),
-        new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 16, 30, 0, 0),
-        new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 19, 0, 0, 0),
-      ],
-      theaterURL: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
-    });
-  });
-
-  describe('movie value', () => {
+  describe('movie', () => {
     describe('setter works with', () => {
       it('a URL', () => {
-        const obj = new MovieListing(movieListingEl, 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/');
-        obj.movie = 'https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/';
+        const obj = new MovieListing(mockTheater, movieListingEl);
+        obj.movieURL = 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/';
         expect(obj).toEqual(/* expected */ {
-          movieURL: 'https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
-          showtimes: [
-            new Showtime(...dateArgs, 14),
-            new Showtime(...dateArgs, 16, 30),
-            new Showtime(...dateArgs, 19),
+          movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+          showings: [
+            {
+              parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+              showtime: new Showtime(...dateArgs.concat([14])),
+            },
+            {
+              parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+              showtime: new Showtime(...dateArgs.concat([16, 30])),
+            },
+            {
+              parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+              showtime: new Showtime(...dateArgs.concat([19])),
+            },
           ],
-          theaterURL: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
+          parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
         });
       });
 
@@ -91,28 +145,37 @@ describe('movie listing', () => {
           | 2 hr 15 min
             </div>
           </div>`;
-        // TODO - decide ion JSDOM or DOMParser (supposed to be browseer only)
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(otherMovieHTML, 'text/html');
-        const otherMovieEl = doc.querySelector('.moviedata');
-        const otherMovie = new Movie(otherMovieEl);
 
-        const obj = new MovieListing(movieListingEl, 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/');
+        const dom = new JSDOM(otherMovieHTML);
+        const otherMovieEl = dom.window.document.querySelector('.moviedata');
+        const otherMovie = new Movie(otherMovieEl);
+        const mockVenue = { id: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/' };
+        context.theaters.set(mockVenue.id, mockVenue);
+        const obj = new MovieListing(mockVenue, movieListingEl);
         obj.movie = otherMovie;
         expect(obj).toEqual({
           movieURL: 'https://www.moviefone.com/movie/solo-a-star-wars-story/uIv4AtOo8b9KZwtAZ3dU11/main/',
-          showtimes: [
-            new Showtime(...dateArgs, 14),
-            new Showtime(...dateArgs, 16, 30),
-            new Showtime(...dateArgs, 19),
+          showings: [
+            {
+              parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+              showtime: new Showtime(...dateArgs.concat([14])),
+            },
+            {
+              parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+              showtime: new Showtime(...dateArgs.concat([16, 30])),
+            },
+            {
+              parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+              showtime: new Showtime(...dateArgs.concat([19])),
+            },
           ],
-          theaterURL: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
+          parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
         });
       });
     });
 
-    describe('getter works', () => {
-      const obj = new MovieListing(movieListingEl, 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/');
+    it('getter works', () => {
+      const obj = new MovieListing(mockTheater, movieListingEl);
       expect(obj.movie).toEqual({
         runningTime: new Duration('1h36m'),
         title: 'Three Identical Strangers (2018)',
@@ -122,53 +185,39 @@ describe('movie listing', () => {
     });
   });
 
-  describe('theater getter works', () => {
-    const theaterURL = 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/';
-    const theaterObj = {
-      name: 'Lexington Venue',
-      url: theaterURL,
-      address: '1794 Massachussetts Ave., Lexington, MA  02420',
-      phone: '(781) 861-6161',
-      _distance: 1.3,
-      distanceUnit: ' mi.',
-      movieListings: [],
-    };
-    context.theaters.set(theaterURL, theaterObj);
-    const obj = new MovieListing(movieListingEl, theaterURL);
+  it('theater getter works', () => {
+    const obj = new MovieListing(mockTheater, movieListingEl);
     const { theater } = obj;
-    expect(theater).toEqual(theaterObj);
+    expect(theater).toEqual(mockTheater);
   });
 
-  function mapit(hm) {
+  function mapToShowtime(hm) {
     const r = new Showtime(context.requestedDate);
     r.setHours(hm[0]);
     r.setMinutes(hm[1]);
     r.setSeconds(0);
     r.setMilliseconds(0);
-    return r; // .toISOString();
+    return r;
   }
 
   describe('showtimes can be filtered', () => {
     const testlist = [
-      ['before all', 13, [[14, 0], [16, 30], [19, 0]].map(mapit)],
-      ['after first', 15, [[16, 30], [19, 0]].map(mapit)],
-      ['after second', 17, [[19, 0]].map(mapit)],
+      ['before all', 13, [[14, 0], [16, 30], [19, 0]].map(mapToShowtime)],
+      ['after first', 15, [[16, 30], [19, 0]].map(mapToShowtime)],
+      ['after second', 17, [[19, 0]].map(mapToShowtime)],
       ['after all', 20, []],
     ];
 
-    const obj = new MovieListing(
-      movieListingEl,
-      'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/'
-    );
-
+    const obj = new MovieListing(mockTheater, movieListingEl);
     test.each(testlist)(
       '%s',
-      (testName, hours, expected) => {
-        const testDate = new Date();
-        testDate.setHours(hours, 0, 0, 0);
-        const testShowtime = new Showtime(testDate);
-        expect(obj.showtimesAfter(testShowtime)/* .map(showtime => showtime.toISOString()) */)
-          .toEqual(expected);
+      (testName, hours, expectedShowtimes) => {
+        const testShowtime = new Showtime();
+        testShowtime.setHours(hours, 0, 0, 0);
+
+        expect(obj.showingsAfter(testShowtime)
+          .map(showing => showing.showtime))
+          .toEqual(expectedShowtimes);
       },
     );
   });

@@ -61,7 +61,11 @@ function reviver(key, value) {
       retval = new Duration(value._milliseconds); // eslint-disable-line no-underscore-dangle
       break;
 
-    case 'showtimes':
+    case 'showings':
+      retval = value.map(showingString => new Showing(showingString));
+      break;
+
+    case 'showtime':
       retval = value.map(showtimeString => new Showtime(showtimeString));
       break;
 
@@ -117,7 +121,7 @@ function renderSelectionForm() {
       .listings
       .some(
         // The listing is for the requested movie and there are showings left.
-        listing => ((movie.url === listing.movie.url) && (listing.showtimesAfter(now).length !== 0))
+        listing => ((movie.url === listing.movie.url) && (listing.showingsAfter(now).length !== 0))
       );
     return hasMoreShowings;
   });
@@ -127,7 +131,7 @@ function renderSelectionForm() {
     const hasMoreShowings = !context
       .listings
       .some(listing => (
-        (theater.url === listing.theater.url) && (listing.showtimesAfter(now).length !== 0)
+        (theater.url === listing.theater.url) && (listing.showingsAfter(now).length !== 0)
       ));
     return hasMoreShowings;
   });
@@ -266,35 +270,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelector(`#${singular}-selected-list ul.selected-list`)
           .innerHTML = htmlItemList;
       });
-
-    function mapTheaterToListings(allListings, theaterURL) {
-      const theater = context.theaters.get(theaterURL);
-      const listingsForTheater = theater
-        .movieListings
-        .filter((listing) => {
-          const retval = selected.movies.has(listing.movieURL);
-          return retval;
-        });
-      return allListings.concat(listingsForTheater);
-    }
-
-    function mapListingsToShowings(allShowings, listing) {
-      const showingsForListing = listing.showtimesAfter(Showtime.now()).map(
-        showtime => new Showing(listing.theaterURL, listing.movieURL, showtime)
-      );
-      return allShowings.concat(showingsForListing);
-    }
-
     function compareShowings(lhs, rhs) {
       return Showtime.compare(lhs.showtime, rhs.showtime)
-        || rhs.theater.distance - rhs.theater.distance
+        || (rhs.theater.distance - rhs.theater.distance)
         || Util.compareWOArticles(lhs.movie.title, rhs.movie.title)
         || Util.compareWOArticles(lhs.theater.name, rhs.theater.name);
     }
 
+    /*
+     * For selected theater:
+     *   o Map theaters to listing
+     *   o Filter to get listings of selected movies that still have remaining showings.
+     *   o Map listings to showings
+     *   o Sort list of showings.
+     */
     const sortedShowings = Array.from(selected.theaters)
-      .reduce(mapTheaterToListings, [])
-      .reduce(mapListingsToShowings, [])
+      .reduce((allListings, theater) => allListings.concat(theater.listings), [])
+      .filter(
+        listing => selected.movies.has(listing.movieURL) && listing.showingsAfter(Showtime.now())
+      )
+      .reduce((allShowings, listing) => allShowings.concat(listing.showings), [])
       .sort(compareShowings);
 
     document.getElementById('result-list').innerHTML = sortedShowings

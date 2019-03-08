@@ -1,5 +1,5 @@
 import debug from './debug';
-import context, { ContextMap } from './context';
+import context from './context';
 import Util from './util';
 
 /**
@@ -7,9 +7,9 @@ import Util from './util';
  */
 class Showtime {
   /**
-   * @param  {...*} args - If this is an {@linkcode HTMLElement} it is a node containing the
+   * @param  {...*} args - If this is an {@link HTMLElement} it is a node containing the
    *                       showtime as a string. Otherwise, it may be any set of arguments passed
-   *                       to the JavaScript {@linkcode Date} constructor.
+   *                       to the JavaScript {@link Date} constructor.
    *
    *                       <p>The seconds and milliseconds arguments are ignored. Those values are
    *                       set to 0.</p>
@@ -17,8 +17,8 @@ class Showtime {
   constructor(...args) {
     /** @member {Date} - The date and time of the showing. */
     this.date = null;
+
     let superArgs;
-    const { requestedDate } = context;
 
     if ((args.length === 1)
         && (typeof args[0] === 'object')
@@ -39,9 +39,9 @@ class Showtime {
       }
 
       superArgs = [
-        requestedDate.getFullYear(),
-        requestedDate.getMonth(),
-        requestedDate.getDate(),
+        context.requestedDate.getFullYear(),
+        context.requestedDate.getMonth(),
+        context.requestedDate.getDate(),
         hours,
         minutes,
       ];
@@ -55,9 +55,9 @@ class Showtime {
   }
 
   /**
-   * @summary Translates the internal format to an ISO 8601 formatted string for the GMT timezone.
+   * Translates the internal format to an ISO 8601 formatted string for the GMT timezone.
    *
-   * @returns {string} A string in the form "yyyy-mm-ddTmm:hh:ssZ".
+   * @returns {string} - A string in the form "yyyy-mm-ddTmm:hh:ssZ".
    */
   toISOString() {
     return this.date.toISOString();
@@ -66,13 +66,12 @@ class Showtime {
   /**
    * Current time (encapsulates debug code).
    *
-   * @returns {Date} - Either the current time or the time defined in debug.now.
+   * @returns {Showtime} - Either the current time or the time defined in debug.now.
    *
    */
   static now() {
     return (debug.now ? new Showtime(debug.now) : new Showtime());
   }
-
 
   /**
    * Get an ISO formatted datetime for the current timezone.
@@ -121,6 +120,12 @@ class Showtime {
    */
   static compare(lhs, rhs) { return Math.sign(lhs.date - rhs.date); }
 
+  /**
+   * Return human readable date and time.
+   *
+   * @returns {string} - a string in the form of an am/pm time. For example, "3:15pm".
+   * @memberof Showtime
+   */
   toString() {
     let period = 'am';
 
@@ -140,46 +145,15 @@ class Showtime {
     return `${hours}:${minutes}${period}`;
   }
 
+  /**
+   * Return the internal value of this object.
+   *
+   * @returns {number} - A JavaScript {@link Date} value as milliseconds.
+   * @memberof Showtime
+   */
   valueOf() { return this.date.valueOf(); }
 
   // TODO allow decimals in distance field
-
-  /**
-  * Sort and expand the showtimes in context.listing. The "expansion" is performed by taking the
-  * list of times in a MovieListing and creating a separate listing for each showtime.
-  *
-  * @param {Object}     selected          - List of selected theaters and movies.
-  * @param {ContextMap} selected.movies   - Map (string => {@link Movie}) of the movies selected by
-  *                                         the user.
-  * @param {ContextMap} selected.theaters - Map (string => {@link Theater}) of the theaters
-  *                                         selected by the user.
-  *
-  * @returns {Showtime[]} A list of showtimes n the form of a movie llisting object.
-  */
-  static getSortedShowings(selected) {
-    const now = this.now();
-
-    const showtimes = context.listings
-    // Is it a movie in a theater that were both selected?
-      .filter(listing => selected.movies.has(listing.movieURL)
-      && selected.theaters.has(listing.theaterURL)
-      // Is there at least one showing left?
-      && listing.showtimes.length
-      && (Showtime.compare(now, listing.showtimes[listing.showtimes.length - 1]) <= 0))
-      .reduce((showings, listing) => {
-        // Look at the showtimes for each listing. For each showtime after
-        // 'now', add a separate entry to the accumulator.
-        listing.showtimes
-          .filter(showtime => (Showtime.compare(now, showtime) <= 0))
-          .forEach(showtime => showings.push({ showtime, listing }));
-        return showings;
-      }, [])
-      .sort((lhs, rhs) => Showtime.compare(lhs.showtime, rhs.showtime)
-      || rhs.listing.theater.distance - rhs.listing.theater.distance
-      || Util.compareWOArticles(lhs.listing.movie.title, rhs.listing.movie.title)
-      || Util.compareWOArticles(lhs.listing.theater.name, rhs.listing.theater.name));
-    return showtimes;
-  }
 }
 
 /**

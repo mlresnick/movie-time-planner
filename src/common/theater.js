@@ -1,15 +1,25 @@
 import context from './context';
 import MovieListing from './movie-listing';
 import Util from './util';
+import IdObject from './id-object';
 
 /**
  * A theater containing movie Listings.
  *
- * @param {HTMLElement} theaterEl - Theater listing from the web page.
+ * @class
  */
-class Theater {
+class Theater extends IdObject {
+  /**
+   * Creates an instance of Theater.
+   *
+   * @param {HTMLElement} theaterEl - Web page element for a theater and the movies shown there.
+   *
+   * @memberof Theater
+   */
   constructor(theaterEl) {
-    /**  @member {string} */
+    super();
+
+    /** @member {string} */
     this.name = '';
 
     /** @member {string} */
@@ -35,10 +45,14 @@ class Theater {
       this.phone = Util.innerHTML(theaterEl.querySelector('.theater-phone'));
       this.distanceString = Util.innerHTML(theaterEl.querySelector('.mileage'));
 
-      context.theaters.set(this.url, this);
+      context.theaters.set(this);
 
-      this.movieListings = Array.from(theaterEl.querySelectorAll('.movie-listing'))
-        .map(movieListingEl => new MovieListing(movieListingEl, this.url));
+      const self = this;
+      theaterEl
+        .querySelectorAll('.movie-listing')
+        .forEach((movieListingEl) => {
+          self.movieListings.push(new MovieListing(self, movieListingEl));
+        });
     }
   }
 
