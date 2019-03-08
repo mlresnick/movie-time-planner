@@ -25,8 +25,11 @@ describe('Showtime', () => {
   });
 
   it('can be created with an HTMLElement', () => {
-    const el = new JSDOM('<span class="stDisplay future">4:30pm</span>');
-    const obj = new Showtime(el.window.document.querySelector('span'));
+    const showtimeDoc = (new JSDOM('<span class="stDisplay future">4:30pm</span>'))
+      .window
+      .document;
+    const showtimeEl = showtimeDoc.querySelector('span');
+    const obj = new Showtime(showtimeEl);
     expect(obj.toString()).toBe('4:30pm');
   });
 
