@@ -5,10 +5,6 @@ import { JSDOM } from 'jsdom';
 import Util from '../../src/common/util';
 
 describe('Util', () => {
-  // it('can be created', () => {
-  //   const obj = new Util();
-  //   expect(obj).toBeDefined();
-  // });
   describe('compares strings (without articles)', () => {
     const values = [
       { value: 'a foo', sortBy: 'foo' },
