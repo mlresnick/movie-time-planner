@@ -72,6 +72,14 @@ class Movie {
   }
 
   /**
+   * Unique ID for this movie.
+   *
+   * @readonly
+   * @memberof Movie
+   */
+  get id() { return this.url; }
+
+  /**
    * @member {string} name - Synonym for {@linkcode title}.
    * @memberof Movie
    * @instance

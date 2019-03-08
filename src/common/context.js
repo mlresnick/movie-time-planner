@@ -1,4 +1,5 @@
 import debug from './debug';
+import IdObject from './id-object';
 
 /**
  * Augmented  {@link https://devdocs.io/javascript/global_objects/map Map} class.
@@ -26,12 +27,25 @@ export class ContextMap extends Map {
    * <code>Map</code> object. If the key is already in the <code>Map</code>, this method does
    * nothing.
    *
-   * @param {*} key - The key of the element to add to the <code>Map</code> object.
-   * @param {*} value - The value of the element to add to the <code>Map</code> object.
+   * @param {...*} args - If two arguments are passed in, they are treated as a
+   *               <code>key</code>-<code>value</code> pair. If one argument is passed in, it is
+   *               treated as an {@link IdObject}. The key will be set to the <code>id</code> member
+   *               of the object.
    *
    * @returns {ContextMap} The <code>ContextMap</code> object.
    */
-  set(key, value) {
+  set(...args) {
+    let key;
+    let value;
+
+    if ((args.length === 1) && (args[0] instanceof IdObject)) {
+      [value] = args;
+      key = value.id;
+    }
+    else {
+      [key, value] = args;
+    }
+
     if (!this.has(key)) {
       super.set(key, value);
     }
@@ -83,19 +97,16 @@ class Context {
       this.movies = new ContextMap();
 
       /**
-       * @member {ContextArray} - Movie listings found for the requested theaters and movies. It is
+       * @member {ContextMap} - Movie listings found for the requested theaters and movies. It is
        *                          an array of {@link Listing} objects.
        */
-      this.listings = new ContextArray();
+      this.listings = new ContextMap();
 
       /**
        * @member {ContextMap} - List of theaters requested. A theater's URL is used as the key
        *                        with a value of a {@link Theater} object.
        */
       this.theaters = new ContextMap();
-
-      /** @member {Date} - Requested date of listings. */
-      this.requestedDate = debug.requestedDate || new Date();
 
       /**
        * @member {Object} - Time durations used to calculatetime needed between movies.
@@ -124,6 +135,10 @@ class Context {
     this.theaters.clear();
     this.listings.length = 0;
   }
+
+  /** @member {Date} - Requested date of listings. */
+  // eslint-disable-next-line class-methods-use-this
+  get requestedDate() { return debug.requestedDate || new Date(); }
 }
 
 const context = new Context();

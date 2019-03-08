@@ -129,11 +129,32 @@ describe('theater', () => {
         _distance: 0,
         distanceUnit: '',
         movieListings: [],
+        parentId: null,
       });
     });
 
-    it('an element', () => {
-      const theaterEl = document.querySelector('.theater');
+    it('a theater-only element', () => {
+      const theaterOnlyHTML = `
+        <div class="theater">
+          <div class="head">
+            <div class="title">
+              <span class="mileage">1.3 mi.</span>
+              <a class="theater-name" href="https://www.moviefone.com/theater/lexington-venue/2042/showtimes/">Lexington Venue</a>
+            </div>
+            <div class="address-keys">
+              <p class="address">
+                <a href="https://www.moviefone.com/theater/lexington-venue/2042/showtimes/">1794 Massachussetts Ave., Lexington, MA  02420</a>
+                |
+                <span class="theater-phone">(781) 861-6161</span>
+              </p>
+            </div>
+          </div>
+          <div class="showtimes">
+          </div>
+        </div>
+      `;
+      const theaterOnlyDocument = new JSDOM(theaterOnlyHTML).window.document;
+      const theaterEl = theaterOnlyDocument.querySelector('.theater');
       const theater = new Theater(theaterEl);
       expect(theater).toMatchObject({
         name: 'Lexington Venue',
@@ -142,25 +163,39 @@ describe('theater', () => {
         phone: '(781) 861-6161',
         _distance: 1.3,
         distanceUnit: 'mi.',
-        movieListings: [
-          {
-            movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-            theaterURL: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
-          },
-          {
-            movieURL: 'https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
-            theaterURL: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
-          },
-          {
-            movieURL: 'https://www.moviefone.com/movie/solo-a-star-wars-story/uIv4AtOo8b9KZwtAZ3dU11/main/',
-            theaterURL: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
-          },
-          {
-            movieURL: 'https://www.moviefone.com/movie/rbg/ET6Xj4o8kksEK6ugClFr35/main/',
-            theaterURL: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
-          },
-        ],
+        movieListings: [],
       });
+    });
+  });
+
+  it('a full theater element', () => {
+    const theaterEl = document.querySelector('.theater');
+    const theater = new Theater(theaterEl);
+    expect(theater).toMatchObject({
+      name: 'Lexington Venue',
+      url: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
+      address: '1794 Massachussetts Ave., Lexington, MA 02420',
+      phone: '(781) 861-6161',
+      _distance: 1.3,
+      distanceUnit: 'mi.',
+      movieListings: [
+        {
+          parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
+          movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+        },
+        {
+          movieURL: 'https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
+          parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
+        },
+        {
+          movieURL: 'https://www.moviefone.com/movie/solo-a-star-wars-story/uIv4AtOo8b9KZwtAZ3dU11/main/',
+          parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
+        },
+        {
+          movieURL: 'https://www.moviefone.com/movie/rbg/ET6Xj4o8kksEK6ugClFr35/main/',
+          parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
+        },
+      ],
     });
   });
 
