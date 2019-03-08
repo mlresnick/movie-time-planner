@@ -1,6 +1,7 @@
 /* eslint-env jest */
 
 import Duration from 'duration-js';
+import { JSDOM } from 'jsdom';
 import context from '../../src/common/context';
 import Movie, { removeThisYear } from '../../src/common/movie';
 
@@ -18,7 +19,7 @@ PG-13
 `;
 
 describe('Movie', () => {
-  test('can be allocated', () => {
+  it('can be allocated', () => {
     const emptyData = {
       rating: '',
       runningTime: { _milliseconds: 0 },
@@ -30,13 +31,13 @@ describe('Movie', () => {
     expect(movie).toMatchObject(emptyData);
   });
 
-  test('can remove this year from title', () => {
+  it('can remove this year from title', () => {
     expect(removeThisYear('a movie title with no year')).toBe('a movie title with no year');
     expect(removeThisYear('a movie title with previous year (2000)')).toBe('a movie title with previous year (2000)');
     expect(removeThisYear(`a movie title with this year (${new Date().getFullYear().toString()})`)).toBe('a movie title with this year');
   });
 
-  test('can be created with a DOM node', () => {
+  it('can be created with a DOM node', () => {
     const expectedMovie = {
       rating: 'PG-13',
       runningTime: { _milliseconds: 5760000 },
@@ -44,16 +45,15 @@ describe('Movie', () => {
       url: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
     };
     const expectedEntry = [[expectedMovie.url, expectedMovie]];
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const moviedataEl = doc.querySelector('.moviedata');
+    const { document } = (new JSDOM(html)).window;
+    const moviedataEl = document.querySelector('.moviedata');
     const movie = new Movie(moviedataEl);
 
     expect(movie).toMatchObject(expectedMovie);
     expect(Array.from(context.movies)).toMatchObject(expectedEntry);
   });
 
-  test('can be translated to a string', () => {
+  it('can be translated to a string', () => {
     let movie = new Movie();
     movie.runningTime = new Duration('3h21m');
     movie.rating = 'G';
