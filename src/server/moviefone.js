@@ -9,16 +9,32 @@ const { JSDOM } = jsdom;
 /**
  * Fetch a web page from moviefone.com and scrape it for listings.
  *
- * @param {string} location    - may be a zip code or address of the location to search for movie
- *                               listings.
- * @param {number} maxDistance - radius from the center of <kbd>location</kbd>, in miles, to
- *                               search.
+ * @class
  */
 class Moviefone {
+  /**
+   * Creates an instance of Moviefone.
+   *
+   * @param {string} location - Center of the search area. For example a zip code.
+   * @param {number} maxDistance - How far out from <code>location</code> to look.
+   *
+   * @memberof Moviefone
+   */
   constructor(location, maxDistance) {
-    /** @member {string} location - see constructor doc. */
+    /**
+     * @member {string} location - see constructor doc.
+     *
+     * @instance
+     * @memberof Moviefone
+     */
     this.location = location;
-    /** @member {number} maxDistance - see constructor doc. */
+
+    /**
+     * @member {number} maxDistance - see constructor doc.
+     *
+     * @instance
+     * @memberof Moviefone
+     */
     this.maxDistance = (typeof maxDistance !== 'undefined') ? maxDistance : 10;
   }
 
