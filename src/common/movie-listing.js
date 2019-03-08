@@ -52,6 +52,7 @@ class MovieListing extends IdObject {
           }
           this.showings.push(newShowing);
         }, this);
+      context.listings.set(this);
     }
   }
 
