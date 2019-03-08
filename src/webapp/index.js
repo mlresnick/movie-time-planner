@@ -31,11 +31,6 @@ function reviver(key, value) {
 
   let retval;
 
-  // TODO remove context.listings
-  /*
-   * TODO add backlinks from showings to movielisting, then change accessors in Showing to use link
-   * to listing and listing's link to theater
-   */
   switch (key) {
     case 'listings':
       retval = new ContextArray();
