@@ -1,41 +1,12 @@
 import express from 'express';
 import { fetch } from 'cross-fetch';
 import path from 'path';
-// XXX RINN
-// import webpack from 'webpack';
-// import webpackDevMiddleware from 'webpack-dev-middleware';
-// import webpackHotMiddleware from 'webpack-hot-middleware';
-// import * as webpackConfigContainer from '../../webpack.config';
 import Moviefone from './moviefone';
 import Util from '../common/util';
 
-// XXX RINN
-// const webpackConfig = webpackConfigContainer.default;
-// ?const compiler = webpack(webpackConfig);
 const root = path.resolve(`${__dirname}/../..`);
 
 const app = express();
-
-// XXX RINN
-// // HMR related plugins
-// app.use(
-//   webpackDevMiddleware(compiler, {
-//     hot: true,
-//     filename: 'main.js',
-//     publicPath: webpackConfig.output.publicPath,
-//     stats: { colors: true },
-//     historyApiFallback: true,
-//   })
-// );
-
-// XXX RINN
-// app.use(
-//   webpackHotMiddleware(compiler, {
-//     log: Util.logError,
-//     path: '/__webpack_hmr',
-//     heartbeat: 10 * 1000,
-//   })
-// );
 
 // Routes
 app.use(express.static(root));

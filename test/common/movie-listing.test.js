@@ -60,7 +60,7 @@ describe('movie listing', () => {
     });
 
     it('an empty movie listing element', () => {
-      const obj = new MovieListing(mockTheater, movieListingEl/* XXX RINN , 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/' */);
+      const obj = new MovieListing(mockTheater, movieListingEl);
       const now = new Showtime();
 
       expect(obj).toEqual({
@@ -79,12 +79,12 @@ describe('movie listing', () => {
             showtime: new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 19, 0, 0, 0),
           },
         ],
-        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/', /* XXX RINN 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/', */
+        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
       });
     });
 
     it('a movie listing element', () => {
-      const obj = new MovieListing(mockTheater, movieListingEl/* XXX RINN , 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/' */);
+      const obj = new MovieListing(mockTheater, movieListingEl);
       const now = new Showtime();
 
       expect(obj).toEqual({
