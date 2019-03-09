@@ -1,4 +1,5 @@
 import { JSDOM } from 'jsdom';
+import context from '../../src/common/context';
 import Showtime from '../../src/common/showtime';
 
 function getLocalTimezone() {
@@ -11,6 +12,8 @@ function getLocalTimezone() {
   const minutes = ((minutesInt < 10) ? '0' : '') + minutesInt.toString();
   return `${sign}${hours}:${minutes}`;
 }
+
+context.requestedDate = new Date();
 
 describe('Showtime', () => {
   it('can be created', () => {

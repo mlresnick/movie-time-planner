@@ -6,9 +6,14 @@ import Showtime from '../../src/common/showtime';
 import Movie from '../../src/common/movie';
 import Theater from '../../src/common/theater';
 
+context.requestedDate = new Date();
+
 describe('movie listing', () => {
-  const nowDate = new Date();
-  const dateArgs = [nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate()];
+  const dateArgs = [
+    context.requestedDate.getFullYear(),
+    context.requestedDate.getMonth(),
+    context.requestedDate.getDate(),
+  ];
   const movieListingHTML = `
     <div class="movie-listing">
         <div class="moviePoster">

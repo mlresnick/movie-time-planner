@@ -1,11 +1,10 @@
 /* eslint-env jest */
 import { JSDOM } from 'jsdom';
 import context from '../../src/common/context';
-import debug from '../../src/common/debug';
 import Showing from '../../src/common/showing';
 import Showtime from '../../src/common/showtime';
 
-debug.requestedDate = new Showtime(2019, 0, 1, 2, 0, 0, 0);
+context.requestedDate = new Showtime(2019, 0, 1, 2, 0, 0, 0);
 
 describe('Showing', () => {
   context.clear();

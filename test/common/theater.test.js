@@ -1,5 +1,8 @@
 import { JSDOM } from 'jsdom';
+import context from '../../src/common/context';
 import Theater from '../../src/common/theater';
+
+context.requestedDate = new Date();
 
 describe('theater', () => {
   const theaterHTML = `

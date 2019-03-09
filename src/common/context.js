@@ -1,4 +1,3 @@
-import debug from './debug';
 import IdObject from './id-object';
 
 /**
@@ -120,10 +119,9 @@ class Context {
       this.movies = new ContextMap();
 
       /**
-       * @member {ContextMap} - Movie listings found for the requested theaters and movies. It is
-       *                          an array of {@link Listing} objects.
+       * @member {Date} - Requested date of listings.
        */
-      this.listings = new ContextMap();
+      this.requestedDate = undefined;
 
       /**
        * @member {ContextMap<string, Theater>} - List of theaters requested. A theater's URL is used
@@ -146,12 +144,8 @@ class Context {
   clear() {
     this.movies.clear();
     this.theaters.clear();
-    this.listings.length = 0;
+    this.listings.clear();
   }
-
-  /** @member {Date} - Requested date of listings. */
-  // eslint-disable-next-line class-methods-use-this
-  get requestedDate() { return debug.requestedDate || new Date(); }
 }
 
 const context = new Context();
