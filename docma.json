@@ -1,4 +1,8 @@
 {
+  "app": {
+    "favicon": "./favicon.ico",
+    "title": "Movie Time Planner"
+  },
   "debug": true,
   "src": ["./src/**/*.js" ],
   "dest": "./doc",
