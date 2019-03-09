@@ -58,4 +58,28 @@ describe('ContextMap', () => {
       expect(Array.from(map.entries())).toEqual([[url, obj]]);
     });
   });
+
+  describe('includes() works with', () => {
+    const map = new ContextMap();
+    map.set('key1', 'value1');
+    map.set('key3', 'value3');
+
+    it('an existing entry', () => {
+      expect(map.includes('key1')).toBeTruthy();
+    });
+
+    it('a non-existent entry', () => {
+      expect(map.includes('key2')).toBeFalsy();
+    });
+  });
+
+  it('has a working toString()', () => {
+    const map = new ContextMap();
+    map.set('key1', 'value1');
+    map.set('key3', 'value3');
+    expect(map.toJSON()).toEqual([
+      ['key1', 'value1'],
+      ['key3', 'value3'],
+    ]);
+  });
 });
