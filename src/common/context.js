@@ -61,12 +61,12 @@ export class ContextMap extends Map {
 }
 
 /**
- * @class
- *
  * Because this is an array, use the older style of inheritance.
  * AND set the new array object to inherit from the ContextArray class.
  *
  * @param  {...any} args - Either a list of elements or an array length.
+ *
+ * @class
  */
 export function ContextArray(...args) {
   let contextArray = Object.create(Array.prototype);
@@ -88,11 +88,34 @@ export function ContextArray(...args) {
  * A singleton object used by various parts of the applicaton.
  */
 class Context {
+  /**
+   * @private
+   * @memberof Context
+   */
   constructor() {
     if (!Context.instance) {
       /**
-       *  @member  {ContextMap} - List of movies requested. The movie's URL is the key. A
-       *                          {@link Movie} object is the value.
+       * @member {Object} - Time durations used to calculatetime needed between movies.
+       *
+       * @property {integer} entrance - Expected time it takes to geet from car to auditorium.
+       * @property {integer} preview  - Expected length of movie previews.
+       * @property {integer} exit     - Expected time it taqkes to get from auditorium
+       */
+      this.durations = {
+        entrance: 5,
+        preview: 20,
+        exit: 5,
+      };
+
+      /**
+       * @member {ContextMap<string, MovieListing>} - Movie listings found for the requested
+       *                                              theaters and movies. It is an array of
+       *                                              {@link Listing} objects.
+       */
+      this.listings = new ContextMap();
+
+      /**
+       * @member {ContextMap<string, Movie>} - All movies in the requested area.
        */
       this.movies = new ContextMap();
 
@@ -103,26 +126,16 @@ class Context {
       this.listings = new ContextMap();
 
       /**
-       * @member {ContextMap} - List of theaters requested. A theater's URL is used as the key
-       *                        with a value of a {@link Theater} object.
+       * @member {ContextMap<string, Theater>} - List of theaters requested. A theater's URL is used
+       *                                         as the key with a value of a {@link Theater}
+       *                                         object.
        */
       this.theaters = new ContextMap();
 
       /**
-       * @member {Object} - Time durations used to calculatetime needed between movies.
-       *
-       * @property {integer} preview  - Expected length of movie previews.
-       * @property {integer} entrance - Expected time it takes to geet from car to
-       *                                          auditorium.
-       * @property {integer} exit     - Expected time it taqkes to get from auditorium
-       *                                          to car.
-       */
-      this.durations = {
-        preview: 20,
-        entrance: 5,
-        exit: 5,
-      };
-
+        * @member {Context} - The singleton object itself.
+        * @private
+        */
       Context.instance = this;
     }
 

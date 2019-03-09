@@ -7,9 +7,8 @@
  * @property {?number[]} nowVals - The six values passed to {@link Date}() and
  *           {@link Date} constructors.
  * @property {?Date} now - The value created by using the {@link nowVals} property.
- *
- * @memberof Context
- * @instance
+ * @property {?Date} requestedDate - If set, {@link Context.requestedDate} will use it, rather than
+ *           the value normally used.
  */
 // Comment out what is not to be used.
 const debug = {
