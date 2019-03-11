@@ -1,5 +1,6 @@
 import Duration from 'duration-js';
 import context from './context';
+import IdObject from './id-object';
 import Util from './util';
 
 /*
@@ -28,20 +29,22 @@ export function removeThisYear(title) {
 /**
  * Information about a movie being shown.
  */
-class Movie {
+class Movie extends IdObject {
   /**
    * Collect information from an HTMLElement and put it into a more convenient format.
    *
    * @param {HTMLElement} moviedataEl - Element scraped from a web page.
    */
   constructor(moviedataEl) {
+    super(null);
+
     /** @member {string} - MPAA rating. */
     this.rating = '';
 
-    /** @member {Duration} */
+    /** @member {Duration} - Length of movie in minutes */
     this.runningTime = new Duration(0);
 
-    /** @member {string} */
+    /** @member {string} - Name of them movie. */
     this.title = '';
 
     /** @member {string} - Unique identifier for this movie. */
@@ -65,8 +68,10 @@ class Movie {
           Util.innerHTML(moviedataEl.querySelector('.movietitle a')),
         );
         this.url = moviedataEl.querySelector('.movietitle a').getAttribute('href');
+      }
 
-        context.movies.set(this.url, this);
+      if (!context.movies.includes(this.id)) {
+        context.movies.set(this);
       }
     }
   }
@@ -88,7 +93,11 @@ class Movie {
 
   set name(title) { this.title = title; }
 
-  /** @returns {string} A readable version of this object. */
+  /**
+   * Generate human readable versn of object.
+   *
+   * @returns {string} - A readable version of this object.
+   */
   toString() {
     const [, hours, minutes] = this.runningTime.toString().match(/^(\d+)h(\d+)m$/);
     return `${this.title} - ${hours}:${minutes.padStart(2, '0')} | ${this.rating}`;
