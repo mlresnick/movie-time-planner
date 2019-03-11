@@ -13,7 +13,7 @@ function getLocalTimezone() {
   return `${sign}${hours}:${minutes}`;
 }
 
-context.requestedDate = new Date();
+context.requestedDate = new Date(2019, 1, 2, 0, 0, 0, 0);
 
 describe('Showtime', () => {
   it('can be created', () => {
@@ -109,8 +109,7 @@ describe('Showtime', () => {
 
   describe('toLocalISOString works', () => {
     const tz = getLocalTimezone();
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
+    const d = new Date(2019, 6, 4, 0, 0, 0, 0);
 
     const pad = (value, padding = 2) => value.toString().padStart(padding, '0');
 
