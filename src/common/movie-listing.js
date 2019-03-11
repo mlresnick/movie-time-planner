@@ -52,7 +52,10 @@ class MovieListing extends IdObject {
           }
           this.showings.push(newShowing);
         }, this);
-      context.listings.set(this);
+
+      if (!context.listings.includes(this.id)) {
+        context.listings.set(this);
+      }
     }
   }
 
