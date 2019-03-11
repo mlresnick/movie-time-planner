@@ -49,7 +49,7 @@ class Theater extends IdObject {
 
       const self = this;
       theaterEl
-        .querySelectorAll('.movie-listing')
+        .querySelectorAll('.showtimes .movie-listing')
         .forEach((movieListingEl) => {
           self.movieListings.push(new MovieListing(self, movieListingEl));
         });

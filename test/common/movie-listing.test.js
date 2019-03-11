@@ -6,7 +6,7 @@ import Showtime from '../../src/common/showtime';
 import Movie from '../../src/common/movie';
 import Theater from '../../src/common/theater';
 
-context.requestedDate = new Date();
+context.requestedDate = new Date(2019, 1, 2, 0, 0, 0, 0);
 
 describe('movie listing', () => {
   const dateArgs = [
@@ -15,39 +15,45 @@ describe('movie listing', () => {
     context.requestedDate.getDate(),
   ];
   const movieListingHTML = `
+    <!DOCTYPE html>
+    <html>
+    <body>
     <div class="movie-listing">
-        <div class="moviePoster">
-          <a href="https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/" title="Three Identical Strangers">
-            <img class="lazy showtimes-poster" src="https://d1t80wr11ktjcz.cloudfront.net/legacy/assets/mf-no-image.png" data-src="https://d1t80wr11ktjcz.cloudfront.net/movieposters/v7/AllPhotos/15402597/p15402597_p_v7_aa.jpg?d=270x360&amp;q=60" alt="Three Identical Strangers Poster">
-          </a>
-        </div>
-        <div class="movie-data-wrap">
-          <div class="moviedata">
-            <div class="movietitle">
-              <a href="https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/" title="Three Identical Strangers">Three Identical Strangers  (2018)</a>
-            </div>
-            <div class="movierating-runtime">
-        PG-13
-        
-        | 1 hr 36 min
-            </div>
+      <div class="moviePoster">
+        <a href="https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/" title="Three Identical Strangers">
+          <img class="lazy showtimes-poster" src="https://d1t80wr11ktjcz.cloudfront.net/legacy/assets/mf-no-image.png" data-src="https://d1t80wr11ktjcz.cloudfront.net/movieposters/v7/AllPhotos/15402597/p15402597_p_v7_aa.jpg?d=270x360&amp;q=60" alt="Three Identical Strangers Poster">
+        </a>
+      </div>
+      <div class="movie-data-wrap">
+        <div class="moviedata">
+          <div class="movietitle">
+            <a href="https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/" title="Three Identical Strangers">Three Identical Strangers  (2018)</a>
           </div>
-          <div class="showtimes-list">
-            <span class="stDisplay future">2:00pm</span>
-            <span class="stDisplay future">4:30pm</span>
-            <span class="stDisplay future">7:00pm</span>
-            <div class="clear">
-            </div>
+          <div class="movierating-runtime">
+            PG-13
+
+            | 1 hr 36 min
           </div>
         </div>
-      </div>`;
+        <div class="showtimes-list">
+          <span class="stDisplay future">2:00pm</span>
+          <span class="stDisplay future">4:30pm</span>
+          <span class="stDisplay future">7:00pm</span>
+          <div class="clear">
+          </div>
+        </div>
+      </div>
+    </div>
+    </body>
+    </html>
+    `;
 
   const mockTheater = new Theater();
   mockTheater.url = 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/';
   context.theaters.set(mockTheater);
 
   const mockMovie = new Movie();
-  mockMovie.url = 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/';
+  mockMovie.url = 'https://www.moviefone.com/movie/foo-bar/baz/main/';
   context.movies.set(mockMovie);
 
   const movieListingDoc = new JSDOM(movieListingHTML).window.document;
@@ -66,22 +72,45 @@ describe('movie listing', () => {
 
     it('an empty movie listing element', () => {
       const obj = new MovieListing(mockTheater, movieListingEl);
-      const now = new Showtime();
 
       expect(obj).toEqual({
         movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
         showings: [
           {
             parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-            showtime: new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 14, 0, 0, 0),
+            showtime: new Showtime(
+              context.requestedDate.getFullYear(),
+              context.requestedDate.getMonth(),
+              context.requestedDate.getDate(),
+              14,
+              0,
+              0,
+              0
+            ),
           },
           {
             parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-            showtime: new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 16, 30, 0, 0),
+            showtime: new Showtime(
+              context.requestedDate.getFullYear(),
+              context.requestedDate.getMonth(),
+              context.requestedDate.getDate(),
+              16,
+              30,
+              0,
+              0
+            ),
           },
           {
             parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-            showtime: new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 19, 0, 0, 0),
+            showtime: new Showtime(
+              context.requestedDate.getFullYear(),
+              context.requestedDate.getMonth(),
+              context.requestedDate.getDate(),
+              19,
+              0,
+              0,
+              0
+            ),
           },
         ],
         parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
@@ -90,22 +119,45 @@ describe('movie listing', () => {
 
     it('a movie listing element', () => {
       const obj = new MovieListing(mockTheater, movieListingEl);
-      const now = new Showtime();
 
       expect(obj).toEqual({
         movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
         showings: [
           {
             parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-            showtime: new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 14, 0, 0, 0),
+            showtime: new Showtime(
+              context.requestedDate.getFullYear(),
+              context.requestedDate.getMonth(),
+              context.requestedDate.getDate(),
+              14,
+              0,
+              0,
+              0
+            ),
           },
           {
             parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-            showtime: new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 16, 30, 0, 0),
+            showtime: new Showtime(
+              context.requestedDate.getFullYear(),
+              context.requestedDate.getMonth(),
+              context.requestedDate.getDate(),
+              16,
+              30,
+              0,
+              0
+            ),
           },
           {
             parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-            showtime: new Showtime(now.getFullYear(), now.getMonth(), now.getDate(), 19, 0, 0, 0),
+            showtime: new Showtime(
+              context.requestedDate.getFullYear(),
+              context.requestedDate.getMonth(),
+              context.requestedDate.getDate(),
+              19,
+              0,
+              0,
+              0
+            ),
           },
         ],
         parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
@@ -180,13 +232,16 @@ describe('movie listing', () => {
     });
 
     it('getter works', () => {
-      const obj = new MovieListing(mockTheater, movieListingEl);
-      expect(obj.movie).toEqual({
+      const expected = {
+        parentId: null,
+        rating: 'PG-13',
         runningTime: new Duration('1h36m'),
         title: 'Three Identical Strangers (2018)',
         url: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-        rating: 'PG-13',
-      });
+      };
+      context.movies.set(expected.url, expected);
+      const obj = new MovieListing(mockTheater, movieListingEl);
+      expect(obj.movie).toEqual(expected);
     });
   });
 
@@ -217,7 +272,7 @@ describe('movie listing', () => {
     test.each(testlist)(
       '%s',
       (testName, hours, expectedShowtimes) => {
-        const testShowtime = new Showtime();
+        const testShowtime = new Showtime(context.requestedDate);
         testShowtime.setHours(hours, 0, 0, 0);
 
         expect(obj.showingsAfter(testShowtime)
