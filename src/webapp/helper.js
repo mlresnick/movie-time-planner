@@ -31,14 +31,6 @@ export function reviver(key, value) {
       });
       break;
 
-    case 'movieListings':
-      retval = [];
-      value.forEach((v) => {
-        const listing = Object.setPrototypeOf(v, MovieListing.prototype);
-        retval.push(listing);
-      });
-      break;
-
     case 'movies':
       retval = buildContextMap(Movie, value);
       break;

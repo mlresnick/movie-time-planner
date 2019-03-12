@@ -282,6 +282,11 @@ const expected = {
         address: '1794 Massachussetts Ave., Lexington, MA 02420',
         distanceUnit: 'mi.',
         movieListings: [
+          'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+          'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
+          'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/solo-a-star-wars-story/uIv4AtOo8b9KZwtAZ3dU11/main/',
+          'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/rbg/ET6Xj4o8kksEK6ugClFr35/main/',
+        ],
           {
             parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
             movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
