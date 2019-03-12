@@ -8,7 +8,7 @@ import Theater from '../common/theater';
 
 // The 'value' for listings, movies, showtimes and theaters are
 // entry arrays ([ [k, v], [k, v], [k, v], ... ]).
-export default function reviver(key, value) {
+function reviver(key, value) {
   function buildContextMap(clazz, list) {
     const retval = new ContextMap();
     list.forEach((entry) => {
@@ -55,4 +55,15 @@ export default function reviver(key, value) {
   }
 
   return retval;
+}
+
+export default function parseContext(contextJSON) {
+  const localContext = JSON.parse(contextJSON, reviver);
+  localContext.theaters.forEach((theater) => {
+    // eslint-disable-next-line no-param-reassign
+    theater.movieListings = theater.movieListings.map(
+      listingId => localContext.listings.get(listingId)
+    );
+  });
+  return localContext;
 }

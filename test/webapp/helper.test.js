@@ -4,10 +4,10 @@ import { JSDOM } from 'jsdom';
 import context from '../../src/common/context';
 import Movie from '../../src/common/movie';
 import MovieListing from '../../src/common/movie-listing';
-import reviver from '../../src/webapp/helper';
 import Showing from '../../src/common/showing';
 import Showtime from '../../src/common/showtime';
 import Theater from '../../src/common/theater';
+import parseContext from '../../src/webapp/helper';
 
 const Diff = require('diff');
 
@@ -149,6 +149,81 @@ const theatersHTML = `
 </html>
 `;
 
+const VENUE = 0;
+const BELMONT = 1;
+const listings = [];
+listings[VENUE] = [
+  {
+    parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
+    movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+    showings: [
+      {
+        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+        showtime: '2019-02-02T14:00:00.000-05:00',
+      },
+      {
+        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+        showtime: '2019-02-02T16:30:00.000-05:00',
+      },
+      {
+        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+        showtime: '2019-02-02T19:00:00.000-05:00',
+      },
+    ],
+  },
+  {
+    movieURL: 'https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
+    parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
+    showings: [
+      {
+        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
+        showtime: '2019-02-02T18:45:00.000-05:00',
+      },
+    ],
+  },
+  {
+    movieURL: 'https://www.moviefone.com/movie/solo-a-star-wars-story/uIv4AtOo8b9KZwtAZ3dU11/main/',
+    parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
+    showings: [
+      {
+        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/solo-a-star-wars-story/uIv4AtOo8b9KZwtAZ3dU11/main/',
+        showtime: '2019-02-02T13:30:00.000-05:00',
+      },
+    ],
+  },
+  {
+    movieURL: 'https://www.moviefone.com/movie/rbg/ET6Xj4o8kksEK6ugClFr35/main/',
+    parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
+    showings: [
+      {
+        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/rbg/ET6Xj4o8kksEK6ugClFr35/main/',
+        showtime: '2019-02-02T16:15:00.000-05:00',
+      },
+    ],
+  },
+];
+
+listings[BELMONT] = [
+  {
+    movieURL: 'https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
+    parentId: 'https://www.moviefone.com/theater/belmont-studio-cinema/2051/showtimes/',
+    showings: [
+      {
+        parentId: 'https://www.moviefone.com/theater/belmont-studio-cinema/2051/showtimes/,https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
+        showtime: '2019-02-02T15:30:00.000-05:00',
+      },
+      {
+        parentId: 'https://www.moviefone.com/theater/belmont-studio-cinema/2051/showtimes/,https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
+        showtime: '2019-02-02T17:30:00.000-05:00',
+      },
+      {
+        parentId: 'https://www.moviefone.com/theater/belmont-studio-cinema/2051/showtimes/,https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
+        showtime: '2019-02-02T19:30:00.000-05:00',
+      },
+    ],
+  },
+];
+
 const expectedStructure = {
   durations: {
     entrance: 5,
@@ -158,84 +233,23 @@ const expectedStructure = {
   listings: [
     [
       'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-      {
-        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
-        movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-        showings: [
-          {
-            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-            showtime: '2019-02-02T14:00:00.000-05:00',
-          },
-          {
-            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-            showtime: '2019-02-02T16:30:00.000-05:00',
-          },
-          {
-            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-            showtime: '2019-02-02T19:00:00.000-05:00',
-          },
-        ],
-      },
+      listings[VENUE][0],
     ],
     [
       'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
-      {
-        movieURL: 'https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
-        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
-        showings: [
-          {
-            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
-            showtime: '2019-02-02T18:45:00.000-05:00',
-          },
-        ],
-      },
+      listings[VENUE][1],
     ],
     [
       'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/solo-a-star-wars-story/uIv4AtOo8b9KZwtAZ3dU11/main/',
-      {
-        movieURL: 'https://www.moviefone.com/movie/solo-a-star-wars-story/uIv4AtOo8b9KZwtAZ3dU11/main/',
-        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
-        showings: [
-          {
-            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/solo-a-star-wars-story/uIv4AtOo8b9KZwtAZ3dU11/main/',
-            showtime: '2019-02-02T13:30:00.000-05:00',
-          },
-        ],
-      },
+      listings[VENUE][2],
     ],
     [
       'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/rbg/ET6Xj4o8kksEK6ugClFr35/main/',
-      {
-        movieURL: 'https://www.moviefone.com/movie/rbg/ET6Xj4o8kksEK6ugClFr35/main/',
-        parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
-        showings: [
-          {
-            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/rbg/ET6Xj4o8kksEK6ugClFr35/main/',
-            showtime: '2019-02-02T16:15:00.000-05:00',
-          },
-        ],
-      },
+      listings[VENUE][3],
     ],
     [
       'https://www.moviefone.com/theater/belmont-studio-cinema/2051/showtimes/,https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
-      {
-        movieURL: 'https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
-        parentId: 'https://www.moviefone.com/theater/belmont-studio-cinema/2051/showtimes/',
-        showings: [
-          {
-            parentId: 'https://www.moviefone.com/theater/belmont-studio-cinema/2051/showtimes/,https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
-            showtime: '2019-02-02T15:30:00.000-05:00',
-          },
-          {
-            parentId: 'https://www.moviefone.com/theater/belmont-studio-cinema/2051/showtimes/,https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
-            showtime: '2019-02-02T17:30:00.000-05:00',
-          },
-          {
-            parentId: 'https://www.moviefone.com/theater/belmont-studio-cinema/2051/showtimes/,https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
-            showtime: '2019-02-02T19:30:00.000-05:00',
-          },
-        ],
-      },
+      listings[BELMONT][0],
     ],
   ],
   movies: [
@@ -289,10 +303,10 @@ const expectedStructure = {
         address: '1794 Massachussetts Ave., Lexington, MA 02420',
         distanceUnit: 'mi.',
         movieListings: [
-          'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-          'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
-          'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/solo-a-star-wars-story/uIv4AtOo8b9KZwtAZ3dU11/main/',
-          'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/rbg/ET6Xj4o8kksEK6ugClFr35/main/',
+          listings[VENUE][0],
+          listings[VENUE][1],
+          listings[VENUE][2],
+          listings[VENUE][3],
         ],
         name: 'Lexington Venue',
         parentId: null,
@@ -307,7 +321,7 @@ const expectedStructure = {
         address: '376 Trapelo Rd., Belmont, MA 02478',
         distanceUnit: 'mi.',
         movieListings: [
-          'https://www.moviefone.com/theater/belmont-studio-cinema/2051/showtimes/,https://www.moviefone.com/movie/wont-you-be-my-neighbor/VISsqkBXMqqiRuM6rUJqh4/main/',
+          listings[BELMONT][0],
         ],
         name: 'Belmont Studio Cinema',
         parentId: null,
@@ -523,42 +537,39 @@ describe('Serialization', () => {
 
   describe('followed by a parse', () => {
     const theatersJSON = JSON.stringify(context);
-    it('W/O the reviver', () => {
-      const ctx = JSON.parse(theatersJSON);
-      expect(ctx).toEqual(expectedStructure);
+
+    const expected = Object.assign({}, expectedStructure);
+
+    function setClass(object, clazz) {
+      Object.setPrototypeOf(object, clazz.prototype);
+    }
+
+    expected.theaters.forEach(theater => setClass(theater[1], Theater));
+
+    const ctx = parseContext(theatersJSON);
+
+    it('has movie listings', () => {
+      ctx.listings
+        .forEach((listing) => {
+          expect(listing).toBeInstanceOf(MovieListing);
+          listing.showings.forEach((showing) => {
+            expect(showing).toBeInstanceOf(Showing);
+            expect(showing.showtime).toBeInstanceOf(Showtime);
+          });
+        });
     });
 
-    describe('with the reviver', () => {
-      const expected = Object.assign({}, expectedStructure);
-
-      function setClass(object, clazz) {
-        Object.setPrototypeOf(object, clazz.prototype);
-      }
-
-      expected.theaters.forEach(theater => setClass(theater[1], Theater));
-
-      const ctx = JSON.parse(theatersJSON, reviver);
-
-      it('has movie listings', () => {
-        ctx.listings
-          .forEach((listing) => {
-            expect(listing).toBeInstanceOf(MovieListing);
-            listing.showings.forEach((showing) => {
-              expect(showing).toBeInstanceOf(Showing);
-              expect(showing.showtime).toBeInstanceOf(Showtime);
-            });
-          });
+    it('has movies', () => {
+      ctx.movies.forEach((movie) => {
+        expect(movie).toBeInstanceOf(Movie);
+        expect(movie.runningTime).toBeInstanceOf(Duration);
       });
+    });
 
-      it('has movies', () => {
-        ctx.movies.forEach((movie) => {
-          expect(movie).toBeInstanceOf(Movie);
-          expect(movie.runningTime).toBeInstanceOf(Duration);
-        });
-      });
-
-      it('has theaters', () => {
-        ctx.theaters.forEach(theater => expect(theater).toBeInstanceOf(Theater));
+    it('has theaters', () => {
+      ctx.theaters.forEach((theater) => {
+        expect(theater).toBeInstanceOf(Theater);
+        theater.movieListings.forEach(listing => expect(listing).toBeInstanceOf(MovieListing));
       });
     });
   });
