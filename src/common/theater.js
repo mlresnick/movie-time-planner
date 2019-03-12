@@ -51,7 +51,8 @@ class Theater extends IdObject {
       theaterEl
         .querySelectorAll('.showtimes .movie-listing')
         .forEach((movieListingEl) => {
-          self.movieListings.push(new MovieListing(self, movieListingEl));
+          const listing = new MovieListing(self, movieListingEl);
+          self.movieListings.push(listing.id);
         });
     }
   }
