@@ -1,7 +1,7 @@
 import 'colors';
 import Duration from 'duration-js';
 import { JSDOM } from 'jsdom';
-import context, { ContextMap } from '../../src/common/context';
+import context from '../../src/common/context';
 import Movie from '../../src/common/movie';
 import MovieListing from '../../src/common/movie-listing';
 import reviver from '../../src/webapp/helper';
@@ -535,71 +535,31 @@ describe('Serialization', () => {
         Object.setPrototypeOf(object, clazz.prototype);
       }
 
-      expected.theaters.forEach((theater) => {
-        setClass(theater[1], Theater);
-      //   // theater.movieListings.forEach((listing) => {
-      //   //   setClass(listing, MovieListing);
-      //   // });
-      });
-
-      // expected.listings.forEach((listing) => {
-      //   setClass(listing, MovieListing);
-      //   // listing.showings.forEach((showing) => {
-      //   //   setClass(showing, Showing);
-      //   //   // setClass(showing.showtime, Showtime);
-      //   // });
-      // });
-
-      // expected.movies.forEach((movie) => {
-      //   setClass(movie, Movie);
-      // });
+      expected.theaters.forEach(theater => setClass(theater[1], Theater));
 
       const ctx = JSON.parse(theatersJSON, reviver);
-      it.each([
-        ['listings', MovieListing],
-        ['movies', Movie],
-        ['theaters', Theater],
-      ])('has %s', (item, clazz, nestedArray = null, nestedClazz = null) => {
-        expect(ctx[item]).toBeInstanceOf(ContextMap);
-        ctx[item]
-          .forEach((entry) => {
-            expect(entry).toBeInstanceOf(clazz);
-            if (nestedArray) {
-              entry[nestedArray]
-                .forEach(nestedEntry => expect(nestedEntry).toBeInstanceOf(nestedClazz));
-            }
+
+      it('has movie listings', () => {
+        ctx.listings
+          .forEach((listing) => {
+            expect(listing).toBeInstanceOf(MovieListing);
+            listing.showings.forEach((showing) => {
+              expect(showing).toBeInstanceOf(Showing);
+              expect(showing.showtime).toBeInstanceOf(Showtime);
+            });
           });
       });
 
-      ctx.listings
-        .forEach((listing) => {
-          listing.showings.forEach((showing) => {
-            expect(showing).toBeInstanceOf(Showing);
-            expect(showing.showtime).toBeInstanceOf(Showtime);
-          });
+      it('has movies', () => {
+        ctx.movies.forEach((movie) => {
+          expect(movie).toBeInstanceOf(Movie);
+          expect(movie.runningTime).toBeInstanceOf(Duration);
         });
+      });
 
-      ctx.movies
-        .forEach(movie => expect(movie.runningTime).toBeInstanceOf(Duration));
-      // TODO movie.runningTime Duration
-
-      // it('has theaters', () => {
-      //   expect(ctx.theaters).toBeInstanceOf(ContextMap);
-      //   ctx.theaters
-      //     .forEach((theaterEntry) => {
-      //       expect(theaterEntry).toBeInstanceOf(Theater);
-      //     });
-      // });
-      // it('has correct structure', () => {
-      //   expect(ctx).toEqual(expected);
-      // });
-      // expect(ctx.theaters).toBeInstanceOf(ContextMap);
-      // ctx.theaters.forEach((entry) => { expect(entry).toBeInstanceOf(Theater); });
-      // ctx.listings.forEach((listing) => {
-      //   expect(listing).toBeInstanceOf(MovieListing);
-      //   listing.showings.forEach(showing => expect(showing).toBeInstanceOf(Showing));
-      // });
-      // ctx.movies.forEach((movie) => { expect(movie).toBeInstanceOf(Movie); });
+      it('has theaters', () => {
+        ctx.theaters.forEach(theater => expect(theater).toBeInstanceOf(Theater));
+      });
     });
   });
 });
