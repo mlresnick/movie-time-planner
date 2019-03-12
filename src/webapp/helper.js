@@ -1,5 +1,5 @@
 import Duration from 'duration-js';
-import { ContextArray, ContextMap } from '../common/context';
+import { ContextMap } from '../common/context';
 import MovieListing from '../common/movie-listing';
 import Movie from '../common/movie';
 import Showing from '../common/showing';
@@ -7,15 +7,14 @@ import Showtime from '../common/showtime';
 import Theater from '../common/theater';
 
 // The 'value' for listings, movies, showtimes and theaters are
-// arrays.
-/* eslint-disable import/prefer-default-export */
-export function reviver(key, value) {
+// entry arrays ([ [k, v], [k, v], [k, v], ... ]).
+export default function reviver(key, value) {
   function buildContextMap(clazz, list) {
     const retval = new ContextMap();
     list.forEach((entry) => {
-      const [k, props] = entry;
-      const v = Object.setPrototypeOf(props, clazz.prototype);
-      retval.set(k, v);
+      const [k, v] = entry;
+      const typedV = Object.setPrototypeOf(v, clazz.prototype);
+      retval.set(k, typedV);
     });
     return retval;
   }
@@ -24,11 +23,7 @@ export function reviver(key, value) {
 
   switch (key) {
     case 'listings':
-      retval = new ContextArray();
-      value.forEach((v) => {
-        const listing = Object.setPrototypeOf(v, MovieListing.prototype);
-        retval.push(listing);
-      });
+      retval = buildContextMap(MovieListing, value);
       break;
 
     case 'movies':
@@ -40,11 +35,15 @@ export function reviver(key, value) {
       break;
 
     case 'showings':
-      retval = value.map(showingString => new Showing(showingString));
+      retval = [];
+      value.forEach((v) => {
+        const listing = Object.setPrototypeOf(v, Showing.prototype);
+        retval.push(listing);
+      });
       break;
 
     case 'showtime':
-      retval = value.map(showtimeString => new Showtime(showtimeString));
+      retval = new Showtime(value);
       break;
 
     case 'theaters':
