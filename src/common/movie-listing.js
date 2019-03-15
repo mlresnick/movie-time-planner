@@ -95,7 +95,7 @@ class MovieListing extends IdObject {
   /**
    * Get an {@link Array} of {@link Showing} objects that have shoiwtimes after a given time.
    *
-   * @param {Showtime} showtime - Earliest time for showngs to be returned.
+   * @param {Showtime} showtime - Earliest time for showings to be returned.
    *
    * @returns {Showing[]} - Filtered list of showings.
    *
@@ -105,6 +105,18 @@ class MovieListing extends IdObject {
     return this.showings
       .filter(showing => (Showtime.compare(showtime, showing.showtime) < 0));
   }
+
+  /**
+   * Answers the question "Are there any showings left for this listing?"
+   *
+   * @param {Showtime} showtime - Earliest time for showings to be returned.
+   *
+   * @returns {boolean} - <code>true</code> if there are any showings left.
+   *          Otherwise <code>false</code>.
+   *
+   * @memberof MovieListing
+   */
+  areShowingsAfter(showtime) { return this.showingsAfter(showtime).length !== 0; }
 
   /**
    * @member {string} id - Unique identifier for this object.
