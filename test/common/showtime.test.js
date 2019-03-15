@@ -47,20 +47,23 @@ describe('Showtime', () => {
     );
   });
 
-  // TODO add extra arguments
   describe('supported setters work', () => {
     test.each([
-      ['years', 'setFullYear', 2002, [2002, 0, 1, 1, 1, 0, 0]],
-      ['months', 'setMonth', 5, [2019, 5, 1, 1, 1, 0, 0]],
-      ['days', 'setDate', 5, [2019, 0, 5, 1, 1, 0, 0]],
-      ['hours', 'setHours', 5, [2019, 0, 1, 5, 1, 0, 0]],
-      ['minutes', 'setMinutes', 5, [2019, 0, 1, 1, 5, 0, 0]],
+      ['years', 'setFullYear', [2002], [2002, 0, 1, 1, 1, 0, 0]],
+      ['years', 'setFullYear', [2002, 1], [2002, 1, 1, 1, 1, 0, 0]],
+      ['years', 'setFullYear', [2002, 1, 2], [2002, 1, 2, 1, 1, 0, 0]],
+      ['months', 'setMonth', [5], [2019, 5, 1, 1, 1, 0, 0]],
+      ['months', 'setMonth', [5, 4], [2019, 5, 4, 1, 1, 0, 0]],
+      ['days', 'setDate', [5], [2019, 0, 5, 1, 1, 0, 0]],
+      ['hours', 'setHours', [5], [2019, 0, 1, 5, 1, 0, 0]],
+      ['hours', 'setHours', [5, 3], [2019, 0, 1, 5, 3, 0, 0]],
+      ['minutes', 'setMinutes', [5], [2019, 0, 1, 1, 5, 0, 0]],
     ])(
       'for %s',
-      (testName, setMethod, newValue, expectedArgs) => {
+      (testName, setMethod, newValues, expectedArgs) => {
         const expected = new Showtime(...expectedArgs);
         const obj = new Showtime(2019, 0, 1, 1, 1);
-        obj[setMethod](newValue);
+        obj[setMethod](...newValues);
         expect(obj.toLocalISOString()).toBe(expected.toLocalISOString());
       }
     );
