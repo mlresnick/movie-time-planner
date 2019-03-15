@@ -83,10 +83,10 @@ class Moviefone {
         response = await fetch(`${baseURL}?page=${page}`);
         // TODO error checking
         const text = await response.text();
-        const doc = await new JSDOM(text).window.document;
+        const { document } = await new JSDOM(text).window;
 
         // Each object parses their own bit of the page.
-        theatersOnPage = Array.from(doc.querySelectorAll('.theater'))
+        theatersOnPage = Array.from(document.querySelectorAll('.theater'))
           .map(theaterEl => new Theater(theaterEl));
 
         filteredTheaters = theatersOnPage
