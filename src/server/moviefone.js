@@ -85,6 +85,8 @@ class Moviefone {
         const text = await response.text();
         const { document } = await new JSDOM(text).window;
 
+        context.requestedDate = new Date(document.querySelector('.controls-date').textContent);
+
         // Each object parses their own bit of the page.
         theatersOnPage = Array.from(document.querySelectorAll('.theater'))
           .map(theaterEl => new Theater(theaterEl));
