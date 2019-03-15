@@ -154,8 +154,6 @@ class Showtime {
    * @memberof Showtime
    */
   valueOf() { return this.date.valueOf(); }
-
-  // TODO allow decimals in distance field
 }
 
 /**

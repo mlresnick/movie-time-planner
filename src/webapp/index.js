@@ -39,7 +39,7 @@ function renderSelectionList(type) {
       const newId = `${type}=${item.url}`;
       const disabled = !context.remaining[`${type}Ids`].has(item.url);
       return '<tr>'
-        + `<td><input type="checkbox" id="${newId}" value="${item.url}"${disabled ? ' disabled="" title="No remaining showings today"' : ''}/></td>`
+        + `<td><input type="checkbox" id="${newId}" value="${item.url}"${disabled ? ' disabled="" title="No remaining showings today"' : ''}></td>`
         + `<td><label for="${newId}"${disabled ? ' data-disabled="" title="No remaining showings today"' : ''}>${getLink(item)}</label></td>`
       + '</tr>';
     })
