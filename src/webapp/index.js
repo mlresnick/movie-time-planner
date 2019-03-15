@@ -8,7 +8,7 @@ import Theater from '../common/theater';
 // TODO import Scheduler from '../common/scheduler';
 import Showtime from '../common/showtime';
 import Util from '../common/util';
-import { reviver } from './helper';
+import parseContext from './helper';
 
 import '../../scss/index.scss';
 
@@ -28,19 +28,18 @@ function getLink(object) {
   return `<a href="${object.url}" target="${target}">${object.name}</a>`;
 }
 
-function renderSelectionList(type, isDisabledAttr) {
+function renderSelectionList(type) {
   const listEl = document.querySelector(`#${type}-selection-list .selection-list`);
 
   document.querySelector(`#all-${type}s`).checked = false;
 
-  listEl.innerHTML = Array.from(context[`${type}s`].entries())
-    .sort((lhs, rhs) => Util.compareWOArticles(lhs[1].name, rhs[1].name))
-    .map((entry) => {
-      const [url, item] = entry;
-      const newId = `${type}=${url}`;
-      const disabled = isDisabledAttr(item);
+  listEl.innerHTML = Array.from(context[`${type}s`].values())
+    .sort((lhs, rhs) => Util.compareWOArticles(lhs.name, rhs.name))
+    .map((item) => {
+      const newId = `${type}=${item.url}`;
+      const disabled = !context.remaining[`${type}Ids`].has(item.url);
       return '<tr>'
-        + `<td><input type="checkbox" id="${newId}" value="${url}"${disabled ? ' disabled="" title="No remaining showings today"' : ''}/></td>`
+        + `<td><input type="checkbox" id="${newId}" value="${item.url}"${disabled ? ' disabled="" title="No remaining showings today"' : ''}/></td>`
         + `<td><label for="${newId}"${disabled ? ' data-disabled="" title="No remaining showings today"' : ''}>${getLink(item)}</label></td>`
       + '</tr>';
     })
@@ -48,27 +47,24 @@ function renderSelectionList(type, isDisabledAttr) {
 }
 
 function renderSelectionForm() {
-  renderSelectionList('movie', (movie) => {
-    const now = Showtime.now();
+  context.remaining = {
+    listingIds: new Set(),
+    movieIds: new Set(),
+    theaterIds: new Set(),
+  };
 
-    const hasMoreShowings = !context
-      .listings
-      .some(
-        // The listing is for the requested movie and there are showings left.
-        listing => ((movie.url === listing.movie.url) && (listing.showingsAfter(now).length !== 0))
-      );
-    return hasMoreShowings;
-  });
+  Array.from(context.listings.values())
+    .reduce((remaining, listing) => {
+      if (listing.areShowingsAfter(Showtime.now)) {
+        remaining.movieIds.add(listing.movie.id);
+        remaining.theaterIds.add(listing.theater.id);
+        remaining.listingIds.add(listing.id);
+      }
+      return remaining;
+    }, context.remaining);
 
-  renderSelectionList('theater', (theater) => {
-    const now = Showtime.now();
-    const hasMoreShowings = !context
-      .listings
-      .some(listing => (
-        (theater.url === listing.theater.url) && (listing.showingsAfter(now).length !== 0)
-      ));
-    return hasMoreShowings;
-  });
+  renderSelectionList('movie');
+  renderSelectionList('theater');
 }
 
 function collapseSection(section) {
@@ -159,7 +155,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (Util.isInInterval(response.status, '[200, 300)') || (response.status === 304)) {
       const contextJSON = await response.text();
-      const localContext = JSON.parse(contextJSON, reviver);
+      const localContext = parseContext(contextJSON); // JSON.parse(contextJSON, reviver);
       ['movies', 'theaters', 'listings', 'requestedDate'].forEach((member) => {
         context[member] = localContext[member];
       });
@@ -212,22 +208,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         || Util.compareWOArticles(lhs.theater.name, rhs.theater.name);
     }
 
-    /*
-     * For selected theater:
-     *   o Map theaters to listing
-     *   o Filter to get listings of selected movies that still have remaining showings.
-     *   o Map listings to showings
-     *   o Sort list of showings.
-     */
-    const sortedShowings = Array.from(selected.theaters)
-      .reduce((allListings, theater) => allListings.concat(theater.listings), [])
-      .filter(
-        listing => selected.movies.has(listing.movieURL) && listing.showingsAfter(Showtime.now)
-      )
-      .reduce((allShowings, listing) => allShowings.concat(listing.showings), [])
-      .sort(compareShowings);
+    // const a1 = Array.from(context.remaining.listingIds.values());
+    // const a2 = a1.map(listingId => context.listings.get(listingId));
+    // const a3 = a2.sort(compareShowings);
 
-    document.getElementById('result-list').innerHTML = sortedShowings
+    document.getElementById('result-list').innerHTML = Array
+      // IDs for all of the remaining listings...
+      .from(context.remaining.listingIds.values())
+      // ... converted to listings...
+      .map(listingId => context.listings.get(listingId))
+      // ... gete the remaining showings in the listings...
+      .reduce((showings, listing) => showings.concat(listing.showingsAfter(Showtime.now)), [])
+      // ... sorted by showtime, theater distance, title, and theater name...
+      .sort(compareShowings)
+      // ... converted to HTML.
       .map(
         (showing) => {
           const { movie, theater } = showing;
@@ -235,7 +229,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           previousShowtime = showing.showtime;
 
           const phone = theater.phone
-            ? `&#x25c6; <span class="theater-address">${theater.address}</span>`
+            ? `&#x25c6; <span class="theater-phone">${theater.phone}</span>`
             : '';
 
           return `<tr>
