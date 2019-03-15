@@ -13,10 +13,10 @@
 // Comment out what is not to be used.
 const debug = {
   // showtimeFilterOff: true,
-  nowVals: {
-    // date: [2019, 2, 11],
-    time: [22, 0, 0, 0],
-  },
+  // nowVals: {
+  //   // date: [2019, 2, 11],
+  //   time: [21, 0, 0, 0],
+  // },
   // autoFillLists: true,
 };
 if (debug.nowVals) {
