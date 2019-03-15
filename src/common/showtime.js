@@ -68,8 +68,10 @@ class Showtime {
    *
    * @returns {Showtime} - Either the current time or the time defined in debug.now.
    *
+   * @readonly
+   * @memberof Showtime
    */
-  static now() {
+  static get now() {
     return (debug.now ? new Showtime(debug.now) : new Showtime());
   }
 

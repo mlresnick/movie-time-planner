@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const sortedShowings = Array.from(selected.theaters)
       .reduce((allListings, theater) => allListings.concat(theater.listings), [])
       .filter(
-        listing => selected.movies.has(listing.movieURL) && listing.showingsAfter(Showtime.now())
+        listing => selected.movies.has(listing.movieURL) && listing.showingsAfter(Showtime.now)
       )
       .reduce((allShowings, listing) => allShowings.concat(listing.showings), [])
       .sort(compareShowings);
