@@ -52,6 +52,43 @@ export class ContextMap extends Map {
   }
 
   /**
+   * Tests whether at least one value in the map passes the test implemented by the
+   * provided function.
+   *
+   * @param {ContextMap~someCallback} callback - See the Array#some documentation.
+   * @param {Object} [thisArg] - Object to use for <code>this</code> when
+   *        executing <code>someCallback</code>.
+   *
+   * @returns {boolean} - <code>true</code> if the callback function returns a truthy value for any
+   *          array element; otherwise, <code>false</code>.
+   *
+   * @memberof ContextMap
+   */
+  some(callback, thisArg) {
+    const e1 = Array.from(this.values());
+    const e2 = e1;
+    // .map((entry) => {
+    //   const retval = entry[1];
+    //   return retval;
+    // });
+    const retval = e2.some(callback, thisArg);
+    return retval;
+    // return Array.from(this.entries())
+    //   .map(entry => entry[1])
+    //   .some(callback, thisArg);
+  }
+
+  /**
+   * See the Array#some documentation.
+   *
+   * @callback ContextMap~someCallback
+   *
+   * @param {*} element - The current element being processed in the array.
+   * @param {integer} [index] - The index of the current element being processed in the array.
+   * @param {Array} [array] - The array some() was called upon.
+   */
+
+  /**
    * Called by {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify JSON.stringify} to serialize the this object.
    *
    * @returns {Array<*>} - The result of the {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/entries Map.entries} call, as an array.
