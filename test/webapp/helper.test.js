@@ -3,7 +3,7 @@ import Duration from 'duration-js';
 import { JSDOM } from 'jsdom';
 import context from '../../src/common/context';
 import Movie from '../../src/common/movie';
-import MovieListing from '../../src/common/movie-listing';
+import Listing from '../../src/common/listing';
 import Showing from '../../src/common/showing';
 import Showtime from '../../src/common/showtime';
 import Theater from '../../src/common/theater';
@@ -551,7 +551,7 @@ describe('Serialization', () => {
     it('has movie listings', () => {
       ctx.listings
         .forEach((listing) => {
-          expect(listing).toBeInstanceOf(MovieListing);
+          expect(listing).toBeInstanceOf(Listing);
           listing.showings.forEach((showing) => {
             expect(showing).toBeInstanceOf(Showing);
             expect(showing.showtime).toBeInstanceOf(Showtime);
@@ -569,7 +569,7 @@ describe('Serialization', () => {
     it('has theaters', () => {
       ctx.theaters.forEach((theater) => {
         expect(theater).toBeInstanceOf(Theater);
-        theater.movieListings.forEach(listing => expect(listing).toBeInstanceOf(MovieListing));
+        theater.movieListings.forEach(listing => expect(listing).toBeInstanceOf(Listing));
       });
     });
   });

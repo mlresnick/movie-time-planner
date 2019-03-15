@@ -1,4 +1,4 @@
-/* global Movie,MovieListing,Theater */
+/* global Movie,Listing,Theater */
 import context from './context';
 import IdObject from './id-object';
 import Showtime from './showtime';
@@ -8,7 +8,7 @@ import Showtime from './showtime';
  */
 class Showing extends IdObject {
   /**
-   * @param {MovieListing} listing - The movie listing of which this is a part.
+   * @param {Listing} listing - The movie listing of which this is a part.
    * @param {HTMLElement} showtimeEl - The element containing the time of the showing.
    */
   constructor(listing, showtimeEl) {
@@ -51,7 +51,7 @@ class Showing extends IdObject {
   get id() { return `${this.parentId},${this.showtime.toISOString()}`; }
 
   /**
-   * @member {MovieListing} listing - Listing under which this showing appears.
+   * @member {Listing} listing - Listing under which this showing appears.
    * @memberof Showing
    * @instance
    * @readonly

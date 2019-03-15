@@ -1,7 +1,7 @@
 import { JSDOM } from 'jsdom';
 import Duration from 'duration-js';
 import context from '../../src/common/context';
-import MovieListing from '../../src/common/movie-listing';
+import Listing from '../../src/common/listing';
 import Showtime from '../../src/common/showtime';
 import Movie from '../../src/common/movie';
 import Theater from '../../src/common/theater';
@@ -61,7 +61,7 @@ describe('movie listing', () => {
 
   describe('can be created with', () => {
     it('no arguments', () => {
-      const obj = new MovieListing();
+      const obj = new Listing();
       expect(obj).toBeDefined();
       expect(obj).toEqual({
         movieURL: '',
@@ -71,7 +71,7 @@ describe('movie listing', () => {
     });
 
     it('an empty movie listing element', () => {
-      const obj = new MovieListing(mockTheater, movieListingEl);
+      const obj = new Listing(mockTheater, movieListingEl);
 
       expect(obj).toEqual({
         movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
@@ -118,7 +118,7 @@ describe('movie listing', () => {
     });
 
     it('a movie listing element', () => {
-      const obj = new MovieListing(mockTheater, movieListingEl);
+      const obj = new Listing(mockTheater, movieListingEl);
 
       expect(obj).toEqual({
         movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
@@ -168,7 +168,7 @@ describe('movie listing', () => {
   describe('movie', () => {
     describe('setter works with', () => {
       it('a URL', () => {
-        const obj = new MovieListing(mockTheater, movieListingEl);
+        const obj = new Listing(mockTheater, movieListingEl);
         obj.movieURL = 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/';
         expect(obj).toEqual(/* expected */ {
           movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
@@ -208,7 +208,7 @@ describe('movie listing', () => {
         const otherMovie = new Movie(otherMovieEl);
         const mockVenue = { id: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/' };
         context.theaters.set(mockVenue.id, mockVenue);
-        const obj = new MovieListing(mockVenue, movieListingEl);
+        const obj = new Listing(mockVenue, movieListingEl);
         obj.movie = otherMovie;
         expect(obj).toEqual({
           movieURL: 'https://www.moviefone.com/movie/solo-a-star-wars-story/uIv4AtOo8b9KZwtAZ3dU11/main/',
@@ -240,13 +240,13 @@ describe('movie listing', () => {
         url: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
       };
       context.movies.set(expected.url, expected);
-      const obj = new MovieListing(mockTheater, movieListingEl);
+      const obj = new Listing(mockTheater, movieListingEl);
       expect(obj.movie).toEqual(expected);
     });
   });
 
   it('theater getter works', () => {
-    const obj = new MovieListing(mockTheater, movieListingEl);
+    const obj = new Listing(mockTheater, movieListingEl);
     const { theater } = obj;
     expect(theater).toEqual(mockTheater);
   });
@@ -268,7 +268,7 @@ describe('movie listing', () => {
       ['after all', 20, []],
     ];
 
-    const obj = new MovieListing(mockTheater, movieListingEl);
+    const obj = new Listing(mockTheater, movieListingEl);
     test.each(testlist)(
       '%s',
       (testName, hours, expectedShowtimes) => {
