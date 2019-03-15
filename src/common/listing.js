@@ -10,7 +10,7 @@ import Showtime from './showtime';
  *
  * Maps the contents of an HTML element into a more convenient representation.
  */
-class MovieListing extends IdObject {
+class Listing extends IdObject {
   /**
    * @param {Theater} theater - Theater at which this listing is appearing.
    * @param {HTMLElement} movieListingEl - Movie listing from the web page.
@@ -63,7 +63,7 @@ class MovieListing extends IdObject {
    * @member {Movie} - Movie for this listing. It may assigned to either a {@linkcode Movie} or a
    *                   {@linkcode string}. When refrerenced the vallue is always
    *                   a {@linkcode Movie}.
-   * @memberof MovieListing
+   * @memberof Listing
    * @instance
    */
   get movie() { return context.movies.get(this.movieURL); }
@@ -84,7 +84,7 @@ class MovieListing extends IdObject {
    * The theater for this movie listing.
    *
    * @type {Theater}
-   * @memberof MovieListing
+   * @memberof Listing
    * @instance
    * @readonly
    */
@@ -99,7 +99,7 @@ class MovieListing extends IdObject {
    *
    * @returns {Showing[]} - Filtered list of showings.
    *
-   * @memberof MovieListing
+   * @memberof Listing
    */
   showingsAfter(showtime) {
     return this.showings
@@ -114,16 +114,16 @@ class MovieListing extends IdObject {
    * @returns {boolean} - <code>true</code> if there are any showings left.
    *          Otherwise <code>false</code>.
    *
-   * @memberof MovieListing
+   * @memberof Listing
    */
   areShowingsAfter(showtime) { return this.showingsAfter(showtime).length !== 0; }
 
   /**
    * @member {string} id - Unique identifier for this object.
-   * @memberof MovieListing
+   * @memberof Listing
    * @instance
    */
   get id() { return `${this.theater.id},${this.movie.id}`; }
 }
 
-export default MovieListing;
+export default Listing;

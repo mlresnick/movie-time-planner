@@ -144,7 +144,7 @@ class Context {
       };
 
       /**
-       * @member {ContextMap<string, MovieListing>} - Movie listings found for the requested
+       * @member {ContextMap<string, Listing>} - Movie listings found for the requested
        *                                              theaters and movies. It is an array of
        *                                              {@link Listing} objects.
        */

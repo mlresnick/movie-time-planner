@@ -1,5 +1,5 @@
 import context from './context';
-import MovieListing from './movie-listing';
+import Listing from './listing';
 import Util from './util';
 import IdObject from './id-object';
 
@@ -34,7 +34,7 @@ class Theater extends IdObject {
     this._distance = 0;
     this.distanceUnit = '';
 
-    /** @member {MovieListing[]} */
+    /** @member {Listing[]} */
     this.movieListings = [];
 
     if (typeof theaterEl !== 'undefined') {
@@ -51,7 +51,7 @@ class Theater extends IdObject {
       theaterEl
         .querySelectorAll('.showtimes .movie-listing')
         .forEach((movieListingEl) => {
-          const listing = new MovieListing(self, movieListingEl);
+          const listing = new Listing(self, movieListingEl);
           self.movieListings.push(listing.id);
         });
     }

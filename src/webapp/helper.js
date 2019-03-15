@@ -1,6 +1,6 @@
 import Duration from 'duration-js';
 import { ContextMap } from '../common/context';
-import MovieListing from '../common/movie-listing';
+import Listing from '../common/listing';
 import Movie from '../common/movie';
 import Showing from '../common/showing';
 import Showtime from '../common/showtime';
@@ -23,7 +23,7 @@ function reviver(key, value) {
 
   switch (key) {
     case 'listings':
-      retval = buildContextMap(MovieListing, value);
+      retval = buildContextMap(Listing, value);
       break;
 
     case 'movies':
