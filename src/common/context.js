@@ -160,6 +160,28 @@ class Context {
        */
       this.requestedDate = undefined;
 
+      
+      /**
+       * @member {Object} - Sets containing IDs of items that still hve remaining showings.
+       * @property {Set} listingIds - Listings that still have showings left.
+       * @property {Set} movieIds - Movies that still have showings left.
+       * @property {Set} theaterIds - Theaters that still have showings left.
+       */
+      this.remaining = {
+        listingIds: new Set(),
+        movieIds: new Set(),
+        theaterIds: new Set(),
+        /**
+         * Clean up contents.
+         *
+         * @memberof Context#remaining
+         */
+        clear() {
+          ['listingIds', 'movieIds', 'theaterIds']
+            .forEach(property => this[property].clear());
+        },
+      };
+
       /**
        * @member {ContextMap<string, Theater>} - List of theaters requested. A theater's URL is used
        *                                         as the key with a value of a {@link Theater}
@@ -179,9 +201,8 @@ class Context {
 
   /** Empty the singleton of its values. */
   clear() {
-    this.movies.clear();
-    this.theaters.clear();
-    this.listings.clear();
+    ['movies', 'theaters', 'listings', 'remaining']
+      .forEach(property => this[property].clear());
   }
 }
 
