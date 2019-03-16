@@ -48,11 +48,7 @@ function renderSelectionList(type) {
 }
 
 function renderSelectionForm() {
-  context.remaining = {
-    listingIds: new Set(),
-    movieIds: new Set(),
-    theaterIds: new Set(),
-  };
+  context.remaining.clear();
 
   Array.from(context.listings.values())
     .reduce((remaining, listing) => {
@@ -218,6 +214,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       .from(context.remaining.listingIds.values())
       // ... converted to listings...
       .map(listingId => context.listings.get(listingId))
+      // ... use only selected movies and theaters
+      .filter(listing => (
+        selected.theaters.has(listing.theaterURL) && selected.movies.has(listing.movieURL)
+      ))
       // ... gete the remaining showings in the listings...
       .reduce((showings, listing) => showings.concat(listing.showingsAfter(Showtime.now)), [])
       // ... sorted by showtime, theater distance, title, and theater name...
