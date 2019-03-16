@@ -160,7 +160,6 @@ class Context {
        */
       this.requestedDate = undefined;
 
-      
       /**
        * @member {Object} - Sets containing IDs of items that still hve remaining showings.
        * @property {Set} listingIds - Listings that still have showings left.
