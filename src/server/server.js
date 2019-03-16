@@ -1,6 +1,7 @@
 import express from 'express';
 import { fetch } from 'cross-fetch';
 import path from 'path';
+import context from '../common/context';
 import Moviefone from './moviefone';
 import Util from '../common/util';
 
@@ -14,8 +15,8 @@ app.use(express.static(root));
 app.get('/zip-code/:zipCode', async (req, res) => {
   try {
     const moviefone = new Moviefone(req.params.zipCode, req.query['max-distance']);
-    const result = await moviefone.collectListings();
-    res.json(result);
+    await moviefone.collectListings();
+    res.json(context);
   }
   catch (error) {
     Util.logError(`Error collecting listing: ${error}\n\nContinuing...\n`);
