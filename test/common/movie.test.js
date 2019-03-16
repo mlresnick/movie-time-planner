@@ -37,20 +37,51 @@ describe('Movie', () => {
     expect(removeThisYear(`a movie title with this year (${new Date().getFullYear().toString()})`)).toBe('a movie title with this year');
   });
 
-  it('can be created with a DOM node', () => {
-    const expectedMovie = {
-      rating: 'PG-13',
-      runningTime: { _milliseconds: 5760000 },
-      title: 'Three Identical Strangers (2018)',
-      url: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-    };
-    const expectedEntry = [[expectedMovie.url, expectedMovie]];
-    const { document } = (new JSDOM(html)).window;
-    const moviedataEl = document.querySelector('.moviedata');
-    const movie = new Movie(moviedataEl);
+  describe('can be created with a DOM node', () => {
+    it('normally', () => {
+      const expectedMovie = {
+        rating: 'PG-13',
+        runningTime: { _milliseconds: 5760000 },
+        title: 'Three Identical Strangers (2018)',
+        url: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+      };
+      const expectedEntry = [[expectedMovie.url, expectedMovie]];
+      const { document } = (new JSDOM(html)).window;
+      const moviedataEl = document.querySelector('.moviedata');
+      const movie = new Movie(moviedataEl);
 
-    expect(movie).toMatchObject(expectedMovie);
-    expect(Array.from(context.movies)).toMatchObject(expectedEntry);
+      expect(movie).toMatchObject(expectedMovie);
+      expect(Array.from(context.movies)).toMatchObject(expectedEntry);
+    });
+
+    it('missing runningtime', () => {
+      const noRunningTimeHTML = `
+      <div class="moviedata">
+        <div class="movietitle">
+          <a href="https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/" title="Three Identical Strangers">Three Identical Strangers  (2018)</a>
+        </div>
+        <div class="movierating-runtime">
+      PG-13
+      
+      
+        </div>
+      </div>
+      `;
+      const expectedMovie = {
+        rating: 'PG-13',
+        runningTime: { _milliseconds: 0 },
+        title: 'Three Identical Strangers (2018)',
+        url: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
+      };
+      context.clear(); // Make sure the Movie object ceated here is put into context.movies
+      const expectedEntry = [[expectedMovie.url, expectedMovie]];
+      const { document } = (new JSDOM(noRunningTimeHTML)).window;
+      const moviedataEl = document.querySelector('.moviedata');
+      const movie = new Movie(moviedataEl);
+
+      expect(movie).toMatchObject(expectedMovie);
+      expect(Array.from(context.movies)).toMatchObject(expectedEntry);
+    });
   });
 
   it('can be translated to a string', () => {

@@ -52,6 +52,7 @@ class Movie extends IdObject {
 
     let hours;
     let minutes;
+    let fullMatch;
 
     if (typeof moviedataEl !== 'undefined') {
       // Get the element containg both the movie's running time and rating.
@@ -60,15 +61,21 @@ class Movie extends IdObject {
       );
 
       // Parse the string into meaningful bits.
-      const results = movieRatingRuntime.match(/(.+) \|( *(\d+) hr)?( *(\d+) min)?/);
+      const results = movieRatingRuntime.match(/^(.*) \| (\d+) hr (\d+) min$/);
       if (Array.isArray(results)) {
-        [, this.rating, , hours, , minutes] = results;
-        this.runningTime = new Duration(`${hours || 0}h${minutes || 0}m`);
-        this.title = removeThisYear(
-          Util.innerHTML(moviedataEl.querySelector('.movietitle a')),
-        );
-        this.url = moviedataEl.querySelector('.movietitle a').getAttribute('href');
+        [fullMatch, this.rating, hours, minutes] = results;
+        if (fullMatch) {
+          this.runningTime = new Duration(`${hours || 0}h${minutes || 0}m`);
+        }
       }
+      else {
+        this.rating = movieRatingRuntime;
+      }
+
+      this.title = removeThisYear(
+        Util.innerHTML(moviedataEl.querySelector('.movietitle a')),
+      );
+      this.url = moviedataEl.querySelector('.movietitle a').getAttribute('href');
 
       if (!context.movies.includes(this.id)) {
         context.movies.set(this);
