@@ -294,6 +294,11 @@ const expectedStructure = {
       },
     ],
   ],
+  remaining: {
+    listings: {},
+    movies: {},
+    theaters: {},
+  },
   requestedDate: '2019-02-02T05:00:00.000Z',
   theaters: [
     [
@@ -472,6 +477,11 @@ const expectedJSON = `{
     ]
   ],
   "requestedDate": "2019-02-02T05:00:00.000Z",
+  "remaining": {
+    "listingIds": {},
+    "movieIds": {},
+    "theaterIds": {}
+  },
   "theaters": [
     [
       "https://www.moviefone.com/theater/lexington-venue/2042/showtimes/",
