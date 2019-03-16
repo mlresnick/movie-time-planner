@@ -21,6 +21,12 @@ class IdObject {
     this.parentId = parent ? parent.id : null;
   }
 
+  /**
+   * Unique identifier for derived object.
+   *
+   * @readonly
+   * @memberof IdObject
+   */
   get id() { return this.url; }
 }
 export default IdObject;
