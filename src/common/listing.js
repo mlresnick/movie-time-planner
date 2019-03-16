@@ -38,7 +38,8 @@ class Listing extends IdObject {
       }
 
       movieListingEl
-        .querySelectorAll('.showtimes-list .stDisplay.future, .showtimes-list .showtime-display a')
+        // Get all showtimes - easier for debugging wiot a debug.now value.
+        .querySelectorAll('.showtimes-list .stDisplay')
         .forEach(function addShowing(showtimeEl, index) {
           const newShowing = new Showing(this, showtimeEl);
 
