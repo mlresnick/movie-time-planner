@@ -107,7 +107,6 @@ class Moviefone {
     catch (err) {
       Util.logError(`Exception caught in Moviefone.collectListings\n${err}\n${err.stack}`);
     }
-    return context; // TODO remove this and make sure calling function uses the context singleton
   }
 
   toString() {

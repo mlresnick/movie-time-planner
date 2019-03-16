@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "test": "jest --watch test/**/*.test.js",
-    "devserver": "nodemon -r esm src/server/server.js"
+    "devserver": "nodemon --watch src/server --verbose -r esm src/server/server.js",
+    "webpack": "webpack --watch"
   },
   "repository": {
     "type": "git",
