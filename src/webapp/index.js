@@ -205,53 +205,53 @@ document.addEventListener('DOMContentLoaded', async () => {
         || Util.compareWOArticles(lhs.theater.name, rhs.theater.name);
     }
 
-    // const a1 = Array.from(context.remaining.listingIds.values());
-    // const a2 = a1.map(listingId => context.listings.get(listingId));
-    // const a3 = a2.sort(compareShowings);
+    function showingToHTML(showing) {
+      const { movie, theater } = showing;
+      const showtime = (Showtime.compare(showing.showtime, previousShowtime) !== 0)
+        ? showing.showtime
+        : '&nbsp;';
+      previousShowtime = showing.showtime;
+
+      const phone = theater.phone
+        ? `&#x25c6; <span class="theater-phone">${theater.phone}</span>`
+        : '';
+
+      return `<tr>
+        <td class="showtime">${showtime}</td>
+        <td class="title"$>${getLink(movie)}</td>
+        <td class="rating-running-time">${movie.rating} &#x25c6; ${movie.runningTime.toString()}</td>
+      </tr>
+      <tr class="theater-details">
+        <td>&nbsp;</td>
+        <td colspan="2">
+          <span class="theater-name">${getLink(theater)}</span>
+          &#x25c6;
+          <span class="theater-address">${theater.address}</span>
+          ${phone}
+          &#x25c6;
+          <span class=theater-distance>${theater.distanceString}</span>
+        </td>
+      </tr>`;
+    }
 
     document.getElementById('result-list').innerHTML = Array
       // IDs for all of the remaining listings...
       .from(context.remaining.listingIds.values())
       // ... converted to listings...
       .map(listingId => context.listings.get(listingId))
-      // ... use only selected movies and theaters
+      // ... use only selected movies and theaters...
       .filter(listing => (
-        selected.theaters.has(listing.theaterURL) && selected.movies.has(listing.movieURL)
+        selected.theaters.has(listing.theater.url) && selected.movies.has(listing.movie.url)
       ))
       // ... gete the remaining showings in the listings...
       .reduce((showings, listing) => showings.concat(listing.showingsAfter(Showtime.now)), [])
       // ... sorted by showtime, theater distance, title, and theater name...
       .sort(compareShowings)
-      // ... converted to HTML.
-      .map(
-        (showing) => {
-          const { movie, theater } = showing;
-          const showtime = (Showtime.compare(showing.showtime, previousShowtime) !== 0) ? showing.showtime : '&nbsp;';
-          previousShowtime = showing.showtime;
-
-          const phone = theater.phone
-            ? `&#x25c6; <span class="theater-phone">${theater.phone}</span>`
-            : '';
-
-          return `<tr>
-            <td class="showtime">${showtime}</td>
-            <td class="title"$>${getLink(movie)}</td>
-            <td class="rating-running-time">${movie.rating} &#x25c6; ${movie.runningTime.toString()}</td>
-          </tr>
-          <tr class="theater-details">
-            <td>&nbsp;</td>
-            <td colspan="2">
-              <span class="theater-name">${getLink(theater)}</span>
-              &#x25c6;
-              <span class="theater-address">${theater.address}</span>
-              ${phone}
-              &#x25c6;
-              <span class=theater-distance>${theater.distanceString}</span>
-            </td>
-          </tr>`;
-        }
-      )
+      // ... converted to HTML...
+      .map(showingToHTML)
+      // ... and merge the HTML fragments
       .join('');
+
     expandSection('results');
   });
 });
