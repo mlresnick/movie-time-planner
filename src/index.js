@@ -1,11 +1,13 @@
 /* eslint-env browser */
 
+import '@babel/polyfill';
+
 import context from './js/common/context';
 import debug from './js/common/debug';
-// TODO import getDistanceMatrix from '../common/distance-matrix';
+// TODO import getDistanceMatrix from './js/common/distance-matrix';
 import Movie from './js/common/movie';
 import Theater from './js/common/theater';
-// TODO import Scheduler from '../common/scheduler';
+// TODO import Scheduler from './js/common/scheduler';
 import Showtime from './js/common/showtime';
 import Util from './js/common/util';
 import parseContext from './js/webapp/helper';
