@@ -1,6 +1,5 @@
 import '@babel/polyfill';
 import '@babel/register';
-// const path = require("path");
 
 import initMTPRoutes from './src/js/server/server';
 
