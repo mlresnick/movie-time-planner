@@ -1,4 +1,6 @@
 /* eslint-env browser */
+import '@babel/polyfill';
+
 import context from './js/common/context';
 import debug from './js/common/debug';
 // TODO import getDistanceMatrix from './js/common/distance-matrix';
