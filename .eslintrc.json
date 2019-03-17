@@ -24,7 +24,7 @@
     "no-underscore-dangle": ["error", { "allowAfterThis": true }],
     "prefer-const": ["error", { "destructuring": "all" }],
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-    "jsdoc/check-examples": "warn",
+    "jsdoc/check-examples": "off",
     "jsdoc/check-param-names": "warn",
     "jsdoc/check-tag-names": "warn",
     "jsdoc/check-types": "warn",
