@@ -1,8 +1,8 @@
 /* eslint-env jest */
 import { JSDOM } from 'jsdom';
-import context from '../../src/common/context';
-import Showing from '../../src/common/showing';
-import Showtime from '../../src/common/showtime';
+import context from '../../src/js/common/context';
+import Showing from '../../src/js/common/showing';
+import Showtime from '../../src/js/common/showtime';
 
 context.requestedDate = new Showtime(2019, 0, 1, 2, 0, 0, 0);
 

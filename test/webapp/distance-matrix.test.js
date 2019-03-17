@@ -1,6 +1,6 @@
 /* eslint-env jest */
 import '@babel/polyfill';
-import getDistanceMatrix from '../../src/webapp/distance-matrix';
+import getDistanceMatrix from '../../src/js/webapp/distance-matrix';
 
 expect.extend({
   valueToBeTypeOf(actual, expected) {

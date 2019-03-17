@@ -1,6 +1,6 @@
 import { JSDOM } from 'jsdom';
-import context from '../../src/common/context';
-import Theater from '../../src/common/theater';
+import context from '../../src/js/common/context';
+import Theater from '../../src/js/common/theater';
 
 const theaterHTML = `
 <div class="theater">

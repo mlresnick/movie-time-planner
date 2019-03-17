@@ -1,6 +1,6 @@
 import { JSDOM } from 'jsdom';
-import context from '../../src/common/context';
-import Showtime from '../../src/common/showtime';
+import context from '../../src/js/common/context';
+import Showtime from '../../src/js/common/showtime';
 
 function getLocalTimezone() {
   const rawTimezoneOffset = (new Date()).getTimezoneOffset();

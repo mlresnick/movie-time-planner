@@ -1,5 +1,5 @@
-import context, { ContextMap } from '../../src/common/context';
-import IdObject from '../../src/common/id-object';
+import context, { ContextMap } from '../../src/js/common/context';
+import IdObject from '../../src/js/common/id-object';
 
 class IdObjectSubclass extends IdObject {
   constructor(parent, value) {

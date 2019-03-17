@@ -1,13 +1,13 @@
 import 'colors';
 import Duration from 'duration-js';
 import { JSDOM } from 'jsdom';
-import context from '../../src/common/context';
-import Movie from '../../src/common/movie';
-import Listing from '../../src/common/listing';
-import Showing from '../../src/common/showing';
-import Showtime from '../../src/common/showtime';
-import Theater from '../../src/common/theater';
-import parseContext from '../../src/webapp/helper';
+import context from '../../src/js/common/context';
+import Movie from '../../src/js/common/movie';
+import Listing from '../../src/js/common/listing';
+import Showing from '../../src/js/common/showing';
+import Showtime from '../../src/js/common/showtime';
+import Theater from '../../src/js/common/theater';
+import parseContext from '../../src/js/webapp/helper';
 
 const Diff = require('diff');
 
