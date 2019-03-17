@@ -1,16 +1,18 @@
 /* eslint-env browser */
 
-import context from '../common/context';
-import debug from '../common/debug';
-// TODO import getDistanceMatrix from '../common/distance-matrix';
-import Movie from '../common/movie';
-import Theater from '../common/theater';
-// TODO import Scheduler from '../common/scheduler';
-import Showtime from '../common/showtime';
-import Util from '../common/util';
-import parseContext from './helper';
+import '@babel/polyfill';
 
-import '../../scss/index.scss';
+import context from './js/common/context';
+import debug from './js/common/debug';
+// TODO import getDistanceMatrix from './js/common/distance-matrix';
+import Movie from './js/common/movie';
+import Theater from './js/common/theater';
+// TODO import Scheduler from './js/common/scheduler';
+import Showtime from './js/common/showtime';
+import Util from './js/common/util';
+import parseContext from './js/webapp/helper';
+
+import './scss/index.scss';
 
 const sectionList = ['location', 'selection', 'results', 'itineraries'];
 
