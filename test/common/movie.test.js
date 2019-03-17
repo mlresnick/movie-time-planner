@@ -2,8 +2,8 @@
 
 import Duration from 'duration-js';
 import { JSDOM } from 'jsdom';
-import context from '../../src/common/context';
-import Movie, { removeThisYear } from '../../src/common/movie';
+import context from '../../src/js/common/context';
+import Movie, { removeThisYear } from '../../src/js/common/movie';
 
 const html = `
 <div class="moviedata">

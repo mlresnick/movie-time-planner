@@ -1,10 +1,10 @@
 import { JSDOM } from 'jsdom';
 import Duration from 'duration-js';
-import context from '../../src/common/context';
-import Listing from '../../src/common/listing';
-import Showtime from '../../src/common/showtime';
-import Movie from '../../src/common/movie';
-import Theater from '../../src/common/theater';
+import context from '../../src/js/common/context';
+import Listing from '../../src/js/common/listing';
+import Showtime from '../../src/js/common/showtime';
+import Movie from '../../src/js/common/movie';
+import Theater from '../../src/js/common/theater';
 
 context.requestedDate = new Date(2019, 1, 2, 0, 0, 0, 0);
 

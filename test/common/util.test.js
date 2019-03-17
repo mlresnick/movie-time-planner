@@ -2,7 +2,7 @@
  * Tests for Util.
  */
 import { JSDOM } from 'jsdom';
-import Util from '../../src/common/util';
+import Util from '../../src/js/common/util';
 
 describe('Util', () => {
   describe('compares strings (without articles)', () => {
