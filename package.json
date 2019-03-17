@@ -1,20 +1,6 @@
 {
-  "name": "movie-time-planner",
-  "version": "1.0.0-alpha.1",
-  "description": "Movie Time Planner",
-  "private": true,
-  "scripts": {
-    "test": "jest --watch test/**/*.test.js",
-    "devserver": "nodemon --watch src/server --verbose -r esm src/server/server.js",
-    "webpack": "webpack --watch"
-  },
-  "repository": {
-    "type": "git",
-    "url": "."
-  },
-  "keywords": [],
   "author": "Michael Resnick <michaelresnick17@gmail.com>",
-  "license": "ISC",
+  "description": "Movie Time Planner",
   "dependencies": {
     "cross-fetch": "^3.0.1",
     "duration-js": "^4.0.0",
@@ -38,5 +24,22 @@
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
     "webpack-cli": "^3.2.3"
-  }
+  },
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "module": "src/server.js",
+  "name": "movie-time-planner",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "scripts": {
+    "test": "jest --watch test/**/*.test.js",
+    "debugserver": "nodemon  --inspect --watch src/common --watch src/server --watch package.json --verbose --require=esm src/server/server.js",
+    "devserver": "nodemon --watch src/common --watch src/server --watch package.json --verbose --require=esm src/server/server.js",
+    "webpack": "webpack --watch"
+  },
+  "version": "1.0.0-alpha.1"
 }
