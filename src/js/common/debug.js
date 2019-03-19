@@ -1,3 +1,4 @@
+
 /**
  * DEBUG
  *
@@ -10,17 +11,29 @@
  * @property {?booleann} addDumpToArray - If true, a method called dump will be added to the
  *           {@link Array} prototype.
  */
-// Comment out what is not to be used.
-const debug = {
-  // nowValues: {
-  //   // date: [2019, 2, 11], // If commented out, today's dated will be used.
-  //   time: [12, 0, 0, 0],
-  // },
-  // autoFillLists: true,
-  // addDumpToArray: true,
-};
 
-if (debug.addDumpToArray) {
+/*
+ * Turn on debugging and optionally set now values.
+ */
+const enableDebugging = false;
+let nowDate = null; // [2019, 2, 11];
+const nowTime = null; // [12, 0, 0, 0];
+
+const debug = { };
+
+if (enableDebugging) {
+  debug.autoFillLists = true;
+  debug.now = null;
+
+  if (nowDate || nowTime) {
+    if (!nowDate) {
+      const now = new Date();
+      nowDate = [now.getFullYear(), now.getMonth(), now.getDate()];
+    }
+    const dateArgs = nowDate.concat(nowTime);
+    debug.now = new Date(...dateArgs);
+  }
+
   // eslint-disable jsdoc/check-examples
   /**
    * Within a chain of calls, dump the array in its current state.
@@ -58,16 +71,6 @@ if (debug.addDumpToArray) {
     );
     return this;
   };
-}
-
-if (debug.nowValues) {
-  let nowDate = debug.nowVals.date;
-  if (!nowDate) {
-    const now = new Date();
-    nowDate = [now.getFullYear(), now.getMonth(), now.getDate()];
-  }
-  [].concat();
-  debug.now = new Date(...nowDate.concat(debug.nowVals.time));
 }
 
 export default debug;
