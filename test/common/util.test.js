@@ -1,7 +1,7 @@
-/**
- * Tests for Util.
- */
+/* eslint-env jest */
+
 import { JSDOM } from 'jsdom';
+
 import Util from '../../src/js/common/util';
 
 describe('Util', () => {

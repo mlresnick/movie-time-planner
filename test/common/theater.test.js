@@ -1,4 +1,7 @@
+/* eslint-env jest */
+
 import { JSDOM } from 'jsdom';
+
 import context from '../../src/js/common/context';
 import Theater from '../../src/js/common/theater';
 

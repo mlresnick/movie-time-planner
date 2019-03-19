@@ -1,5 +1,7 @@
 /* eslint-env jest */
+
 import { JSDOM } from 'jsdom';
+
 import context from '../../src/js/common/context';
 import Showing from '../../src/js/common/showing';
 import Showtime from '../../src/js/common/showtime';

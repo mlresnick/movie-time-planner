@@ -1,4 +1,5 @@
 /* eslint-env jest */
+
 import '@babel/polyfill';
 import getDistanceMatrix from '../../src/js/webapp/distance-matrix';
 

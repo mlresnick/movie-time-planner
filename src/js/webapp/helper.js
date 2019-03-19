@@ -1,4 +1,5 @@
 import Duration from 'duration-js';
+
 import { ContextMap } from '../common/context';
 import Listing from '../common/listing';
 import Movie from '../common/movie';
@@ -64,6 +65,9 @@ export default function parseContext(contextJSON) {
     theater.movieListings = theater.movieListings.map(
       listingId => localContext.listings.get(listingId)
     );
+    // TODO create context.remaining.showings using method change just put into util
+    // the Util method can probably be removed.
+    // It doesn't belong here, it belongs wherever the other remaining lists are created.
   });
   return localContext;
 }

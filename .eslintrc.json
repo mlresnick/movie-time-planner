@@ -20,6 +20,7 @@
       "functions": "ignore"
     }],
     "import/extensions": ["error", "ignorePackages"],
+    "import/order": ["error", { "newlines-between": "always" }],
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "no-underscore-dangle": ["error", { "allowAfterThis": true }],
     "prefer-const": ["error", { "destructuring": "all" }],
