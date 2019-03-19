@@ -7,7 +7,8 @@
   "scripts": {
     "buildprod": "webpack --mode production",
     "devbuild": "webpack",
-    "devserver": "webpack --watch & webpack-dev-server --open-page 'webpack-dev-server/index.html'",
+    "docgen": "docma serve",
+    "start": "webpack --watch & webpack-dev-server --open-page 'webpack-dev-server/index.html'",
     "test": "jest --watch test/**/*.test.js"
   },
   "keywords": [],
