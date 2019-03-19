@@ -1,4 +1,5 @@
 import Duration from 'duration-js';
+
 import { ContextMap } from '../common/context';
 import Listing from '../common/listing';
 import Movie from '../common/movie';

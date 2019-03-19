@@ -1,5 +1,6 @@
 import { fetch } from 'cross-fetch';
 import jsdom from 'jsdom';
+
 import context from '../common/context';
 import Theater from '../common/theater';
 import Util from '../common/util';

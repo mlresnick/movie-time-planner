@@ -1,15 +1,19 @@
+/* eslint-env jest */
+
 import 'colors';
+
 import Duration from 'duration-js';
 import { JSDOM } from 'jsdom';
+
 import context from '../../src/js/common/context';
-import Movie from '../../src/js/common/movie';
 import Listing from '../../src/js/common/listing';
+import Movie from '../../src/js/common/movie';
+import parseContext from '../../src/js/webapp/helper';
 import Showing from '../../src/js/common/showing';
 import Showtime from '../../src/js/common/showtime';
 import Theater from '../../src/js/common/theater';
-import parseContext from '../../src/js/webapp/helper';
 
-const Diff = require('diff');
+const Diff = require('diff'); // Try to import this again
 
 const theatersHTML = `
 <!DOCTYPE html>

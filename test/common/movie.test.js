@@ -2,6 +2,7 @@
 
 import Duration from 'duration-js';
 import { JSDOM } from 'jsdom';
+
 import context from '../../src/js/common/context';
 import Movie, { removeThisYear } from '../../src/js/common/movie';
 

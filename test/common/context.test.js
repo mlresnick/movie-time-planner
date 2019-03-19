@@ -1,3 +1,5 @@
+/* eslint-env jest */
+
 import context, { ContextMap } from '../../src/js/common/context';
 import IdObject from '../../src/js/common/id-object';
 

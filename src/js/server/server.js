@@ -1,7 +1,9 @@
 import fetch from 'cross-fetch';
+
 import context from '../common/context';
-import Moviefone from './moviefone';
 import Util from '../common/util';
+
+import Moviefone from './moviefone';
 
 export default function initMTPRoutes(app/* , server */) {
   app.get('/zip-code/:zipCode', async (req, res) => {

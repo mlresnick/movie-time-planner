@@ -1,4 +1,5 @@
 import { fetch } from 'cross-fetch';
+
 import Util from '../common/util';
 
 export default async function getDistanceMatrix(origins, destinationsArg) {

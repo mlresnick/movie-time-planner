@@ -1,4 +1,5 @@
 import Duration from 'duration-js';
+
 import context from './context';
 import IdObject from './id-object';
 import Util from './util';
