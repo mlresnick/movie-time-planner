@@ -24,6 +24,8 @@
     "css-loader": "^2.1.1",
     "diff": "^4.0.1",
     "docma": "^3.2.2",
+    "jest": "^24.5.0",
+    "madge": "^3.4.4",
     "node-sass": "^4.11.0",
     "nodemon": "^1.18.10",
     "sass-loader": "^7.1.0",
