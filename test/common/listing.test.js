@@ -51,6 +51,36 @@ describe('movie listing', () => {
     </html>
     `;
 
+  const emptyMovieListingHTML = `
+    <!DOCTYPE html>
+    <html>
+    <body>
+    <div class="movie-listing">
+      <div class="moviePoster">
+        <a href="https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/" title="Three Identical Strangers">
+          <img class="lazy showtimes-poster" src="https://d1t80wr11ktjcz.cloudfront.net/legacy/assets/mf-no-image.png" data-src="https://d1t80wr11ktjcz.cloudfront.net/movieposters/v7/AllPhotos/15402597/p15402597_p_v7_aa.jpg?d=270x360&amp;q=60" alt="Three Identical Strangers Poster">
+        </a>
+      </div>
+      <div class="movie-data-wrap">
+        <div class="moviedata">
+          <div class="movietitle">
+            <a href="https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/" title="Three Identical Strangers">Three Identical Strangers  (2018)</a>
+          </div>
+          <div class="movierating-runtime">
+            PG-13
+
+            | 1 hr 36 min
+          </div>
+        </div>
+        <div class="showtimes-list">
+          <div class="clear">
+          </div>
+        </div>
+      </div>
+    </div>
+    </body>
+    </html>
+    `;
   const mockTheater = new Theater();
   mockTheater.url = 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/';
   context.theaters.set(mockTheater);
@@ -59,8 +89,8 @@ describe('movie listing', () => {
   mockMovie.url = 'https://www.moviefone.com/movie/foo-bar/baz/main/';
   context.movies.set(mockMovie);
 
-  const movieListingDoc = new JSDOM(movieListingHTML).window.document;
-  const movieListingEl = movieListingDoc.querySelector('div.movie-listing');
+  const { document } = new JSDOM(movieListingHTML).window;
+  const movieListingEl = document.querySelector('div.movie-listing');
 
   describe('can be created with', () => {
     it('no arguments', () => {
@@ -74,48 +104,14 @@ describe('movie listing', () => {
     });
 
     it('an empty movie listing element', () => {
-      const obj = new Listing(mockTheater, movieListingEl);
+      const emptyMovieDoc = new JSDOM(emptyMovieListingHTML).window.document;
+      const emptyMovieListingEl = emptyMovieDoc.querySelector('div.movie-listing');
+
+      const obj = new Listing(mockTheater, emptyMovieListingEl);
 
       expect(obj).toEqual({
         movieURL: 'https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-        showings: [
-          {
-            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-            showtime: new Showtime(
-              context.requestedDate.getFullYear(),
-              context.requestedDate.getMonth(),
-              context.requestedDate.getDate(),
-              14,
-              0,
-              0,
-              0
-            ),
-          },
-          {
-            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-            showtime: new Showtime(
-              context.requestedDate.getFullYear(),
-              context.requestedDate.getMonth(),
-              context.requestedDate.getDate(),
-              16,
-              30,
-              0,
-              0
-            ),
-          },
-          {
-            parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/,https://www.moviefone.com/movie/three-identical-strangers/pBVodF8RCax5biHUdPdH45/main/',
-            showtime: new Showtime(
-              context.requestedDate.getFullYear(),
-              context.requestedDate.getMonth(),
-              context.requestedDate.getDate(),
-              19,
-              0,
-              0,
-              0
-            ),
-          },
-        ],
+        showings: [],
         parentId: 'https://www.moviefone.com/theater/lexington-venue/2042/showtimes/',
       });
     });
