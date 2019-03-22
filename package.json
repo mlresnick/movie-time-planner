@@ -36,9 +36,9 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
+    "binary-search-bounds": "^2.0.4",
     "cross-fetch": "^3.0.1",
     "duration-js": "^4.0.0",
-    "jest": "^24.5.0",
     "jsdom": "^13.2.0"
   },
   "repository": {
