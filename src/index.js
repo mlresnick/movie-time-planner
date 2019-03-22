@@ -4,12 +4,12 @@ import '@babel/polyfill';
 import context from './js/common/context';
 import debug from './js/common/debug';
 // TODO import getDistanceMatrix from './js/common/distance-matrix';
+import { getRemainingShowings, parseContext } from './js/webapp/helper';
 import Movie from './js/common/movie';
 import Theater from './js/common/theater';
 // TODO import Scheduler from './js/common/scheduler';
 import Showtime from './js/common/showtime';
 import Util from './js/common/util';
-import parseContext from './js/webapp/helper';
 
 import './scss/index.scss';
 
@@ -176,6 +176,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
   });
+
   document.getElementById('selection-form').addEventListener('submit', (event) => {
     let previousShowtime = new Showtime(0, 0, 0, 0, 0, 0, 0);
 
@@ -199,12 +200,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           .innerHTML = htmlItemList;
       });
 
-    function compareShowings(lhs, rhs) {
-      return Showtime.compare(lhs.showtime, rhs.showtime)
-        || (rhs.theater.distance - rhs.theater.distance)
-        || Util.compareWOArticles(lhs.movie.title, rhs.movie.title)
-        || Util.compareWOArticles(lhs.theater.name, rhs.theater.name);
-    }
+    // function compareShowings(lhs, rhs) {
+    //   return Showtime.compare(lhs.showtime, rhs.showtime)
+    //     || (rhs.theater.distance - rhs.theater.distance)
+    //     || Util.compareWOArticles(lhs.movie.title, rhs.movie.title)
+    //     || Util.compareWOArticles(lhs.theater.name, rhs.theater.name);
+    // }
 
     function showingToHTML(showing) {
       const { movie, theater } = showing;
@@ -235,19 +236,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       </tr>`;
     }
 
-    document.getElementById('result-list').innerHTML = Array
-      // IDs for all of the remaining listings...
-      .from(context.remaining.listingIds.values())
-      // ... converted to listings...
-      .map(listingId => context.listings.get(listingId))
-      // ... use only selected movies and theaters...
-      .filter(listing => (
-        selected.theaters.has(listing.theater.url) && selected.movies.has(listing.movie.url)
-      ))
-      // ... gete the remaining showings in the listings...
-      .reduce((showings, listing) => showings.concat(listing.showingsAfter(Showtime.now)), [])
-      // ... sorted by showtime, theater distance, title, and theater name...
-      .sort(compareShowings)
+    document.getElementById('result-list').innerHTML = getRemainingShowings(selected)
       // ... converted to HTML...
       .map(showingToHTML)
       // ... and merge the HTML fragments
