@@ -8,7 +8,7 @@ import { JSDOM } from 'jsdom';
 import context from '../../src/js/common/context';
 import Listing from '../../src/js/common/listing';
 import Movie from '../../src/js/common/movie';
-import parseContext from '../../src/js/webapp/helper';
+import { parseContext } from '../../src/js/webapp/helper';
 import Showing from '../../src/js/common/showing';
 import Showtime from '../../src/js/common/showtime';
 import Theater from '../../src/js/common/theater';
