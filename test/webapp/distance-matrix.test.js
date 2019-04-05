@@ -129,14 +129,6 @@ describe('DistanceMatrix', () => {
     });
 
     it('with two arguments', async () => {
-      await getDistanceMatrix([
-        '193 Salem St, Boston, MA 02113', // Old North Church
-        '19 N Square, Boston, MA 02113', // Paul Revere's House
-      ],
-      [
-        '77 Massachusetts Ave, Cambridge, MA 02139', // MIT
-        'Massachusetts Hall, Cambridge, MA', // Harvard
-      ]);
       expect(await getDistanceMatrix([
         '193 Salem St, Boston, MA 02113', // Old North Church
         '19 N Square, Boston, MA 02113', // Paul Revere's House
