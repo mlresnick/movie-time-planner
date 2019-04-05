@@ -1,7 +1,5 @@
 /**
  * Miscellaneous methods used by more than one class.
- *
- * @hideconstructor
  */
 class Util {
   /**
@@ -12,9 +10,9 @@ class Util {
    * @param {string} lhs - Left-hand side of comparison.
    * @param {string} rhs - Right-hand side of comparison.
    *
-   * @returns {number} A negative value is <code>lhs</code> is before <code>rhs</code>, 0 if
-   *                   <code>lhs</code> and <code>rhs</code> are equal, and a
-   *                   positive value if <code>lhs</code> is after <code>rhs</code>.
+   * @returns {number} A negative value is `lhs` is before `rhs`, 0 if
+   *          `lhs` and `rhs` are equal, and a positive value if
+   *          `lhs` is after `rhs`.
    */
   static compareWOArticles(lhs, rhs) {
     const a = lhs.toLowerCase().replace(/^(an?|the)\s/i, '');
@@ -36,7 +34,7 @@ class Util {
   * @param {HTMLElement} el - The HTML element whose internal HTML is returned.
   *
   * @returns {string} - Text of the inner HTML. Multiple whitespace charcaters are replaced with
-  *                     a single space.
+  *          a single space.
   *
   */
   static innerHTML(el) {
@@ -50,15 +48,18 @@ class Util {
    *
    * @param {number} value    - Value to be tested.
    * @param {string} interval - The interval to check in the form of
-   *                           "(" | "[" | "]" min , max "]" | ")" | "[".
-   *                            Where
-   *                                "["        indicates the lower end is inclusive/closed.
-   *                                "(" or "]" indicates the lower end is exclusive/open.
-   *                                "]"        indicates the upper end is inclusive/closed.
-   *                                ")" or "[" indicates the upper end is exclusive/open.
+   *        _open-symbol_ _min_, _max_ _close-symbol_.
+   *        Where
+   * * _min_ defines the lower end of the range.
+   * * _max_ defines the upper end of the range.
+   * * _open-symbol_ is
+   *   * **[** to indicate the lower end is inclusive/closed.
+   *   * **(** or **]** to indicate the lower end is exclusive/open.
+   * * _close-symbold_ is
+   *   * **]** to indicate the upper end is inclusive/closed.
+   *   * **)** or **[** to indicate the upper end is exclusive/open.
    *
-   * @returns {boolean} - A value of <code>true</code> if the value is wi thin the range.
-   *                      Otherwise, <code>false</code>.
+   * @returns {boolean} - A value of `true` if the value is wi thin the range. Otherwise, `false`.
    */
   static isInInterval(value, interval) {
     const [, leftBracket, minString, maxString, rightBracket] = /([(\][])([+-]?\d+(?:\.\d+)?), *([+-]?\d+(?:\.\d+)?)([)[\]])/.exec(interval);

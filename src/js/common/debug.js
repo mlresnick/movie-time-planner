@@ -1,8 +1,8 @@
 
 /**
- * DEBUG
+ * Debugging settings - to enable these values set `enableDebugging` to `true`. Optionally set
+ * `nowDate` and `nowTime`.
  *
- * @member {Object} debug
  * @property {?Object} nowValues - The six values passed to {@link Date}() and
  *           {@link Date} constructors.
  * @property {number[]} nowValues.date - Array of [year, month, date]
@@ -11,6 +11,7 @@
  * @property {?booleann} addDumpToArray - If true, a method called dump will be added to the
  *           {@link Array} prototype.
  */
+const debug = { };
 
 /*
  * Turn on debugging and optionally set now values.
@@ -18,8 +19,6 @@
 const enableDebugging = false;
 let nowDate = null; // [2019, 2, 11];
 const nowTime = null; // [12, 0, 0, 0];
-
-const debug = { };
 
 if (enableDebugging) {
   debug.autoFillLists = true;
@@ -38,15 +37,15 @@ if (enableDebugging) {
   /**
    * Within a chain of calls, dump the array in its current state.
    *
-   * <em>This method is onooy available if <code>{@link debug}.addDumpToArray</code>
-   * is <code>true</code>.</em>
+   * <em>This method is onooy available if {@link debug}.addDumpToArray
+   * is `true`.</em>
    *
    * <strong>This method should not be in production code.</strong>
    *
    * @param {string} texts - One or more text arguments to be written to the console before the
    *        current version of the array is written.
    *
-   * @returns {Array} - <code>this</code>
+   * @returns {Array} - `this`
    *
    * @example
    * const result = ['a', 2, 'iii']

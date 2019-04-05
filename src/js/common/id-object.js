@@ -1,15 +1,9 @@
 /**
  * Base class for objects that have parent objects and their own id.
- * @class
+ *
+ * @param {Object} [parent] - Object with an id that will be stored in this object.
  */
 class IdObject {
-  /**
-   * Creates an instance of IdObject.
-   *
-   * @param {Object} [parent] - Object with an id that will be stored in this object.
-   *
-   * @memberof IdObject
-   */
   constructor(parent) {
     /**
      * @member {string} parentId - Identifier of the object under which this showing appears.
@@ -22,10 +16,10 @@ class IdObject {
   }
 
   /**
-   * Unique identifier for derived object.
+   * Unique identifier for derived object. May be overridden by subclasses.
    *
    * @readonly
-   * @memberof IdObject
+   * @instance
    */
   get id() { return this.url; }
 }

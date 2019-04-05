@@ -9,24 +9,21 @@ import Showtime from './showtime';
  * The list of show times for a given movie at a given theater.
  *
  * Maps the contents of an HTML element into a more convenient representation.
- */
-class Listing extends IdObject {
-  /**
+ *
    * @param {Theater} theater - Theater at which this listing is appearing.
    * @param {HTMLElement} movieListingEl - Movie listing from the web page.
    */
+export default class Listing extends IdObject {
   constructor(theater, movieListingEl) {
     super(theater);
 
     /**
-     * @member {string}
+     * @type {string}
      * @private
      */
     this.movieURL = '';
 
-    /**
-     * @member {Showing[]} - List of showtimes for this.movie at this.theater.
-     */
+    /** @type {Showing[]} - List of showtimes for this.movie at this.theater. */
     this.showings = [];
 
     if (typeof movieListingEl !== 'undefined') {
@@ -62,10 +59,11 @@ class Listing extends IdObject {
   }
 
   /**
-   * @member {Movie} - Movie for this listing. It may assigned to either a {@linkcode Movie} or a
-   *                   {@linkcode string}. When refrerenced the vallue is always
-   *                   a {@linkcode Movie}.
-   * @memberof Listing
+   * Movie for this listing. It may assigned to either a {@link Movie} or a
+   *                   {@link string}. When refrerenced the vallue is always
+   *                   a {@link Movie}.
+   *
+   * @type Movie
    * @instance
    */
   get movie() { return context.movies.get(this.movieURL); }
@@ -95,13 +93,13 @@ class Listing extends IdObject {
   }
 
   /**
-   * Get an {@link Array} of {@link Showing} objects that have shoiwtimes after a given time.
+   * Get an {@link Array} of {@link Showing} objects that have showtimes after a given time.
    *
    * @param {Showtime} showtime - Earliest time for showings to be returned.
    *
    * @returns {Showing[]} - Filtered list of showings.
    *
-   * @memberof Listing
+   * @instance
    */
   showingsAfter(showtime) {
     return this.showings
@@ -113,10 +111,9 @@ class Listing extends IdObject {
    *
    * @param {Showtime} showtime - Earliest time for showings to be returned.
    *
-   * @returns {boolean} - <code>true</code> if there are any showings left.
-   *          Otherwise <code>false</code>.
+   * @returns {boolean} - `true` if there are any showings left. Otherwise `false`.
    *
-   * @memberof Listing
+   * @instance
    */
   areShowingsAfter(showtime) { return this.showingsAfter(showtime).length !== 0; }
 
@@ -127,5 +124,3 @@ class Listing extends IdObject {
    */
   get id() { return `${this.theater.id},${this.movie.id}`; }
 }
-
-export default Listing;

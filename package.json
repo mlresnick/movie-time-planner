@@ -5,12 +5,12 @@
   "main": "index.js",
   "module": "src/server.js",
   "scripts": {
-    "list": "echo prodbuild, devbuild, docgen, start, test",
+    "list": "ls-scripts",
     "prodbuild": "webpack --mode production",
     "devbuild": "webpack",
-    "docgen": "docma serve",
+    "docgen": "documentation serve ./src/js/** --format html --watch --docunment-exported --sort-order alpha",
     "start": "webpack --watch & webpack-dev-server --open-page 'webpack-dev-server/index.html'",
-    "test": "jest --watch test/**/*.test.js"
+    "test": "jest --watch ./test/**/*.test.js"
   },
   "keywords": [],
   "author": "Michael Resnick <michaelresnick17@gmail.com>",
@@ -25,6 +25,9 @@
     "css-loader": "^2.1.1",
     "diff": "^4.0.1",
     "docma": "^3.2.2",
+    "documentation": "^9.3.1",
+    "esdoc2": "^2.1.5",
+    "esdoc2-standard-plugin": "^2.1.2",
     "jest": "^24.5.0",
     "madge": "^3.4.4",
     "node-sass": "^4.11.0",
