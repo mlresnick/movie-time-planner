@@ -17,7 +17,7 @@ class Moviefone {
    * Creates an instance of Moviefone.
    *
    * @param {string} location - Center of the search area. For example a zip code.
-   * @param {number} maxDistance - How far out from <code>location</code> to look.
+   * @param {number} maxDistance - How far out from `location` to look.
    *
    * @memberof Moviefone
    */

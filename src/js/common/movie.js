@@ -4,13 +4,13 @@ import context from './context';
 import IdObject from './id-object';
 import Util from './util';
 
-/*
- * Regular expression to see if the title ends with the current year in parentheses.
- */
+// Regular expression to see if the title ends with the current year in parentheses.
 const titleExpr = new RegExp(
   `(.+)(\\s+\\(${(new Date()).getFullYear().toString()}\\))`,
 );
 
+// TODO move "export" from the end of amodule into main body of code
+// TODO Move this into to Movie class.
 /**
  * Remove the year in parentheses at the end of the title if it is the current year.
  *
@@ -19,6 +19,8 @@ const titleExpr = new RegExp(
  * @param {string} title - Movie name to be searched.
  *
  * @returns {string} The filtered movie name.
+ *
+ * @memberof Movie
  *
  * @private
  */
