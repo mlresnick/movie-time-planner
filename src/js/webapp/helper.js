@@ -1,12 +1,13 @@
-import Duration from 'duration-js';
+// const Duration = require('../../lib/js/duration.js');
 
-import context, { ContextMap } from '../common/context';
-import Listing from '../common/listing';
-import Movie from '../common/movie';
-import Showing from '../common/showing';
-import Showtime from '../common/showtime';
-import Theater from '../common/theater';
-import Util from '../common/util';
+import context, { ContextMap } from '../common/context.js';
+import Duration from '../common/duration.js';
+import Listing from '../common/listing.js';
+import Movie from '../common/movie.js';
+import Showing from '../common/showing.js';
+import Showtime from '../common/showtime.js';
+import Theater from '../common/theater.js';
+import Util from '../common/util.js';
 
 // The 'value' for listings, movies, showtimes and theaters are
 // entry arrays ([ [k, v], [k, v], [k, v], ... ]).
@@ -81,7 +82,6 @@ export function getRemainingShowings(selected) {
       || Util.compareWOArticles(lhs.theater.name, rhs.theater.name);
   }
 
-  // console.log(`JSON.stringify(selected)=${JSON.stringify(selected, null, 2)}`);
   return Array
     // IDs for all of the remaining listings...
     .from(context.remaining.listingIds.values())
@@ -90,7 +90,7 @@ export function getRemainingShowings(selected) {
     // .dump('from')
     // ... use only selected movies and theaters...
     .filter(listing => (
-      selected.theaters.includes(listing.theater.url) && selected.movies.includes(listing.movie.url)
+      selected.theaters.has(listing.theater.url) && selected.movies.has(listing.movie.url)
     ))
     // ... gete the remaining showings in the listings...
     .reduce((showings, listing) => showings.concat(listing.showingsAfter(Showtime.now)), [])

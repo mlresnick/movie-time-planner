@@ -1,14 +1,19 @@
+import path from 'path';
+
+import express from 'express';
 import fetch from 'cross-fetch';
 
 import context from '../common/context';
 import Util from '../common/util';
 
-const root = path.resolve(`${__dirname}/../..`);
+import Moviefone from './moviefone';
+
+const port = 8080;
+const staticRoot = path.resolve(__dirname, '..', '..');
 
 const app = express();
 
-// Routes
-app.use(express.static(root));
+app.use(express.static(staticRoot));
 
 app.get('/zip-code/:zipCode', async (req, res) => {
   try {
@@ -19,6 +24,7 @@ app.get('/zip-code/:zipCode', async (req, res) => {
   catch (error) {
     Util.logError(`Error collecting listing: ${error}\n\nContinuing...\n`);
   }
+  return null;
 });
 
 app.get('/distancematrix', async (req, res) => {
@@ -41,5 +47,4 @@ app.get('/distancematrix', async (req, res) => {
   }
 });
 
-const port = 8080;
 app.listen(port, () => Util.log(`Listening on port #${port}`));

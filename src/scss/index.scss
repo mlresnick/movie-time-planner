@@ -1,124 +1,38 @@
-$default-color: black;
-$result-color: #797d7f;
-
-@mixin name-link {
-  color: $default-color;
-  text-decoration: none;
-}
-
-@mixin result-highlight {
-  color: $default-color;
-  font-weight: 700;
-}
-
-body {
-  font: 15px arial, "sans-serif";
-  color: $default-color;
-
-  .overlay {
-    position: fixed;
+// .ios .tabbar-labels .tab-link:not(.tab-link-active) .icon-ios-fill {display: none;}
+// .ios .tabbar-labels .tab-link.tab-link-active .icon:not(.icon-ios-fill) {display: none;}
+// #view-location input[type="number"] {width: 4em;text-align: right;}
+// #view-location .inline-labels .item-title  { width: 70%; }
+// #view-location .inline-labels .item-input-wrap  { width: 30%; }
+// .tab-link.tab-link-active .badge {background-color: rgb(0, 122, 255);}
+// .page-content .list.no-more-showings { text-align: center; }
+// .page-content .list.no-more-showings .list-note {display: inline;font-style: italic;font-family: 'Times New Roman', Times, serif;}
+// .page-content .list .list-note { display: none; }
+// .page-content .list ul li.no-more-showings {display: none;}
+.ios .tabbar-labels .tab-link {
+  &:not(.tab-link-active) .icon-ios-fill,
+  &.tab-link-active .icon:not(.icon-ios-fill) {
     display: none;
-    height: 100%;
-    width: 100%;
-    background-color: #00000044;
-    z-index: 10;
-  }
-
-  &.waiting .overlay {
-    cursor: wait; 
-    display: block;
   }
 }
 
-button { font-size: 13px; }
-
-input {
-  font-size: 13px;
-
-  &[type="number"] {
-    width: 3em;
-    text-align: right;
+#view-location {
+  input[type="number"] {width: 4em;text-align: right;}
+  .inline-labels {
+    .item-title  { width: 70%; }
+    .item-input-wrap  { width: 30%; }
   }
 }
 
-.collapsable {
-  button.collapsable {
-    font-size: inherit;
-    width: 2em;
-  }
+.page-content .list {
+  &.no-more-showings {
+    text-align: center;
 
-  .summary { display: none; }
-
-  .content { display: block; }
-
-  &.collapsed {
-    .summary { display: block; }
-
-    .content { display: none; }
-  }
-}
-
-#location-values {
-  font-size: 15px;
-  font-weight: 400;
-  margin-left: 40px;
-}
-
-#selection {
-  .list-container {
-    display: flex;
-
-    .selection-list-section {
-      margin-left: 30px;
-      flex: 1;
-      
-      h3 { margin-top: 0; }
-      
-      th {
-        text-align: left;
-        font-size: 1.17em;
-      }
-      
-    .selection-list {
-        list-style: none;
-        padding-left: 0;
-        
-        td {
-          vertical-align: top;
-          
-          a { @include name-link; }
-
-          label[data-disabled] a { color: silver; }
-        }
-      }
-      
-      input[type="checkbox"] { margin-right: 10px; }
+    .list-note {
+      display: inline;
+      font-style: italic;
+      ont-family: 'Times New Roman', Times, serif;
     }
   }
-
-  #select-button { margin-left: 40%; }
-}
-
-#results .content table {
-  margin-left: 20px;
-
-  color: $result-color;
-
-  .showtime,
-  .rating-running-time { text-align: right; }
-
-  .showtime {
-    padding-right: 1em;
-    @include result-highlight;
-  }
-
-  .title {
-    @include result-highlight;
-
-    a { @include name-link; }
-  }
-
-  .theater-name a { @include name-link; }
-
-  .theater-details td { padding-bottom: 1em; }
+  .list-note { display: none; }
+  ul li.no-more-showings {display: none;}
 }

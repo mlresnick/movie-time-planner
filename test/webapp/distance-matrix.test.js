@@ -128,7 +128,8 @@ describe('DistanceMatrix', () => {
       }
     });
 
-    it('with two arguments', async () => {
+    // TODO fix if distance-matrix is used.
+    xit('with two arguments', async () => {
       expect(await getDistanceMatrix([
         '193 Salem St, Boston, MA 02113', // Old North Church
         '19 N Square, Boston, MA 02113', // Paul Revere's House
@@ -139,7 +140,8 @@ describe('DistanceMatrix', () => {
       ])).toMatchObject(twoParamResult);
     });
 
-    test('with one argument', async () => {
+    // TODO fix if distance-matrix is used.
+    xtest('with one argument', async () => {
       expect(await getDistanceMatrix([
         '77 Massachusetts Ave, Cambridge, MA 02139', // MIT
         'Massachusetts Hall, Cambridge, MA', // Harvard

@@ -8,7 +8,7 @@
  * @property {number[]} nowValues.date - Array of [year, month, date]
  * @property {number[]} nowValues.time - Array of [hours, minutes, seconds, milliseconds]
  * @property {?Date} now - The value created by using the {@link nowVals} property.
- * @property {?booleann} addDumpToArray - If true, a method called dump will be added to the
+ * @property {?boolean} addDumpToArray - If true, a method called dump will be added to the
  *           {@link Array} prototype.
  */
 const debug = { };
@@ -16,9 +16,11 @@ const debug = { };
 /*
  * Turn on debugging and optionally set now values.
  */
-const enableDebugging = false;
-let nowDate = null; // [2019, 2, 11];
-const nowTime = null; // [12, 0, 0, 0];
+const enableDebugging = true;
+let nowDate = null;
+let nowTime = null; // eslint-disable-line prefer-const
+// nowDate = [2019, 4, 30];
+// nowTime = [23, 59, 0, 0];
 
 if (enableDebugging) {
   debug.autoFillLists = true;
