@@ -5,13 +5,6 @@ import { JSDOM } from 'jsdom';
 
 import context from '../../src/js/common/context';
 import Movie, { removeThisYear } from '../../src/js/common/movie';
-// const Duration = require('duration-js');
-// const { JSDOM } = require('jsdom');
-
-// const context = require('../../src/js/common/context');
-// const Movie = require('../../src/js/common/movie');
-
-// const { removeThisYear } = Movie;
 
 const html = `
 <div class="moviedata">
