@@ -2,10 +2,10 @@
 
 import 'colors';
 
-import Duration from 'duration-js';
 import { JSDOM } from 'jsdom';
 
 import context from '../../src/js/common/context';
+import Duration from '../../src/js/common/duration';
 import Listing from '../../src/js/common/listing';
 import Movie from '../../src/js/common/movie';
 import { parseContext } from '../../src/js/webapp/helper';
@@ -573,8 +573,7 @@ describe('Serialization', () => {
         });
     });
 
-    // TODO fix
-    xit('has movies', () => {
+    it('has movies', () => {
       ctx.movies.forEach((movie) => {
         expect(movie).toBeInstanceOf(Movie);
         expect(movie.runningTime).toBeInstanceOf(Duration);
