@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <!-- TODO figure out if this can be uncommented out -->
   <!-- <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content:"> -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -42,10 +43,10 @@
       <div class="toolbar tabbar-labels toolbar-bottom">
         <div class="toolbar-inner">
           <a href="#view-location" class="tab-link tab-link-active">
-            <i class="icon f7-icons ios-only">placemark</i>
-            <i class="icon f7-icons ios-only icon-ios-fill">placemark_fill</i>
-            <i class="icon material-icons md-only">place</i>
-            <span class="tabbar-label">Location</span>
+              <i class="icon f7-icons ios-only">filter</i>
+              <i class="icon f7-icons ios-only icon-ios-fill">filter</i>
+              <i class="icon material-icons md-only">filter_list</i>
+            <span class="tabbar-label">Filters</span>
           </a>
           <a href="#view-theaters" class="tab-link">
             <i class="icon f7-icons ios-only">business</i>
@@ -60,9 +61,9 @@
             <span class="tabbar-label">Movies</span>
           </a>
           <a href="#view-results" class="tab-link">
-            <i class="icon f7-icons ios-only">filter</i>
-            <i class="icon f7-icons ios-only icon-ios-fill">filter</i>
-            <i class="icon material-icons md-only">movie_filter</i>
+            <i class="icon f7-icons ios-only">list</i>
+            <i class="icon f7-icons ios-only icon-ios-fill">list_fill</i>
+            <i class="icon material-icons md-only">list</i>
             <span class="tabbar-label">Results</span>
           </a>
         </div>
@@ -75,24 +76,11 @@
 
           <div class="navbar">
             <div class="navbar-inner">
-<!-- XXX
               <div class="left">
-                <a href="#" class="link icon-only panel-open" data-panel="left">
-                  <span class="icon f7-icons ios-only">settings</span>
-                  <span class="icon material-icons md-only">settings</span>
-                </a>
+                <!-- TODO ad click event listener for this link -->
+                <a href="#" class="link icon-only panel-open" data-panel="left">Save</a>
               </div>
- -->
               <div class="title sliding">Location & Date</div>
-<!-- XXX
-              <div class="right">
-                <a href="#" class="link">
-                  <span class="ios-only">Theaters</span>
-                  <span class="icon f7-icons ios-only">chevron_right</span>
-                  <span class="icon material-icons md-only">arrow_forward</span>
-                </a>
-              </div>
- -->
             </div>
           </div>
 
@@ -131,20 +119,7 @@
                       </div>
                     </div>
                   </li>
-<!-- TODO
-                  <li class="item-content item-input">
-                      <div class="item-inner">
-                        <div class="item-title item-label">Set as default</div>
-                        <div class="item-after">
-                          <label class="toggle toggle-init">
-                            <input type="checkbox">
-                            <span class="toggle-icon"></span>
-                          </label>
-                        </div>
-                      </div>
-                    </li>
- -->
-                  </ul>
+                </ul>
               </div>
 <!-- TODO
               <div class="list-group">
@@ -181,27 +156,13 @@
         <div class="page" data-name="theaters">
           <!-- Top Navbar -->
           <div class="navbar">
-              <div class="navbar-inner">
-<!-- XXX
-                <div class="left">
-                  <a href="#view-location" class="tab-link">
-                    <span class="icon material-icons md-only">arrow_back</span>
-                    <span class="icon f7-icons ios-only">chevron_left</span>
-                     <span class="ios-only">Location</span>
-                  </a>
-                </div>
- -->
-                <div class="title sliding">Theaters</div>
-<!-- XXX
-                <div class="right">
-                  <a href="#view-movies" class="tab-link">
-                    <span class="ios-only">Movies</span>
-                    <span class="icon f7-icons ios-only">chevron_right</span>
-                    <span class="icon material-icons md-only">arrow_forward</span>
-                  </a>
-                </div>
- -->
+            <div class="navbar-inner">
+              <div class="left">
+                <!-- TODO add click event oistern for this link-->
+                <a href="#view-location" class="tab-link">Select all</a>
               </div>
+              <div class="title sliding">Theaters</div>
+            </div>
           </div>
 
           <div class="page-content">
@@ -221,25 +182,10 @@
           <!-- Top Navbar -->
           <div class="navbar">
             <div class="navbar-inner">
-<!-- XXX
               <div class="left">
-                <a href="#view-theaters" class="tab-link">
-                  <span class="icon material-icons md-only">arrow_back</span>
-                  <span class="icon f7-icons ios-only">chevron_left</span>
-                  <span class="ios-only">Theaters</span>
-                </a>
+                <a href="#view-theaters" class="tab-link">Select all</a>
               </div>
- -->
               <div class="title sliding">Movies</div>
-<!-- XXX
-              <div class="right">
-                <a href="#view-results" class="tab-link">
-                  <span class="ios-only">Results</span>
-                  <span class="icon f7-icons ios-only">chevron_right</span>
-                  <span class="icon material-icons md-only">arrow_forward</span>
-                </a>
-              </div>
- -->
             </div>
           </div>
 
@@ -260,23 +206,7 @@
             <!-- Top Navbar -->
             <div class="navbar">
               <div class="navbar-inner">
-<!-- XXX
-                <div class="left">
-                  <a href="#view-movies" class="tab-link">
-                    <i class="icon icon-back"></i>
-                    <span class="ios-only">Movies</span>
-                  </a>
-                </div>
- -->
                 <div class="title sliding">Results</div>
-<!-- XXX
-                <div class="right">
-                  <a href="#view-results" class="tab-link">
-                    <span class="ios-only">Results</span>
-                    <i class="icon icon-next"></i>
-                  </a>
-                </div>
--->
               </div>
             </div>
 
