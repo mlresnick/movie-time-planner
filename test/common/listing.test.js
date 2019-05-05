@@ -1,9 +1,9 @@
 /* eslint-env jest */
 
 import { JSDOM } from 'jsdom';
-import Duration from 'duration-js';
 
 import context from '../../src/js/common/context';
+import Duration from '../../src/js/common/duration';
 import Listing from '../../src/js/common/listing';
 import Movie from '../../src/js/common/movie';
 import Showtime from '../../src/js/common/showtime';
