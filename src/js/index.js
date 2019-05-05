@@ -1,4 +1,5 @@
-import Framework7 from '../../lib/framework7/js/framework7';
+/* global Framework7 */
+import '../../lib/framework7/js/framework7.js';
 
 import context from './common/context.js';
 import { getRemainingShowings, parseContext } from './webapp/helper.js';
