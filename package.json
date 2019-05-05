@@ -12,7 +12,7 @@
   "scripts": {
     "list": "ls-scripts",
     "docgen": "documentation serve ./src/js/** --format html --watch --docunment-exported --sort-order alpha",
-    "start": "node --require esm ./dist/js/server/server.js",
+    "startdev": "nodemon --require esm ./dist/js/server/server.js",
     "test": "jest --watch ./test/**/*.test.js",
     "gulp": "gulp --require esm"
   },
