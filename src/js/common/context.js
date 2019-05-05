@@ -1,4 +1,4 @@
-import IdObject from './id-object';
+import IdObject from './id-object.js';
 
 /**
  * Augmented  {@link Map} class.
@@ -146,7 +146,7 @@ class Context {
       this.requestedDate = undefined;
 
       /**
-       * Sets containing IDs of items that still hve remaining showings.
+       * Sets containing IDs of items that still have remaining showings.
        *
        * @property {Set} listingIds - Listings that still have showings left.
        * @property {Set} movieIds - Movies that still have showings left.

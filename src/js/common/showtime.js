@@ -1,6 +1,6 @@
-import debug from './debug';
-import context from './context';
-import Util from './util';
+import debug from './debug.js';
+import context from './context.js';
+import Util from './util.js';
 
 /**
  * The time and date of a single movie showing.

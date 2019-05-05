@@ -1,7 +1,7 @@
-import context from './context';
-import Listing from './listing';
-import Util from './util';
-import IdObject from './id-object';
+import context from './context.js';
+import Listing from './listing.js';
+import Util from './util.js';
+import IdObject from './id-object.js';
 
 /**
  * A theater containing movie Listings.
@@ -78,6 +78,8 @@ class Theater extends IdObject {
     [this._distance, this.distanceUnit] = distanceString.split(' ');
     this._distance = Number.parseFloat(this._distance, 10);
   }
+
+  get footer() { return `${this.distanceString} | ${this.address} | ${this.phone}`; }
 }
 
 export default Theater;

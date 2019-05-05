@@ -1,9 +1,9 @@
 /* global Theater */ // To avoid ciurular import dependencies.
-import IdObject from './id-object';
-import Movie from './movie';
-import context from './context';
-import Showing from './showing';
-import Showtime from './showtime';
+import IdObject from './id-object.js';
+import Movie from './movie.js';
+import context from './context.js';
+import Showing from './showing.js';
+import Showtime from './showtime.js';
 
 /**
  * The list of show times for a given movie at a given theater.

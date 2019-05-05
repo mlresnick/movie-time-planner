@@ -1,7 +1,7 @@
 /* global Movie,Listing,Theater */
-import context from './context';
-import IdObject from './id-object';
-import Showtime from './showtime';
+import context from './context.js';
+import IdObject from './id-object.js';
+import Showtime from './showtime.js';
 
 /**
  * The specific time for a movie at a given theater.

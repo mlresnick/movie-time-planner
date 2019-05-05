@@ -23,7 +23,6 @@ export default async function getDistanceMatrix(origins, destinationsArg) {
     const response = await fetch(url/* , { mode: 'no-cors' } */);
     if (response.status !== 200) {
       Util.logError(`Looks like there was a problem. Status Code: ${response.status}`);
-      // XXX // console.log(`JSON.stringify(response)=${JSON.stringify(response, null, 2)}`);
     }
     else {
       retval = await response.json();

@@ -1,8 +1,7 @@
-import Duration from 'duration-js';
-
-import context from './context';
-import IdObject from './id-object';
-import Util from './util';
+import context from './context.js';
+import Duration from './duration.js';
+import IdObject from './id-object.js';
+import Util from './util.js';
 
 // Regular expression to see if the title ends with the current year in parentheses.
 const titleExpr = new RegExp(
@@ -102,6 +101,13 @@ class Movie extends IdObject {
   get name() { return this.title; }
 
   set name(title) { this.title = title; }
+
+  get footer() { return `${this.rating} | ${this.runningTimeString}`; }
+
+  get runningTimeString() {
+    const { hours, minutes } = this.runningTime;
+    return `${hours ? `${hours} hr ` : ''}${minutes} min`;
+  }
 
   /**
    * Generate human readable versn of object.
