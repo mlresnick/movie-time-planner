@@ -12,10 +12,9 @@ function initFramework7() {
   // Framework7 App main instance
   framework7 = new Framework7({
     root: '#app', // App root element
-    id: 'io.framework7.testapp', // App bundle ID
-    name: 'Framework7', // App name
+    id: 'com.example.movie-time-planner', // App bundle ID
+    name: 'Movie Time Planner', // App name
     theme: 'auto', // Automatic theme detection
-    // TODO (maybe) routes
   });
 
   // Init/Create views
