@@ -3,11 +3,6 @@
 import context, { ContextMap } from '../../src/js/common/context';
 import IdObject from '../../src/js/common/id-object';
 
-// const context = require('../../src/js/common/context');
-// const IdObject = require('../../src/js/common/id-object');
-
-// const { ContextMap } = context;
-
 class IdObjectSubclass extends IdObject {
   constructor(parent, value) {
     super(parent);
