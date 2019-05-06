@@ -36,11 +36,12 @@ function copySources(cb) {
 
 const createDist = parallel(copySources, createLib, generateDocumentation, generateCSS);
 
-const recreateDist = series(cleanDist, createDist);
+export const recreateDist = series(cleanDist, createDist);
 
-watch(['src/*.*', 'src/js/**/*.*'], parallel(copySources, generateDocumentation));
-watch(['src/scss/**/*.scss', 'src/scss/**/*.css'], generateCSS);
-watch('lib/**/*.*', createLib);
+export default function startWatch(cb) {
+  watch(['src/*.*', 'src/js/**/*.*'], parallel(copySources, generateDocumentation));
+  watch(['src/scss/**/*.scss', 'src/scss/**/*.css'], generateCSS);
+  watch('lib/**/*.*', createLib);
 
-// TODO update taks based on watch results
-export default recreateDist;
+  cb();
+}
