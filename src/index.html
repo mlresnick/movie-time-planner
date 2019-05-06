@@ -2,50 +2,26 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <!-- TODO figure out if this can be uncommented out -->
-  <!-- <meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap: content:"> -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#2196f3">
-  <meta name="format-detection" content="telephone=no">
-  <meta name="msapplication-tap-highlight" content="no">
-  <title>Movie Time Planner F7</title>
-
-  <link rel="stylesheet" href="lib/framework7/css/framework7.css">
+  <title>Movie Time Planner</title>
+  <link rel="stylesheet" href="lib/framework7/css/framework7.bundle.min.css">
   <link rel="stylesheet" href="css/icons.css">
   <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
   <div id="app">
-    <!-- Status bar overlay for fullscreen mode-->
+    
     <div class="statusbar"></div>
-
-    <!-- Left panel with cover effect-->
-    <div class="panel panel-left panel-cover theme-dark">
-      <div class="view">
-        <div class="page">
-          <div class="navbar">
-            <div class="navbar-inner">
-              <div class="title">Settings</div>
-            </div>
-          </div>
-          <div class="page-content">
-              <div class="block">TODO This panel intentionally left blank</div>
-            </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Views/Tabs container -->
-    <div class="views tabs safe-areas">
-      <!-- Tabbar for switching views-tabs -->
-      <div class="toolbar tabbar-labels toolbar-bottom">
+    
+    <div class="views tabs">
+      <div class="toolbar tabbar tabbar-labels toolbar-bottom">
         <div class="toolbar-inner">
-          <a href="#view-location" class="tab-link tab-link-active">
-              <i class="icon f7-icons ios-only">filter</i>
-              <i class="icon f7-icons ios-only icon-ios-fill">filter</i>
-              <i class="icon material-icons md-only">filter_list</i>
+          <a href="#view-filters" class="tab-link tab-link-active">
+            <i class="icon f7-icons ios-only">filter</i>
+            <i class="icon f7-icons ios-only icon-ios-fill">filter</i>
+            <i class="icon material-icons md-only">filter_list</i>
             <span class="tabbar-label">Filters</span>
           </a>
           <a href="#view-theaters" class="tab-link">
@@ -68,36 +44,21 @@
           </a>
         </div>
       </div>
-
-      <!-- Your main view/tab, should have "view-main" class. It also has "tab-active" class -->
-      <div id="view-location" class="view view-main tab tab-active">
-
+      
+      <div id="view-filters" class="view view-main tab tab-active">
         <div class="page" data-name="location">
-
+          
           <div class="navbar">
             <div class="navbar-inner">
-              <div class="left">
-                <!-- TODO ad click event listener for this link -->
-                <a href="#" class="link icon-only panel-open" data-panel="left">Save</a>
-              </div>
-              <div class="title sliding">Location & Date</div>
+              <div class="title sliding">Filters</div>
             </div>
           </div>
-
-          <!--
-            -- TODO - add toggle
-            --  1. remember this information in cookies
-            --  2. remember favorite list of theaters
-            --  3. add date picker
-            -->
-
+          
           <div class="page-content">
             <form id="location-form" class="list inline-labels">
+
               <div class="list-group">
                 <ul>
-<!-- TODO
-                  <li class="list-group-title">Location</li>
- -->
                   <li class="item-content item-input">
                     <div class="item-inner">
                       <div class="item-title item-label">ZIP Code<sup>&trade;</sup></div>
@@ -121,50 +82,20 @@
                   </li>
                 </ul>
               </div>
-<!-- TODO
-              <div class="list-group">
-                <ul>
-                  <li class="list-group-title">Date</li>
-                  <li class="item-content item-input">
-                    <div class="item-inner">
-                      <div class="item-title item-label">Date</div>
-                      <div class="item-input-wrap">
-                        <input type="text" name="date" size="5" placeholder="today — TBI" disabled="">
-                        <span class="input-clear-button"></span>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="item-content item-input">
-                    <div class="item-inner">
-                      <div class="item-title item-label">Time</div>
-                      <div class="item-input-wrap">
-                        <input type="text" name="time" size="5" placeholder="now — TBI" disabled="">
-                        <span class="input-clear-button"></span>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-              </div>
- -->
             </form>
           </div>
         </div>
-      </div>
-
-      <!-- Theater View -->
+      </div>  
+      
       <div id="view-theaters" class="view tab">
-        <div class="page" data-name="theaters">
-          <!-- Top Navbar -->
+        <div class="page" data-name="location">
+          
           <div class="navbar">
             <div class="navbar-inner">
-              <div class="left">
-                <!-- TODO add click event oistern for this link-->
-                <a href="#view-location" class="tab-link">Select all</a>
-              </div>
               <div class="title sliding">Theaters</div>
             </div>
           </div>
-
+          
           <div class="page-content">
             <div class="list">
               <span class="list-note">There are no more showings for any theater.</span>
@@ -175,20 +106,16 @@
           </div>
         </div>
       </div>
-
-      <!-- Movies View -->
+      
       <div id="view-movies" class="view tab">
-        <div class="page" data-name="movies">
-          <!-- Top Navbar -->
+        <div class="page" data-name="location">
+          
           <div class="navbar">
             <div class="navbar-inner">
-              <div class="left">
-                <a href="#view-theaters" class="tab-link">Select all</a>
-              </div>
               <div class="title sliding">Movies</div>
             </div>
           </div>
-
+          
           <div class="page-content">
             <div class="list">
               <span class="list-note">There are no more showings for any movie.</span>
@@ -199,68 +126,30 @@
           </div>
         </div>
       </div>
-
-        <!-- Results View -->
-        <div id="view-results" class="view tab">
-          <div class="page" data-name="results">
-            <!-- Top Navbar -->
-            <div class="navbar">
-              <div class="navbar-inner">
-                <div class="title sliding">Results</div>
-              </div>
-            </div>
-
-            <div class="page-content">
-              <div class="list">
-                <span class="list-note">There are no more showings.</span>
-                <!-- Filled in at runtime -->
-            </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-  </div>
-  <script type="module" src="js/index.js"></script>
-</body>
-</html>
-    <!-- Right panel with reveal effect-->
-<!--
-    <div class="panel panel-right panel-reveal theme-dark">
-      <div class="view">
-        <div class="page">
+      
+      <div id="view-results" class="view tab">
+        <div class="page" data-name="location">
           <div class="navbar">
             <div class="navbar-inner">
-              <div class="title">Right Panel</div>
+              <div class="title sliding">Results</div>
             </div>
           </div>
+
           <div class="page-content">
-            <div class="block">Right panel content goes here</div>
+            <div class="list">
+              <span class="list-note">
+                There are no more showings for the selected movies at the selected theaters.
+              </span>
+              <ul>
+                <!-- Filled in at runtime -->
+              </ul>
+            </div>
           </div>
         </div>
       </div>
     </div>
- -->
-    <!-- Popup -->
-<!--
-    <div class="popup" id="my-popup">
-        <div class="view">
-          <div class="page">
-            <div class="navbar">
-              <div class="navbar-inner">
-                <div class="title">Popup</div>
-                <div class="right">
-                  <a href="#" class="link popup-close">Close</a>
-                </div>
-              </div>
-            </div>
-            <div class="page-content">
-              <div class="block">
-                <p>Popup content goes here.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
--->
+  </div>
+  <script type="text/javascript" src="lib/framework7/js/framework7.bundle.min.js"></script>
+  <script type="module" src="js/foo.js"></script>
+</body>
+</html>
