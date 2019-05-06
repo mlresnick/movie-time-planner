@@ -1,5 +1,4 @@
 /* global Framework7 */
-import '../../lib/framework7/js/framework7.js';
 
 import context from './common/context.js';
 import { getRemainingShowings, parseContext } from './webapp/helper.js';
@@ -10,17 +9,30 @@ let framework7;
 let progressbarEl;
 
 function initFramework7() {
-  // Framework7 App main instance
   framework7 = new Framework7({
-    root: '#app', // App root element
-    id: 'com.example.movie-time-planner', // App bundle ID
-    name: 'Movie Time Planner', // App name
-    theme: 'auto', // Automatic theme detection
+    root: '#app',
+    name: 'Movie Time Planner',
+    id: 'com.example.fmtp',
   });
+}
 
-  // Init/Create views
-  ['#view-location', '#view-theaters', '#view-movies', '#view-results']
-    .forEach(viewName => framework7.views.create(viewName));
+async function retrieveMovieInfo() {
+  const locationForm = document.getElementById('location-form');
+  if (locationForm.reportValidity()) {
+    const zipCode = locationForm.querySelector('input[name="zip-code"]').value;
+    const maxDistance = locationForm.querySelector('input[name="max-distance"]').value;
+    const response = await fetch(
+      `/zip-code/${zipCode}${(maxDistance === '') ? '' : `?max-distance=${maxDistance}`}`,
+    );
+
+    if (Util.isInInterval(response.status, '[200, 300)') || (response.status === 304)) {
+      const contextJSON = await response.text();
+      const localContext = parseContext(contextJSON); // JSON.parse(contextJSON, reviver);
+      ['movies', 'theaters', 'listings', 'requestedDate'].forEach((member) => {
+        context[member] = localContext[member];
+      });
+    }
+  }
 }
 
 function buildRemainingLists(remaining, listing) {
@@ -60,34 +72,6 @@ function sortedListToSelectionHTML(arg) {
   </li>`;
 }
 
-// TODO RINN
-// function showingToHTML(showing, index, showings) {
-//   const { movie, theater } = showing;
-//   const showtime = (Showtime.compare(showing.showtime, previousShowtime) !== 0)
-//     ? showing.showtime
-//     : '&nbsp;';
-//   previousShowtime = showing.showtime;
-
-//   `<li>
-//     <div class="item-content">
-//       <div class="item-inner">
-//         <div class="item-title>${movie.title}</div>
-//       </div>
-//     </div>
-//   </li>`;
-// }
-
-// TODO RINN
-// function setBadges() {
-//   ['theaters', 'movies'].forEach(buttonType => {
-//     document.querySelectorAll(`.toolbar-bottom .tab-link[href="#view-${buttonType}"] .icon`)
-//       .forEach(
-//         iconEl => iconEl.innerHTML = `${iconEl.innerHTML}`
-//           + `<span class="badge">${context[buttonType].size}</span>`
-//       );
-//   });
-// }
-
 function updateSelectionList(listType) {
   const listName = `${listType}s`;
   const viewName = `#view-${listName}`;
@@ -100,6 +84,18 @@ function updateSelectionList(listType) {
     .map(object => ({ listEl, object, listType }))
     .map(sortedListToSelectionHTML)
     .join('\n');
+}
+
+function groupByTime(timeList, showing) {
+  let showtimeList = timeList.get(showing.showtime);
+
+  if (typeof showtimeList === 'undefined') {
+    showtimeList = [];
+    timeList.set(showing.showtime, showtimeList);
+  }
+
+  showtimeList.push(showing);
+  return timeList;
 }
 
 function showingToListItem(showing) {
@@ -121,29 +117,13 @@ function timeListEntryToListGroup(timeListEntry) {
   const [showtime, showings] = timeListEntry;
 
   return ''
-   + `<div class="list-group">
+    + `<div class="list-group">
       <ul>
         <li class="list-group-title">${showtime}</li>
         ${showings.map(showingToListItem).join('\n')}
       </ul>
     </div>
     `;
-}
-
-function groupByTime(timeList, showing, index, showings) {
-  let result = timeList;
-
-  if (typeof result[showing.showtime] === 'undefined') {
-    result[showing.showtime] = [];
-  }
-  result[showing.showtime].push(showing);
-
-  // If this is the last entry, return an array of the accumulator object's entries, rather than the
-  // object itself.
-  if (index === (showings.length - 1)) {
-    result = Object.entries(timeList);
-  }
-  return result;
 }
 
 /*
@@ -165,36 +145,24 @@ function getSelectedSet(listType) {
   return new Set(Array.from(selectedEls).map(el => el.value));
 }
 
-
 function updateResults() {
+  const resultListEl = document.querySelector('#view-results .list');
+
+  // Build here, so it doesn't need to be redone for every showing
   const selected = {
     movies: getSelectedSet('movies'),
     theaters: getSelectedSet('theaters'),
   };
 
-  document.querySelector('#view-results .list').innerHTML = getRemainingShowings(selected)
-    .reduce(groupByTime, {})
+  const timeMap = getRemainingShowings(selected)
+    // .reduce(groupByTime, {}).entries()
+    .reduce(groupByTime, new Map());
+
+  resultListEl.querySelector('ul').innerHTML = Array.from(timeMap.entries())
     .map(timeListEntryToListGroup)
     .join('\n');
-}
 
-async function retrieveMovieInfo() {
-  const locationForm = document.getElementById('location-form');
-  if (locationForm.reportValidity()) {
-    const zipCode = locationForm.querySelector('input[name="zip-code"]').value;
-    const maxDistance = locationForm.querySelector('input[name="max-distance"]').value;
-    const response = await fetch(
-      `/zip-code/${zipCode}${(maxDistance === '') ? '' : `?max-distance=${maxDistance}`}`,
-    );
-
-    if (Util.isInInterval(response.status, '[200, 300)') || (response.status === 304)) {
-      const contextJSON = await response.text();
-      const localContext = parseContext(contextJSON); // JSON.parse(contextJSON, reviver);
-      ['movies', 'theaters', 'listings', 'requestedDate'].forEach((member) => {
-        context[member] = localContext[member];
-      });
-    }
-  }
+  resultListEl.classList.toggle('no-more-showings', timeMap.size === 0);
 }
 
 async function updateOtherTabs() {
@@ -212,106 +180,18 @@ async function updateOtherTabs() {
   framework7.progressbar.hide(progressbarEl);
 }
 
-// TODO RINN
-// // TODO move to after set up
-// const theatersTabButton =
-//   document.querySelector('.toolbar-bottom .tab-link[href="#view-theaters"]');
-// theatersTabButton.click();
-
-// // Add badges
-
-// context.remaining.clear();
-// Array.from(context.listings.values()).reduce(buildRemainingLists, context.remaining);
-
-// TODO RINN
-// ['theater', 'movie'].forEach((objectType) => {
-//   const objectList = `${objectType}s`;
-
-//   const listEl = document.querySelector(`#view-${objectList} .list`);
-//   listEl.classList.add('no-more-showings');
-//   listEl.querySelector('ul').innerHTML =
-//     Array.from(context[`${objectList}`].values())
-//       .sort((lhs, rhs) => Util.compareWOArticles(lhs.name, rhs.name))
-//       // Add info from current context.
-//       .map(object => { return { listEl, object, objectType }; })
-//       .map(sortedListToSelectionHTML)
-//       .join('\n');
-
-// });
-/*
-      function showingToListItem(showing) {
-        return '' +
-         `<li>
-            <div class="item-content">
-              <div class="item-inner">
-                <div class="item-title">
-                  ${showing.movie.title}
-                  <div class="item-footer">${showing.theater.name}</div>
-                </div>
-              </div>
-            </div>
-          </li>
-          `;
-      }
-
-      function timeListEntryToListGroup(timeListEntry) {
-        const [showtime, showings] = timeListEntry;
-
-        return '' +
-          `<div class="list-group">
-            <ul>
-              <li class="list-group-title">${showtime}</li>
-              ${showings
-                .map(showingToListItem)
-                .join('\n')}
-            </ul>
-          </div>
-          `;
-        }
-
-      function groupByTime(timeList, showing, index, showings) {
-        let result = timeList;
-
-        if  (typeof timeList[showing.showtime] === 'undefined' ) {
-          timeList[showing.showtime] = []
-        }
-        timeList[showing.showtime].push(showing)
-
-        // If this is the last entry, return an array of thd object's entries, rather than the
-        // object itself.
-        if (index === (showings.length - 1)) {
-          result = Object.entries(timeList);
-        }
-        return result;
-      }
-
-      const selected = {
-        movies: getSelectedSet('movies'),
-        theaters: getSelectedSet('theaters'),
-      }
-
-      document.querySelector('#view-results .list').innerHTML =
-        getRemainingShowings(selected)
-        .reduce(groupByTime, {})
-        .map(timeListEntryToListGroup)
-        .join('\n');
-    }
-}
-  // framework7.progressbar.hide(progressbarEl);
-}
-*/
-
 document.addEventListener('DOMContentLoaded', () => {
   initFramework7();
 
-  // TODO RINN
-  // document.querySelector('#view-location .navbar .right a')
-  //   .addEventListener('click', retrieveMovieInfo);
+  ['#view-filters', '#view-theaters', '#view-movies', '#view-results']
+    .forEach(viewName => framework7.views.create(viewName));
 
-  document.querySelector('#view-location.tab')
-    .addEventListener('tab:hide', updateOtherTabs);
+  document.querySelector('#view-filters.tab').addEventListener('tab:hide', updateOtherTabs);
+
+  ['#view-theaters', '#view-movies'].forEach(
+    viewName => document.querySelector(viewName).addEventListener('click', updateResults)
+  );
 
   // XXX remove
   document.querySelector('#location-form input[name="zip-code"]').value = '02421';
-  // document.querySelector('#location-form input[name="max-distance"]').value = 6.5;
 });
