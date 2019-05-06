@@ -103,7 +103,7 @@ export default class Listing extends IdObject {
    */
   showingsAfter(showtime) {
     return this.showings
-      .filter(showing => (Showtime.compare(showtime, showing.showtime) < 0));
+      .filter(showing => (Showtime.compare(showtime, showing.showtime) <= 0));
   }
 
   /**

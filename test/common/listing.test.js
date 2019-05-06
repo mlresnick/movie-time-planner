@@ -263,6 +263,7 @@ describe('movie listing', () => {
     const testlist = [
       ['before all', 13, [[14, 0], [16, 30], [19, 0]].map(mapToShowtime)],
       ['after first', 15, [[16, 30], [19, 0]].map(mapToShowtime)],
+      ['at second', 14, [[14, 0], [16, 30], [19, 0]].map(mapToShowtime)],
       ['after second', 17, [[19, 0]].map(mapToShowtime)],
       ['after all', 20, []],
     ];
