@@ -79,7 +79,7 @@ class Theater extends IdObject {
     this._distance = Number.parseFloat(this._distance, 10);
   }
 
-  get footer() { return `${this.distanceString} | ${this.address} | ${this.phone}`; }
+  get footer() { return `${this.distanceString} | ${this.phone}<br>${this.address}`; }
 }
 
 export default Theater;
