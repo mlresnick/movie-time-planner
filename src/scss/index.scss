@@ -13,6 +13,15 @@
   }
 }
 
+.view .navbar .mark-clear {
+  &.all-selected {
+    .mark-all {display: none; }
+  }
+  &:not(.all-selected) {
+    .clear-all { display: none; }
+  }
+}
+
 .page-content .list {
   &.no-more-showings {
     text-align: center;

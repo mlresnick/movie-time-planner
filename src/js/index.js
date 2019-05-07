@@ -14,6 +14,9 @@ function initFramework7() {
     name: 'Movie Time Planner',
     id: 'com.example.fmtp',
   });
+
+  ['#view-filters', '#view-theaters', '#view-movies', '#view-results']
+    .forEach(viewName => framework7.views.create(viewName));
 }
 
 async function retrieveMovieInfo() {
@@ -145,6 +148,14 @@ function getSelectedSet(listType) {
   return new Set(Array.from(selectedEls).map(el => el.value));
 }
 
+function allSelected(viewEl) {
+  const listEl = viewEl.querySelector('.page-content .list');
+  const allElList = Array.from(listEl.querySelectorAll('li input[type="checkbox"]'));
+  const selectedElList = allElList.filter(el => el.checked);
+
+  return (allElList.length === selectedElList.length);
+}
+
 function updateResults() {
   const resultListEl = document.querySelector('#view-results .list');
 
@@ -180,17 +191,48 @@ async function updateOtherTabs() {
   framework7.progressbar.hide(progressbarEl);
 }
 
+function getViewElFromEvent(event) {
+  const composedPath = event.composedPath();
+  const viewEl = composedPath.find(el => el.id.startsWith('view-'));
+
+  if (typeof viewEl === 'undefined') {
+    throw new Error(`Did not find a view element in ${composedPath}`);
+  }
+
+  return viewEl;
+}
+
+function updateOnClickCheckbox(event) {
+  const viewEl = getViewElFromEvent(event);
+  viewEl.querySelector('.mark-clear').classList.toggle('all-selected', allSelected(viewEl));
+
+  updateResults();
+
+  return true;
+}
+
+function affectAllCheckboxes(event) {
+  const allSelectClass = 'all-selected';
+  const viewEl = getViewElFromEvent(event);
+  const { classList } = viewEl.querySelector('.mark-clear');
+  const newCheckedValue = !classList.contains(allSelectClass);
+
+  viewEl.querySelectorAll('.page-content .list li input[type="checkbox"]')
+    .forEach((el) => { el.checked = newCheckedValue; });
+
+  classList.toggle(allSelectClass);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initFramework7();
 
-  ['#view-filters', '#view-theaters', '#view-movies', '#view-results']
-    .forEach(viewName => framework7.views.create(viewName));
-
   document.querySelector('#view-filters.tab').addEventListener('tab:hide', updateOtherTabs);
 
-  ['#view-theaters', '#view-movies'].forEach(
-    viewName => document.querySelector(viewName).addEventListener('click', updateResults)
-  );
+  document.querySelectorAll('.selection-view')
+    .forEach((viewEl) => {
+      viewEl.querySelector('.list ul').addEventListener('click', updateOnClickCheckbox);
+      viewEl.querySelector('.mark-clear').addEventListener('click', affectAllCheckboxes);
+    });
 
   // XXX remove
   document.querySelector('#location-form input[name="zip-code"]').value = '02421';
