@@ -105,7 +105,7 @@ function showingToListItem(showing) {
   return ''
    + `<li>
       <div class="item-content">
-        <div class="item-inner">
+      <div class="item-inner">
           <div class="item-title">
             ${showing.movie.title}
             <div class="item-footer">${showing.theater.name}</div>
@@ -169,7 +169,7 @@ function updateResults() {
     // .reduce(groupByTime, {}).entries()
     .reduce(groupByTime, new Map());
 
-  resultListEl.querySelector('ul').innerHTML = Array.from(timeMap.entries())
+  resultListEl.innerHTML = Array.from(timeMap.entries())
     .map(timeListEntryToListGroup)
     .join('\n');
 
