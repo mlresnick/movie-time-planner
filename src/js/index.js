@@ -191,6 +191,11 @@ async function updateOtherTabs() {
   framework7.progressbar.hide(progressbarEl);
 }
 
+async function handleGetInfo() {
+  await updateOtherTabs();
+  document.querySelector('.tabbar a[href="#view-theaters"]').click();
+}
+
 function getViewElFromEvent(event) {
   const composedPath = event.composedPath();
   const viewEl = composedPath.find(el => el.id.startsWith('view-'));
@@ -226,7 +231,7 @@ function affectAllCheckboxes(event) {
 document.addEventListener('DOMContentLoaded', () => {
   initFramework7();
 
-  document.querySelector('#view-filters.tab').addEventListener('tab:hide', updateOtherTabs);
+  document.querySelector('#view-filters .button.get-info').addEventListener('click', handleGetInfo);
 
   document.querySelectorAll('.selection-view')
     .forEach((viewEl) => {
