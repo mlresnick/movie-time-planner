@@ -4,7 +4,7 @@ import Duration from 'duration-js';
 import { JSDOM } from 'jsdom';
 
 import context from '../../src/js/common/context';
-import Movie, { removeThisYear } from '../../src/js/common/movie';
+import Movie from '../../src/js/common/movie';
 
 const html = `
 <div class="moviedata">
@@ -33,9 +33,9 @@ describe('Movie', () => {
   });
 
   it('can remove this year from title', () => {
-    expect(removeThisYear('a movie title with no year')).toBe('a movie title with no year');
-    expect(removeThisYear('a movie title with previous year (2000)')).toBe('a movie title with previous year (2000)');
-    expect(removeThisYear(`a movie title with this year (${new Date().getFullYear().toString()})`)).toBe('a movie title with this year');
+    expect(Movie.removeThisYear('a movie title with no year')).toBe('a movie title with no year');
+    expect(Movie.removeThisYear('a movie title with previous year (2000)')).toBe('a movie title with previous year (2000)');
+    expect(Movie.removeThisYear(`a movie title with this year (${new Date().getFullYear().toString()})`)).toBe('a movie title with this year');
   });
 
   describe('can be created with a DOM node', () => {
