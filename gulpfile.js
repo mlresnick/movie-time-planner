@@ -5,6 +5,16 @@ import sass from 'gulp-sass';
 
 const { dest, src, parallel, series, watch } = gulp; // eslint-disable-line object-curly-newline
 
+const jsSources = 'src/js/**/*.*';
+const libSources = 'lib/**/*.*';
+const scssSources = ['src/scss/**/*.scss', 'src/scss/**/*.css'];
+const webSources = 'src/*.*';
+
+const cssDestination = 'dist/css';
+const jsDestination = 'dist/js';
+const libDestination = 'dist/lib';
+const webDestination = 'dist';
+
 function copyChanged(from, to) {
   return src(from).pipe(changed(to)).pipe(dest(to));
 }
@@ -22,15 +32,15 @@ function cleanDist() {
 }
 
 function generateCSS() {
-  return src(['src/scss/**/*.scss', 'src/scss/**/*.css'])
-    .pipe(changed('dist/css'))
+  return src(scssSources)
+    .pipe(changed(cssDestination))
     .pipe(sass().on('error', sass.logError))
-    .pipe(dest('dist/css'));
+    .pipe(dest(cssDestination));
 }
 
 function copySources(cb) {
-  copyChanged('src/*.*', 'dist');
-  copyChanged('src/js/**/*.*', 'dist/js');
+  copyChanged(rootSources, rootDestination);
+  copyChanged(jsSources, jsDestination);
 
   cb();
 }
@@ -41,9 +51,10 @@ const createDist = parallel(copySources, createLib, generateDocumentation, gener
 export const recreateDist = series(cleanDist, createDist);
 
 export default function startWatch(cb) {
-  watch(['src/*.*', 'src/js/**/*.*'], parallel(copySources, generateDocumentation));
-  watch(['src/scss/**/*.scss', 'src/scss/**/*.css'], generateCSS);
-  watch('lib/**/*.*', createLib);
+  watch(webSources, copyWebSources);
+  watch(jsSources, parallel(copyJsSources, generateDocumentation));
+  watch(scssSources, generateCSS);
+  watch(libSources, copyLib);
 
   cb();
 }
