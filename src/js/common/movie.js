@@ -8,30 +8,10 @@ const titleExpr = new RegExp(
   `(.+)(\\s+\\(${(new Date()).getFullYear().toString()}\\))`,
 );
 
-// TODO move "export" from the end of amodule into main body of code
-// TODO Move this into to Movie class.
-/**
- * Remove the year in parentheses at the end of the title if it is the current year.
- *
- * Exported for unit testing.
- *
- * @param {string} title - Movie name to be searched.
- *
- * @returns {string} The filtered movie name.
- *
- * @memberof Movie
- *
- * @private
- */
-export function removeThisYear(title) {
-  const result = titleExpr.exec(title);
-  return (result ? result[1] : title);
-}
-
 /**
  * Information about a movie being shown.
  */
-class Movie extends IdObject {
+export default class Movie extends IdObject {
   /**
    * Collect information from an HTMLElement and put it into a more convenient format.
    *
@@ -74,7 +54,7 @@ class Movie extends IdObject {
         this.rating = movieRatingRuntime;
       }
 
-      this.title = removeThisYear(
+      this.title = Movie.removeThisYear(
         Util.innerHTML(moviedataEl.querySelector('.movietitle a')),
       );
       this.url = moviedataEl.querySelector('.movietitle a').getAttribute('href');
@@ -83,6 +63,22 @@ class Movie extends IdObject {
         context.movies.set(this);
       }
     }
+  }
+
+  /**
+   * Remove the year in parentheses at the end of the title if it is the current year.
+   *
+   * @param {string} title - Movie name to be searched.
+   *
+   * @returns {string} The filtered movie name.
+   *
+   * @memberof Movie
+   *
+   * @private
+   */
+  static removeThisYear(title) {
+    const result = titleExpr.exec(title);
+    return (result ? result[1] : title);
   }
 
   /**
@@ -119,5 +115,3 @@ class Movie extends IdObject {
     return `${this.title} - ${hours}:${minutes.padStart(2, '0')} | ${this.rating}`;
   }
 }
-
-export default Movie;
