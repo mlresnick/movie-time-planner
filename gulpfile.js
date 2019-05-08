@@ -18,10 +18,14 @@ const libDestination = 'dist/lib';
 const webDestination = 'dist';
 
 function copyChanged(from, to) {
-  return src(from).pipe(changed(to)).pipe(dest(to));
+  return src(from)
+    .pipe(changed(to))
+    .pipe(dest(to));
 }
 
-function createLib() { return copyChanged('lib/**/*.*', 'dist/lib'); }
+function copyWebSources() { return copyChanged(webSources, webDestination); }
+function copyJsSources() { return copyChanged(jsSources, jsDestination); }
+function copyLib() { return copyChanged(libSources, libDestination); }
 
 
 export function generateDocumentation() {
@@ -41,15 +45,9 @@ function generateCSS() {
     .pipe(dest(cssDestination));
 }
 
-function copySources(cb) {
-  copyChanged(rootSources, rootDestination);
-  copyChanged(jsSources, jsDestination);
-
-  cb();
-}
-
-
-const createDist = parallel(copySources, createLib, generateDocumentation, generateCSS);
+const createDist = parallel(
+  copyWebSources, copyJsSources, copyLib, generateDocumentation, generateCSS
+);
 
 export const recreateDist = series(cleanDist, createDist);
 
