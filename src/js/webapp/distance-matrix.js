@@ -15,7 +15,7 @@ export default async function getDistanceMatrix(origins, destinationsArg) {
     `destinations=${destinations.join('|')}`,
   ];
 
-  // XXX
+  // TODO - decide on real URL
   const rootURL = 'http://localhost:8080';
   const url = `${rootURL}/distancematrix?${query.join('&')}`;
 
