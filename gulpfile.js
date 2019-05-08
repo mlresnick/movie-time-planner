@@ -1,6 +1,7 @@
 import del from 'del';
 import gulp from 'gulp';
 import changed from 'gulp-changed';
+import documentation from 'gulp-documentation';
 import sass from 'gulp-sass';
 
 const { dest, src, parallel, series, watch } = gulp; // eslint-disable-line object-curly-newline
@@ -11,6 +12,7 @@ const scssSources = ['src/scss/**/*.scss', 'src/scss/**/*.css'];
 const webSources = 'src/*.*';
 
 const cssDestination = 'dist/css';
+const documentationDestination = 'documentation';
 const jsDestination = 'dist/js';
 const libDestination = 'dist/lib';
 const webDestination = 'dist';
@@ -21,10 +23,11 @@ function copyChanged(from, to) {
 
 function createLib() { return copyChanged('lib/**/*.*', 'dist/lib'); }
 
-function generateDocumentation(cb) {
-  // TODO
 
-  cb();
+export function generateDocumentation() {
+  return src(jsSources)
+    .pipe(documentation('html', { 'sort-order': 'alpha' }))
+    .pipe(dest(documentationDestination));
 }
 
 function cleanDist() {
