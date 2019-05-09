@@ -19,11 +19,27 @@ function initFramework7() {
     .forEach(viewName => framework7.views.create(viewName));
 }
 
-async function retrieveMovieInfo() {
-  const locationForm = document.getElementById('location-form');
+function getLocationForm() { return document.getElementById('location-form'); }
+
+function getLocationFormData() {
+  const locationForm = getLocationForm();
+  let result = null;
+
   if (locationForm.reportValidity()) {
-    const zipCode = locationForm.querySelector('input[name="zip-code"]').value;
-    const maxDistance = locationForm.querySelector('input[name="max-distance"]').value;
+    result = {
+      zipCode: locationForm.querySelector('input[name="zip-code"]').value,
+      maxDistance: locationForm.querySelector('input[name="max-distance"]').value,
+    };
+  }
+
+  return result;
+}
+
+async function retrieveMovieInfo() {
+  const locationFormData = getLocationFormData();
+  if (locationFormData) {
+    const { zipCode, maxDistance } = locationFormData;
+
     const response = await fetch(
       `/zip-code/${zipCode}${(maxDistance === '') ? '' : `?max-distance=${maxDistance}`}`,
     );
@@ -228,10 +244,36 @@ function affectAllCheckboxes(event) {
   classList.toggle(allSelectClass);
 }
 
+function saveLocation() {
+  const locationFormData = getLocationFormData();
+  if (locationFormData) {
+    const { zipCode, maxDistance } = locationFormData;
+
+    localStorage.setItem('zipCode', zipCode);
+    localStorage.setItem('maxDistance', maxDistance);
+  }
+}
+
+function eraseLocation() {
+  const locationForm = getLocationForm();
+
+  [
+    { storage: 'zipCode', form: 'zip-code' },
+    { storage: 'maxDistance', form: 'max-distance' },
+  ].forEach((key) => {
+    localStorage.removeItem(key.storage);
+    locationForm.querySelector(`input[name="${key.form}"]`).value = '';
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initFramework7();
 
   document.querySelector('#view-filters .button.get-info').addEventListener('click', handleGetInfo);
+
+  document.querySelector('.popup-remember .confirm-remember').addEventListener('click', saveLocation);
+
+  document.querySelector('.popup-remember .erase-remember').addEventListener('click', eraseLocation);
 
   document.querySelectorAll('.selection-view')
     .forEach((viewEl) => {

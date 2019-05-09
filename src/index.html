@@ -50,24 +50,28 @@
           <div class="navbar">
             <div class="navbar-inner">
               <div class="title sliding">Filters</div>
+              <div class="right">
+                <a href="#" class="link popup-open" data-popup=".popup-remember">Save</a>
+              </div>
             </div>
           </div>
           
           <div class="page-content">
             <form id="location-form" class="list inline-labels">
-
+              
               <div class="list-group">
                 <ul>
+                  <li class="list-group-title">Location</li>
                   <li class="item-content item-input">
                     <div class="item-inner">
                       <div class="item-title item-label">ZIP Code<sup>&trade;</sup></div>
                       <div class="item-input-wrap">
                         <input type="text" name="zip-code"
-                          minlength="5" maxlength="5" size="5" required=""
-                          pattern="\d{5}" placeholder="5 digits"
+                        minlength="5" maxlength="5" size="5" required=""
+                        pattern="\d{5}" placeholder="5 digits"
                         >
                         <span class="input-clear-button"></span>
-                      </div>
+                      </div> 
                     </div>
                   </li>
                   <li class="item-content item-input">
@@ -79,33 +83,61 @@
                       </div>
                     </div>
                   </li>
+                </ul>
+              </div>
+              <div class="list-group">
+                <ul>
+                  <li class="list-group-title"></li>
                   <li class="item-content item-input">
-                      <div class="item-inner">
-                        <button type="button" class="button button-large get-info">Get Movie Info</button>
-                      </div>
-                    </li>
-                  </ul>
+                    <div class="item-inner">
+                      <button type="button" class="button button-large get-info">Get Movie Info</button>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </form>
           </div>
         </div>
-      </div>  
-      
-      <div id="view-theaters" class="view tab selection-view">
-        <div class="page">
-          
-          <div class="navbar">
-            <div class="navbar-inner">
-              <div class="left">
-                <a href="#" class="mark-clear">
-                    <span class="mark-all">Mark All</span>
-                    <span class="clear-all">Clear All</span>
-                </a>
-              </div>
-              <div class="title sliding">Theaters</div>
-            </div>
+      </div>
+
+
+      <div class="popup popup-remember">
+
+        <div class="block-title">Remember Location</div>
+
+        <div class="block">
+          <p>Use this location as you default location?</p>
+          <p>Your list of default theaters will be lost.</p>
+        </div>
+
+        <div class="block">
+          <div class="row">
+            <button type="button" class="button button-large button-outline col cancel-remember popup-close">Cancel</button>
+            <button type="button" class="button button-large button-fill col confirm-remember popup-close">Confirm</button>
           </div>
-          
+        </div>
+
+        <div class="block block-tall">
+          <button type="button"  class="button button-large button-outline color-red erase-remember popup-close">Forget the location</button>
+        </div>
+
+      </div>
+    </div>
+    <div id="view-theaters" class="view tab selection-view">
+      <div class="page">
+        
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="left">
+              <a href="#" class="mark-clear">
+                <span class="mark-all">Mark All</span>
+                <span class="clear-all">Clear All</span>
+              </a>
+            </div>
+            <div class="title sliding">Theaters</div>
+          </div>
+        </div>
+        
           <div class="page-content">
             <div class="list">
               <span class="list-note">There are no more showings for any theater.</span>
@@ -150,7 +182,7 @@
               <div class="title sliding">Results</div>
             </div>
           </div>
-
+          
           <div class="page-content">
             <div class="list">
               <span class="list-note">
