@@ -157,10 +157,8 @@ function getCheckboxEls(listType) {
  * element record that elements value in a Set.
  */
 function getSelectedSet(listType) {
-  const { allEls, selectedEls } = getCheckboxEls(listType);
-  const result = selectedEls.length ? selectedEls : allEls;
-
-  return new Set(result);
+  const selectedValues = getCheckboxEls(listType).selectedEls.map(el => el.value);
+  return new Set(selectedValues);
 }
 
 function allSelected(viewEl) {
@@ -205,6 +203,7 @@ async function updateOtherTabs() {
 }
 
 async function handleGetInfo() {
+  // TODO validate form before moving on.
   await updateOtherTabs();
   document.querySelector('.tabbar a[href="#view-theaters"]').click();
 }
@@ -271,10 +270,46 @@ function eraseLocation() {
   locationForm.querySelector('input[name="max-distance"]').value = 5;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+async function locationInitialized() {
+  let retval = false;
+
+  const locationJSON = localStorage.getItem('location');
+  if (locationJSON) {
+    const locationForm = getLocationForm();
+    const location = JSON.parse(locationJSON);
+    locationForm.querySelector('input[name="zip-code"]').value = location.zipCode;
+    locationForm.querySelector('input[name="max-distance"]').value = location.maxDistance;
+    await updateOtherTabs();
+    retval = true;
+  }
+
+  return retval;
+}
+
+function theatersInitialized() {
+  let retval = false;
+
+  const selectedTheatersJSON = localStorage.getItem('theaters');
+  if (selectedTheatersJSON) {
+    const selectedTheaters = JSON.parse(selectedTheatersJSON);
+    selectedTheaters
+      .forEach((theaterId) => {
+        const el = document
+          .querySelector(`#view-theaters li input[type="checkbox"][value="${theaterId}"`);
+        if (el) {
+          el.checked = true;
+        }
+      });
+    updateResults();
+    retval = true;
+  }
+  return retval;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
   initFramework7();
 
-  document.querySelector('#view-filters .button.get-info').addEventListener('click', handleGetInfo);
+  document.querySelector('#view-filters .button.get-info').addEventListener('click', await handleGetInfo);
 
   document.querySelector('.popup-remember-location .confirm-remember').addEventListener('click', saveLocation);
 
@@ -290,7 +325,22 @@ document.addEventListener('DOMContentLoaded', () => {
       viewEl.querySelector('.mark-clear').addEventListener('click', affectAllCheckboxes);
     });
 
-  // TODO - if not stored, initialize location to current location.
+  // Depending on what information is stored, display a tab:
+  // * If we know the location and list of theaters, display the movies tab.
+  // * If we only know the location, display the theaters tab.
+  // * If nothing is stored, display the filters tab.
+  if (await locationInitialized()) {
+    if (theatersInitialized()) {
+      document.querySelector('.tabbar a[href="#view-movies"]').click();
+    }
+    else {
+      document.querySelector('.tabbar a[href="#view-theaters"]').click();
+    }
+  }
+  else {
+    // TODO - if not stored, initialize location to current location.
+  }
+
   // XXX remove
   document.querySelector('#location-form input[name="zip-code"]').value = '02421';
 });
