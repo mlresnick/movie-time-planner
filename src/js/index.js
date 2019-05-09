@@ -267,9 +267,8 @@ function eraseLocation() {
   eraseTheaters();
 
   localStorage.removeItem('location');
-  ['zip-code', 'max-distance'].forEach((key) => {
-    locationForm.querySelector(`input[name="${key}"]`).value = '';
-  });
+  locationForm.querySelector('input[name="zip-code"]').value = '';
+  locationForm.querySelector('input[name="max-distance"]').value = 5;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -291,6 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
       viewEl.querySelector('.mark-clear').addEventListener('click', affectAllCheckboxes);
     });
 
+  // TODO - if not stored, initialize location to current location.
   // XXX remove
   document.querySelector('#location-form input[name="zip-code"]').value = '02421';
 });
