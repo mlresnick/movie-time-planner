@@ -24,7 +24,7 @@ function getLocationForm() { return document.getElementById('location-form'); }
 function getLocationFormData() {
   const locationForm = getLocationForm();
   let result = null;
-  // TODO add date/time fields to filters
+
   if (locationForm.reportValidity()) {
     result = {
       zipCode: locationForm.querySelector('input[name="zip-code"]').value,
@@ -182,7 +182,7 @@ function updateResults() {
   const timeMap = getRemainingShowings(selected).reduce(groupByTime, new Map());
 
   resultListEl.innerHTML = Array.from(timeMap.entries())
-    .map((entry) => {
+    .map((entry) => { // Change milliseconds back to Showtime object
       const [milliseconds, showing] = entry;
       return [new Showtime(milliseconds), showing];
     })
@@ -353,7 +353,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   else {
     // TODO - if not stored, initialize location to current location.
   }
-
-  // XXX remove
-  document.querySelector('#location-form input[name="zip-code"]').value = '02421';
 });
