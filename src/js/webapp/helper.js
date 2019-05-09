@@ -82,16 +82,19 @@ export function getRemainingShowings(selected) {
       || Util.compareWOArticles(lhs.theater.name, rhs.theater.name);
   }
 
+  // Return only selected values, unless there are no selected values, then return all values.
+  function selectedListingFilter(listing) {
+    return (((selected.theaters.size === 0) || selected.theaters.has(listing.theater.url))
+      && ((selected.movies.size === 0) || selected.movies.has(listing.movie.url)));
+  }
+
   return Array
     // IDs for all of the remaining listings...
     .from(context.remaining.listingIds.values())
     // ... converted to listings...
     .map(listingId => context.listings.get(listingId))
-    // .dump('from')
     // ... use only selected movies and theaters...
-    .filter(listing => (
-      selected.theaters.has(listing.theater.url) && selected.movies.has(listing.movie.url)
-    ))
+    .filter(selectedListingFilter)
     // ... gete the remaining showings in the listings...
     .reduce((showings, listing) => showings.concat(listing.showingsAfter(Showtime.now)), [])
     // ... sorted by showtime, theater distance, title, and theater name...
