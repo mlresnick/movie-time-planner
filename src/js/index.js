@@ -106,11 +106,12 @@ function updateSelectionList(listType) {
 }
 
 function groupByTime(timeList, showing) {
-  let showtimeList = timeList.get(showing.showtime);
+  const milliseconds = showing.showtime.valueOf();
+  let showtimeList = timeList.get(milliseconds);
 
   if (typeof showtimeList === 'undefined') {
     showtimeList = [];
-    timeList.set(showing.showtime, showtimeList);
+    timeList.set(milliseconds, showtimeList);
   }
 
   showtimeList.push(showing);
@@ -181,6 +182,10 @@ function updateResults() {
   const timeMap = getRemainingShowings(selected).reduce(groupByTime, new Map());
 
   resultListEl.innerHTML = Array.from(timeMap.entries())
+    .map((entry) => {
+      const [milliseconds, showing] = entry;
+      return [new Showtime(milliseconds), showing];
+    })
     .map(timeListEntryToListGroup)
     .join('\n');
 
