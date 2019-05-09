@@ -24,7 +24,7 @@ function getLocationForm() { return document.getElementById('location-form'); }
 function getLocationFormData() {
   const locationForm = getLocationForm();
   let result = null;
-
+  // TODO add date/time fields to filters
   if (locationForm.reportValidity()) {
     result = {
       zipCode: locationForm.querySelector('input[name="zip-code"]').value,
@@ -203,9 +203,12 @@ async function updateOtherTabs() {
 }
 
 async function handleGetInfo() {
-  // TODO validate form before moving on.
-  await updateOtherTabs();
-  document.querySelector('.tabbar a[href="#view-theaters"]').click();
+  const locationForm = getLocationForm();
+
+  if (locationForm.reportValidity()) {
+    await updateOtherTabs();
+    document.querySelector('.tabbar a[href="#view-theaters"]').click();
+  }
 }
 
 function getViewElFromEvent(event) {
@@ -254,9 +257,14 @@ function eraseTheaters() {
 }
 
 function saveLocation() {
-  const locationFormData = getLocationFormData();
-  if (locationFormData) {
-    localStorage.setItem('location', JSON.stringify(locationFormData));
+  const locationForm = getLocationForm();
+
+  // TODO add date/time fields to filters
+  if (locationForm.reportValidity()) {
+    const locationFormData = getLocationFormData();
+    if (locationFormData) {
+      localStorage.setItem('location', JSON.stringify(locationFormData));
+    }
   }
 }
 
