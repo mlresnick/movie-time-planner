@@ -145,23 +145,22 @@ function timeListEntryToListGroup(timeListEntry) {
     `;
 }
 
+function getCheckboxEls(listType) {
+  const allEls = Array.from(
+    document.querySelectorAll(`#view-${listType} .page-content .list li input[type="checkbox"]`)
+  );
+  const selectedEls = allEls.filter(el => el.checked);
+  return { allEls, selectedEls };
+}
 /*
  * Look though the list items. If a list item has a checked
  * element record that elements value in a Set.
  */
 function getSelectedSet(listType) {
-  let selectedEls;
+  const { allEls, selectedEls } = getCheckboxEls(listType);
+  const result = selectedEls.length ? selectedEls : allEls;
 
-  const selector = `#view-${listType} .page-content .list li input[type="checkbox"]`;
-
-  selectedEls = document.querySelectorAll(`${selector}:checked`);
-
-  // If none are checked, use them all.
-  if (selectedEls.length === 0) {
-    selectedEls = document.querySelectorAll(selector);
-  }
-
-  return new Set(Array.from(selectedEls).map(el => el.value));
+  return new Set(result);
 }
 
 function allSelected(viewEl) {
@@ -181,9 +180,7 @@ function updateResults() {
     theaters: getSelectedSet('theaters'),
   };
 
-  const timeMap = getRemainingShowings(selected)
-    // .reduce(groupByTime, {}).entries()
-    .reduce(groupByTime, new Map());
+  const timeMap = getRemainingShowings(selected).reduce(groupByTime, new Map());
 
   resultListEl.innerHTML = Array.from(timeMap.entries())
     .map(timeListEntryToListGroup)
@@ -244,25 +241,34 @@ function affectAllCheckboxes(event) {
   classList.toggle(allSelectClass);
 }
 
+function saveTheaters() {
+  const { selectedEls } = getCheckboxEls('theaters');
+  const selectedValues = selectedEls.map(el => el.value);
+  localStorage.setItem('theaters', JSON.stringify(selectedValues));
+}
+
+function eraseTheaters() {
+  localStorage.removeItem('theaters');
+  getCheckboxEls('theaters')
+    .selectedEls
+    .forEach((el) => { el.checked = false; });
+}
+
 function saveLocation() {
   const locationFormData = getLocationFormData();
   if (locationFormData) {
-    const { zipCode, maxDistance } = locationFormData;
-
-    localStorage.setItem('zipCode', zipCode);
-    localStorage.setItem('maxDistance', maxDistance);
+    localStorage.setItem('location', JSON.stringify(locationFormData));
   }
 }
 
 function eraseLocation() {
   const locationForm = getLocationForm();
 
-  [
-    { storage: 'zipCode', form: 'zip-code' },
-    { storage: 'maxDistance', form: 'max-distance' },
-  ].forEach((key) => {
-    localStorage.removeItem(key.storage);
-    locationForm.querySelector(`input[name="${key.form}"]`).value = '';
+  eraseTheaters();
+
+  localStorage.removeItem('location');
+  ['zip-code', 'max-distance'].forEach((key) => {
+    locationForm.querySelector(`input[name="${key}"]`).value = '';
   });
 }
 
@@ -271,9 +277,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelector('#view-filters .button.get-info').addEventListener('click', handleGetInfo);
 
-  document.querySelector('.popup-remember .confirm-remember').addEventListener('click', saveLocation);
+  document.querySelector('.popup-remember-location .confirm-remember').addEventListener('click', saveLocation);
 
-  document.querySelector('.popup-remember .erase-remember').addEventListener('click', eraseLocation);
+  document.querySelector('.popup-remember-location .erase-remember').addEventListener('click', eraseLocation);
+
+  document.querySelector('.popup-remember-theaters .confirm-remember').addEventListener('click', saveTheaters);
+
+  document.querySelector('.popup-remember-theaters .erase-remember').addEventListener('click', eraseTheaters);
 
   document.querySelectorAll('.selection-view')
     .forEach((viewEl) => {
