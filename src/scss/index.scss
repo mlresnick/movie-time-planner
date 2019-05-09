@@ -1,3 +1,5 @@
+  @import '../lib/framework7/css/framework7.bundle.css';
+
 .ios .tabbar-labels .tab-link {
   &:not(.tab-link-active) .icon-ios-fill,
   &.tab-link-active .icon:not(.icon-ios-fill) {
