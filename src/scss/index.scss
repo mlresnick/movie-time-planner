@@ -15,6 +15,18 @@
   }
 }
 
+.popup {
+  .block-title {
+    color: var(--f7-theme-color);
+    text-align: center;
+  }
+
+  .block.block-tall {
+    height: 100%;
+    .erase-remember { margin-top: 100%; }
+  }
+}
+
 .view .navbar .mark-clear {
   &.all-selected {
     .mark-all {display: none; }
