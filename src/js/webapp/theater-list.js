@@ -6,7 +6,7 @@ export default class TheaterList extends SelectionList {
   constructor(isInternal = false) {
     super('theater');
     if (isInternal) {
-      // Do initialization
+      this.storageKey = 'theaters';
     }
     else {
       throw new Error('Cannot allocate TheaterList. Use TheaterList.getInstance().');
@@ -18,5 +18,41 @@ export default class TheaterList extends SelectionList {
       instance = new TheaterList(/* isInternal */ true);
     }
     return instance;
+  }
+
+  /*
+   * Storage UI Callbacks
+   */
+  collectDataForStorage() { return Array.from(this.getSelectedValues()); }
+
+  setFromData(selectedValues) {
+    this.clear();
+    selectedValues
+      .map(theaterId => document.querySelector(`#view-theaters li input[type="checkbox"][value="${theaterId}"`))
+      .forEach((checkboxEl) => { checkboxEl.checked = true; });
+  }
+
+  reset() { this.clear(); }
+
+  /*
+   * Storage UI
+   * TODO Make this a mixin that works inside event handlers.
+   */
+  save() { localStorage.setItem(this.storageKey, JSON.stringify(this.collectDataForStorage())); }
+
+  erase() {
+    localStorage.removeItem(this.storageKey);
+    this.reset();
+  }
+
+  load() {
+    let retval = false;
+    const valueJSON = localStorage.getItem(this.storageKey);
+    if (valueJSON) {
+      this.setFromData(JSON.parse(valueJSON));
+      retval = true;
+    }
+
+    return retval;
   }
 }

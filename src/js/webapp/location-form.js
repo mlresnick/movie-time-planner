@@ -6,6 +6,7 @@ export default class LocationForm {
       this.el = document.getElementById('location-form');
       this.zipCodeEl = this.el.querySelector('input[name="zip-code"]');
       this.maxDistanceEl = this.el.querySelector('input[name="max-distance"]');
+      this.storageKey = 'location';
     }
     else {
       throw new Error('Cannot allcate LocationForm. Use LocationForm.getInstance().');
@@ -29,29 +30,38 @@ export default class LocationForm {
 
   get data() { return { zipCode: this.zipCode, maxDistance: this.maxDistance }; }
 
-  saveToStorage() {
-    // TODO add date/time fields to filters
-    localStorage.setItem('location', JSON.stringify(this.data));
+  // TODO add date/time fields to filters
+
+  /*
+   * Storage UI Callbacks
+   */
+  collectDataForStorage() { return this.data; }
+
+  setFromData(data) {
+    const { zipCode, maxDistance } = data;
+    this.zipCode = zipCode;
+    this.maxDistance = maxDistance;
   }
 
-  loadFromStorage() {
-    const locationJSON = localStorage.getItem('location');
-    if (locationJSON) {
-      const { zipCode, maxDistance } = JSON.parse(locationJSON);
-      this.zipCode = zipCode;
-      this.maxDistance = maxDistance;
-    }
-  }
-
-  eraseStorage() {
-    localStorage.removeItem('location');
-    this.clear();
-  }
-
-  clear() {
-    this.zipCode = '';
-    this.maxDistance = 5;
-  }
+  reset() { this.el.reset(); }
 
   reportValidity() { return this.el.reportValidity(); }
+
+  /*
+   * Storage UI
+   * TODO Make this a mixin that works inside event handlers.
+   */
+  save() { localStorage.setItem(this.storageKey, JSON.stringify(this.collectDataForStorage())); }
+
+  erase() {
+    localStorage.removeItem(this.storageKey);
+    this.reset();
+  }
+
+  load() {
+    const valueJSON = localStorage.getItem(this.storageKey);
+    if (valueJSON) {
+      this.setFromData(JSON.parse(valueJSON));
+    }
+  }
 }

@@ -64,9 +64,11 @@ export default class SelectionList {
     return (this.getAllValues().size === this.getSelectedValues().size);
   }
 
-  setAll(value) { this.getEls(this.selectedElSelector).forEach((el) => { el.checked = value; }); }
+  setAll(value) {
+    SelectionList.getEls(this.selectedElSelector).forEach((el) => { el.checked = value; });
+  }
 
-  clearAll() { this.setAll(false); }
+  clear() { this.setAll(false); }
 
-  selectAll() { this.setAll(true); }
+  mark() { this.setAll(true); }
 }

@@ -175,29 +175,23 @@ function affectAllCheckboxes(event) {
   classList.toggle(allSelectClass);
 }
 
-function saveTheaters() {
-  const selectedValues = framework7.theaterList.getSelectedValues();
-  localStorage.setItem('theaters', JSON.stringify(Array.from(selectedValues)));
-}
 
-function eraseTheaters() {
-  localStorage.removeItem('theaters');
-  framework7.theaterList.clearAll();
-}
-
-function saveLocation() { framework7.locationForm.saveToStorage(); }
+function saveLocation() { framework7.locationForm.save(); }
 
 function eraseLocation() {
-  eraseTheaters();
-
-  framework7.locationForm.eraseStorage();
+  framework7.theaterList.erase();
+  framework7.locationForm.erase();
 }
+
+function saveTheaters() { framework7.theaterList.save(); }
+
+function eraseTheaters() { framework7.theaterList.erase(); }
 
 async function locationInitialized() {
   const { locationForm } = framework7;
   let retval = false;
 
-  locationForm.loadFromStorage();
+  locationForm.load();
   if (locationForm.zipCode !== '') {
     await updateOtherTabs();
     retval = true;
@@ -209,24 +203,15 @@ async function locationInitialized() {
 function theatersInitialized() {
   let retval = false;
 
-  const selectedTheatersJSON = localStorage.getItem('theaters');
-  if (selectedTheatersJSON) {
-    const selectedTheaters = JSON.parse(selectedTheatersJSON);
-    selectedTheaters
-      .forEach((theaterId) => {
-        const el = document
-          .querySelector(`#view-theaters li input[type="checkbox"][value="${theaterId}"`);
-        if (el) {
-          el.checked = true;
-        }
-      });
+  if (framework7.theaterList.load()) {
     updateResults();
     retval = true;
   }
+
   return retval;
 }
 
-function saveLocationHandler() {
+function saveLocationPopupHandler() {
   if (framework7.locationForm.reportValidity()) {
     const popupEl = document.querySelector('.popup-remember-location');
     const popup = framework7.popup.get(popupEl) || framework7.popup.create({ el: popupEl });
@@ -241,11 +226,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector('#view-filters .button.get-info')
     .addEventListener('click', await handleGetInfo);
 
-  document.querySelector('.popup-remember-location .confirm-remember')
-    .addEventListener('click', /* framework7.locationForm.saveToStorage */saveLocation);
-
   document.querySelector('#view-filters .navbar .right .link')
-    .addEventListener('click', saveLocationHandler);
+    .addEventListener('click', saveLocationPopupHandler);
+
+  document.querySelector('.popup-remember-location .confirm-remember')
+    .addEventListener('click', saveLocation);
 
   document.querySelector('.popup-remember-location .erase-remember')
     .addEventListener('click', eraseLocation);
