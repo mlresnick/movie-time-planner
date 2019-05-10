@@ -2,6 +2,7 @@
 
 import context from './common/context.js';
 import { getRemainingShowings, parseContext } from './webapp/helper.js';
+import LocationForm from './webapp/location-form.js';
 import Showtime from './common/showtime.js';
 import Util from './common/util.js';
 
@@ -17,31 +18,17 @@ function initFramework7() {
 
   ['#view-filters', '#view-theaters', '#view-movies', '#view-results']
     .forEach(viewName => framework7.views.create(viewName));
-}
 
-function getLocationForm() { return document.getElementById('location-form'); }
-
-function getLocationFormData() {
-  const locationForm = getLocationForm();
-  let result = null;
-
-  if (locationForm.reportValidity()) {
-    result = {
-      zipCode: locationForm.querySelector('input[name="zip-code"]').value,
-      maxDistance: locationForm.querySelector('input[name="max-distance"]').value,
-    };
-  }
-
-  return result;
+  framework7.locationForm = LocationForm.getInstance();
 }
 
 async function retrieveMovieInfo() {
-  const locationFormData = getLocationFormData();
-  if (locationFormData) {
-    const { zipCode, maxDistance } = locationFormData;
+  const { locationForm } = framework7;
 
+  if (locationForm.reportValidity()) {
     const response = await fetch(
-      `/zip-code/${zipCode}${(maxDistance === '') ? '' : `?max-distance=${maxDistance}`}`,
+      `/zip-code/${locationForm.zipCode}`
+      + `${(locationForm.maxDistance === '') ? '' : `?max-distance=${locationForm.maxDistance}`}`,
     );
 
     if (Util.isInInterval(response.status, '[200, 300)') || (response.status === 304)) {
@@ -208,9 +195,7 @@ async function updateOtherTabs() {
 }
 
 async function handleGetInfo() {
-  const locationForm = getLocationForm();
-
-  if (locationForm.reportValidity()) {
+  if (framework7.locationForm.reportValidity()) {
     await updateOtherTabs();
     document.querySelector('.tabbar a[href="#view-theaters"]').click();
   }
@@ -261,37 +246,20 @@ function eraseTheaters() {
     .forEach((el) => { el.checked = false; });
 }
 
-function saveLocation() {
-  const locationForm = getLocationForm();
-
-  // TODO add date/time fields to filters
-  if (locationForm.reportValidity()) {
-    const locationFormData = getLocationFormData();
-    if (locationFormData) {
-      localStorage.setItem('location', JSON.stringify(locationFormData));
-    }
-  }
-}
+function saveLocation() { framework7.locationForm.saveToStorage(); }
 
 function eraseLocation() {
-  const locationForm = getLocationForm();
-
   eraseTheaters();
 
-  localStorage.removeItem('location');
-  locationForm.querySelector('input[name="zip-code"]').value = '';
-  locationForm.querySelector('input[name="max-distance"]').value = 5;
+  framework7.locationForm.eraseStorage();
 }
 
 async function locationInitialized() {
+  const { locationForm } = framework7;
   let retval = false;
 
-  const locationJSON = localStorage.getItem('location');
-  if (locationJSON) {
-    const locationForm = getLocationForm();
-    const location = JSON.parse(locationJSON);
-    locationForm.querySelector('input[name="zip-code"]').value = location.zipCode;
-    locationForm.querySelector('input[name="max-distance"]').value = location.maxDistance;
+  locationForm.loadFromStorage();
+  if (locationForm.zipCode !== '') {
     await updateOtherTabs();
     retval = true;
   }
@@ -319,18 +287,35 @@ function theatersInitialized() {
   return retval;
 }
 
+function saveLocationHandler() {
+  if (framework7.locationForm.reportValidity()) {
+    const popupEl = document.querySelector('.popup-remember-location');
+    const popup = framework7.popup.get(popupEl) || framework7.popup.create({ el: popupEl });
+
+    popup.open(true);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   initFramework7();
 
-  document.querySelector('#view-filters .button.get-info').addEventListener('click', await handleGetInfo);
+  document.querySelector('#view-filters .button.get-info')
+    .addEventListener('click', await handleGetInfo);
 
-  document.querySelector('.popup-remember-location .confirm-remember').addEventListener('click', saveLocation);
+  document.querySelector('.popup-remember-location .confirm-remember')
+    .addEventListener('click', /* framework7.locationForm.saveToStorage */saveLocation);
 
-  document.querySelector('.popup-remember-location .erase-remember').addEventListener('click', eraseLocation);
+  document.querySelector('#view-filters .navbar .right .link')
+    .addEventListener('click', saveLocationHandler);
 
-  document.querySelector('.popup-remember-theaters .confirm-remember').addEventListener('click', saveTheaters);
+  document.querySelector('.popup-remember-location .erase-remember')
+    .addEventListener('click', eraseLocation);
 
-  document.querySelector('.popup-remember-theaters .erase-remember').addEventListener('click', eraseTheaters);
+  document.querySelector('.popup-remember-theaters .confirm-remember')
+    .addEventListener('click', saveTheaters);
+
+  document.querySelector('.popup-remember-theaters .erase-remember')
+    .addEventListener('click', eraseTheaters);
 
   document.querySelectorAll('.selection-view')
     .forEach((viewEl) => {
