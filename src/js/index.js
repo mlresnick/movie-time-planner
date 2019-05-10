@@ -3,7 +3,9 @@
 import context from './common/context.js';
 import { getRemainingShowings, parseContext } from './webapp/helper.js';
 import LocationForm from './webapp/location-form.js';
+import MovieList from './webapp/movie-list.js';
 import Showtime from './common/showtime.js';
+import TheaterList from './webapp/theater-list.js';
 import Util from './common/util.js';
 
 let framework7;
@@ -20,6 +22,8 @@ function initFramework7() {
     .forEach(viewName => framework7.views.create(viewName));
 
   framework7.locationForm = LocationForm.getInstance();
+  framework7.theaterList = TheaterList.getInstance();
+  framework7.movieList = MovieList.getInstance();
 }
 
 async function retrieveMovieInfo() {
@@ -48,48 +52,6 @@ function buildRemainingLists(remaining, listing) {
     remaining.listingIds.add(listing.id);
   }
   return remaining;
-}
-
-function sortedListToSelectionHTML(arg) {
-  const { listEl, object, listType } = arg;
-  const listName = `${listType}Ids`;
-
-  let noMoreShowingsClass = '';
-  let disabled = '';
-  if (context.remaining[listName].has(object.id)) {
-    listEl.classList.remove('no-more-showings');
-  }
-  else {
-    noMoreShowingsClass = ' class="no-more-showings"';
-    disabled = ' disabled=""';
-  }
-
-  return `<li${noMoreShowingsClass}>
-    <label class="item-checkbox item-content">
-      <input type="checkbox"${disabled} value="${object.id}">
-      <span class="icon icon-checkbox"></span>
-      <div class="item-inner">
-        <div class="item-title">
-          ${object.name}
-          <div class="item-footer">${object.footer}</div>
-        </div>
-      </div>
-    </label>
-  </li>`;
-}
-
-function updateSelectionList(listType) {
-  const listName = `${listType}s`;
-  const viewName = `#view-${listName}`;
-
-  const listEl = document.querySelector(`${viewName} .list`);
-  listEl.classList.add('no-more-showings');
-  listEl.querySelector('ul').innerHTML = Array.from(context[`${listName}`].values())
-    .sort((lhs, rhs) => Util.compareWOArticles(lhs.name, rhs.name))
-    // Add info from current context.
-    .map(object => ({ listEl, object, listType }))
-    .map(sortedListToSelectionHTML)
-    .join('\n');
 }
 
 function groupByTime(timeList, showing) {
@@ -133,37 +95,13 @@ function timeListEntryToListGroup(timeListEntry) {
     `;
 }
 
-function getCheckboxEls(listType) {
-  const allEls = Array.from(
-    document.querySelectorAll(`#view-${listType} .page-content .list li input[type="checkbox"]`)
-  );
-  const selectedEls = allEls.filter(el => el.checked);
-  return { allEls, selectedEls };
-}
-/*
- * Look though the list items. If a list item has a checked
- * element record that elements value in a Set.
- */
-function getSelectedSet(listType) {
-  const selectedValues = getCheckboxEls(listType).selectedEls.map(el => el.value);
-  return new Set(selectedValues);
-}
-
-function allSelected(viewEl) {
-  const listEl = viewEl.querySelector('.page-content .list');
-  const allElList = Array.from(listEl.querySelectorAll('li input[type="checkbox"]'));
-  const selectedElList = allElList.filter(el => el.checked);
-
-  return (allElList.length === selectedElList.length);
-}
-
 function updateResults() {
   const resultListEl = document.querySelector('#view-results .list');
 
   // Build here, so it doesn't need to be redone for every showing
   const selected = {
-    movies: getSelectedSet('movies'),
-    theaters: getSelectedSet('theaters'),
+    movies: framework7.movieList.getSelectedValues(),
+    theaters: framework7.theaterList.getSelectedValues(),
   };
 
   const timeMap = getRemainingShowings(selected).reduce(groupByTime, new Map());
@@ -184,10 +122,13 @@ async function updateOtherTabs() {
 
   await retrieveMovieInfo();
 
+  // TODO move the following two lines into context.rebuildRemainingLists()
+  //      and call that instead.
   context.remaining.clear();
   Array.from(context.listings.values()).reduce(buildRemainingLists, context.remaining);
 
-  ['theater', 'movie'].forEach(updateSelectionList);
+  framework7.theaterList.update();
+  framework7.movieList.update();
 
   updateResults();
 
@@ -212,10 +153,11 @@ function getViewElFromEvent(event) {
   return viewEl;
 }
 
-function updateOnClickCheckbox(event) {
-  const viewEl = getViewElFromEvent(event);
-  viewEl.querySelector('.mark-clear').classList.toggle('all-selected', allSelected(viewEl));
-
+// TODO
+//  function updateOnClickCheckbox(event) {
+//   const viewEl = getViewElFromEvent(event);
+//   viewEl.querySelector('.mark-clear').classList.toggle('all-selected', allSelected(viewEl));
+function updateOnClickCheckbox() {
   updateResults();
 
   return true;
@@ -234,16 +176,13 @@ function affectAllCheckboxes(event) {
 }
 
 function saveTheaters() {
-  const { selectedEls } = getCheckboxEls('theaters');
-  const selectedValues = selectedEls.map(el => el.value);
-  localStorage.setItem('theaters', JSON.stringify(selectedValues));
+  const selectedValues = framework7.theaterList.getSelectedValues();
+  localStorage.setItem('theaters', JSON.stringify(Array.from(selectedValues)));
 }
 
 function eraseTheaters() {
   localStorage.removeItem('theaters');
-  getCheckboxEls('theaters')
-    .selectedEls
-    .forEach((el) => { el.checked = false; });
+  framework7.theaterList.clearAll();
 }
 
 function saveLocation() { framework7.locationForm.saveToStorage(); }
