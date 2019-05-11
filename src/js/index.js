@@ -1,22 +1,30 @@
 /* global Framework7 */
 
-import context from './common/context.js';
-import { getRemainingShowings, parseContext } from './webapp/helper.js';
+import context, { ContextMap } from './common/context.js';
+import Duration from './common/duration.js';
+import Listing from './common/listing.js';
+import Movie from './common/movie.js';
+import Showing from './common/showing.js';
+import Showtime from './common/showtime.js';
+import Theater from './common/theater.js';
+import Util from './common/util.js';
+//
+// UI
 import LocationForm from './webapp/location-form.js';
 import MovieList from './webapp/movie-list.js';
-import Showtime from './common/showtime.js';
+import ResultList from './webapp/result-list.js';
 import TheaterList from './webapp/theater-list.js';
-import Util from './common/util.js';
 
-let framework7;
 let progressbarEl;
 
 function initFramework7() {
-  framework7 = new Framework7({
+  context.framework7 = new Framework7({
     root: '#app',
     name: 'Movie Time Planner',
     id: 'com.example.fmtp',
   });
+
+  const { framework7 } = context;
 
   ['#view-filters', '#view-theaters', '#view-movies', '#view-results']
     .forEach(viewName => framework7.views.create(viewName));
@@ -24,10 +32,76 @@ function initFramework7() {
   framework7.locationForm = LocationForm.getInstance();
   framework7.theaterList = TheaterList.getInstance();
   framework7.movieList = MovieList.getInstance();
+  framework7.resultList = ResultList.getInstance();
+}
+
+// The 'value' for listings, movies, showtimes and theaters are
+// entry arrays ([ [k, v], [k, v], [k, v], ... ]).
+function reviver(key, value) {
+  function buildContextMap(clazz, list) {
+    const retval = new ContextMap();
+    list.forEach((entry) => {
+      const [k, v] = entry;
+      const typedV = Object.setPrototypeOf(v, clazz.prototype);
+      retval.set(k, typedV);
+    });
+    return retval;
+  }
+
+  let retval;
+
+  switch (key) {
+    case 'listings':
+      retval = buildContextMap(Listing, value);
+      break;
+
+    case 'movies':
+      retval = buildContextMap(Movie, value);
+      break;
+
+    case 'runningTime':
+      retval = new Duration(value._milliseconds); // eslint-disable-line no-underscore-dangle
+      break;
+
+    case 'showings':
+      retval = [];
+      value.forEach((v) => {
+        const listing = Object.setPrototypeOf(v, Showing.prototype);
+        retval.push(listing);
+      });
+      break;
+
+    case 'showtime':
+      retval = new Showtime(value);
+      break;
+
+    case 'theaters':
+      retval = buildContextMap(Theater, value);
+      break;
+
+    default:
+      retval = value;
+  }
+
+  return retval;
+}
+
+function parseContext(contextJSON) {
+  const localContext = JSON.parse(contextJSON, reviver);
+  localContext.theaters.forEach((theater) => {
+    // eslint-disable-next-line no-param-reassign
+    theater.movieListings = theater.movieListings.map(
+      listingId => localContext.listings.get(listingId)
+    );
+    // TODO create context.remaining.showings using method change just put into util
+    // the Util method can probably be removed.
+    // It doesn't belong here, it belongs wherever the other remaining lists are created.
+  });
+  return localContext;
 }
 
 async function retrieveMovieInfo() {
-  const { locationForm } = framework7;
+  const { locationForm } = context.framework7;
 
   if (locationForm.reportValidity()) {
     const response = await fetch(
@@ -54,70 +128,8 @@ function buildRemainingLists(remaining, listing) {
   return remaining;
 }
 
-function groupByTime(timeList, showing) {
-  const milliseconds = showing.showtime.valueOf();
-  let showtimeList = timeList.get(milliseconds);
-
-  if (typeof showtimeList === 'undefined') {
-    showtimeList = [];
-    timeList.set(milliseconds, showtimeList);
-  }
-
-  showtimeList.push(showing);
-  return timeList;
-}
-
-function showingToListItem(showing) {
-  return ''
-   + `<li>
-      <div class="item-content">
-      <div class="item-inner">
-          <div class="item-title">
-            ${showing.movie.title}
-            <div class="item-footer">${showing.theater.name}</div>
-          </div>
-        </div>
-      </div>
-    </li>
-    `;
-}
-
-function timeListEntryToListGroup(timeListEntry) {
-  const [showtime, showings] = timeListEntry;
-
-  return ''
-    + `<div class="list-group">
-      <ul>
-        <li class="list-group-title">${showtime}</li>
-        ${showings.map(showingToListItem).join('\n')}
-      </ul>
-    </div>
-    `;
-}
-
-function updateResults() {
-  const resultListEl = document.querySelector('#view-results .list');
-
-  // Build here, so it doesn't need to be redone for every showing
-  const selected = {
-    movies: framework7.movieList.getSelectedValues(),
-    theaters: framework7.theaterList.getSelectedValues(),
-  };
-
-  const timeMap = getRemainingShowings(selected).reduce(groupByTime, new Map());
-
-  resultListEl.innerHTML = Array.from(timeMap.entries())
-    .map((entry) => { // Change milliseconds back to Showtime object
-      const [milliseconds, showing] = entry;
-      return [new Showtime(milliseconds), showing];
-    })
-    .map(timeListEntryToListGroup)
-    .join('\n');
-
-  resultListEl.classList.toggle('no-more-showings', timeMap.size === 0);
-}
-
 async function updateOtherTabs() {
+  const { framework7 } = context;
   progressbarEl = framework7.progressbar.show();
 
   await retrieveMovieInfo();
@@ -130,13 +142,13 @@ async function updateOtherTabs() {
   framework7.theaterList.update();
   framework7.movieList.update();
 
-  updateResults();
+  framework7.resultList.update();
 
   framework7.progressbar.hide(progressbarEl);
 }
 
 async function handleGetInfo() {
-  if (framework7.locationForm.reportValidity()) {
+  if (context.framework7.locationForm.reportValidity()) {
     await updateOtherTabs();
     document.querySelector('.tabbar a[href="#view-theaters"]').click();
   }
@@ -158,7 +170,7 @@ function getViewElFromEvent(event) {
 //   const viewEl = getViewElFromEvent(event);
 //   viewEl.querySelector('.mark-clear').classList.toggle('all-selected', allSelected(viewEl));
 function updateOnClickCheckbox() {
-  updateResults();
+  context.framework7.resultList.update();
 
   return true;
 }
@@ -176,19 +188,20 @@ function affectAllCheckboxes(event) {
 }
 
 
-function saveLocation() { framework7.locationForm.save(); }
+function saveLocation() { context.framework7.locationForm.save(); }
 
 function eraseLocation() {
+  const { framework7 } = context;
   framework7.theaterList.erase();
   framework7.locationForm.erase();
 }
 
-function saveTheaters() { framework7.theaterList.save(); }
+function saveTheaters() { context.framework7.theaterList.save(); }
 
-function eraseTheaters() { framework7.theaterList.erase(); }
+function eraseTheaters() { context.framework7.theaterList.erase(); }
 
 async function locationInitialized() {
-  const { locationForm } = framework7;
+  const { locationForm } = context.framework7;
   let retval = false;
 
   locationForm.load();
@@ -202,9 +215,10 @@ async function locationInitialized() {
 
 function theatersInitialized() {
   let retval = false;
+  const { framework7 } = context;
 
   if (framework7.theaterList.load()) {
-    updateResults();
+    framework7.resultList.update();
     retval = true;
   }
 
@@ -212,6 +226,7 @@ function theatersInitialized() {
 }
 
 function saveLocationPopupHandler() {
+  const { framework7 } = context;
   if (framework7.locationForm.reportValidity()) {
     const popupEl = document.querySelector('.popup-remember-location');
     const popup = framework7.popup.get(popupEl) || framework7.popup.create({ el: popupEl });
