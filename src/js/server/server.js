@@ -32,7 +32,7 @@ app.get('/distancematrix', async (req, res) => {
       `origins=${req.query.origins}`,
       `destinations=${req.query.destinations}`,
       'units=imperial',
-      'key=***REMOVED***',
+      'key=Google API key',
     ];
 
     const url = `https://maps.googleapis.com/maps/api/distancematrix/json?${query.join('&')}`;
