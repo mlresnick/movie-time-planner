@@ -61,8 +61,7 @@
   "table-req-header": false,
   "tag-bans": [
     "style",
-    "b",
-    "i"
+    "b"
   ],
   "tag-close": true,
   "tag-name-lowercase": true,
