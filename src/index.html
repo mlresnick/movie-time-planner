@@ -14,32 +14,65 @@
 
     <div class="statusbar"></div>
 
+    <div class="panel panel-right panel-reveal">
+      <div class="content-block">
+        <div class="list filters-list">
+          <ul>
+            <li class="item-content">
+              <div class="item-inner">
+                <a href="#" class="panel-close remember-link">Remember location</a>
+              </div>
+            </li>
+            <li class="item-content">
+              <div class="item-inner">
+                <a href="#" class="panel-close forget-link">Forget location</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="list theaters-list">
+          <ul>
+            <li class="item-content">
+              <div class="item-inner">
+                <a href="#" class="panel-close remember-link">Remember theaters</a>
+              </div>
+            </li>
+            <li class="item-content">
+              <div class="item-inner">
+                <a href="#" class="panel-close forget-link">Forget theaters</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <div class="views tabs">
 
       <div class="toolbar tabbar tabbar-labels toolbar-bottom">
         <div class="toolbar-inner">
           <a href="#view-filters" class="tab-link tab-link-active">
-            <span class="icon f7-icons ios-only">filter</span>
-            <span class="icon f7-icons ios-only icon-ios-fill">filter</span>
-            <span class="icon material-icons md-only">filter_list</span>
+            <i class="icon f7-icons ios-only">filter</i>
+            <i class="icon f7-icons ios-only icon-ios-fill">filter</i>
+            <i class="icon material-icons md-only">filter_list</i>
             <span class="tabbar-label">Filters</span>
           </a>
           <a href="#view-theaters" class="tab-link">
-            <span class="icon f7-icons ios-only">business</span>
-            <span class="icon f7-icons ios-only icon-ios-fill">business_fill</span>
-            <span class="icon material-icons md-only">business</span>
+            <i class="icon f7-icons ios-only">business</i>
+            <i class="icon f7-icons ios-only icon-ios-fill">business_fill</i>
+            <i class="icon material-icons md-only">business</i>
             <span class="tabbar-label">Theaters</span>
           </a>
           <a href="#view-movies" class="tab-link">
-            <span class="icon f7-icons ios-only">film</span>
-            <span class="icon f7-icons ios-only icon-ios-fill">film_fill</span>
-            <span class="icon material-icons md-only">local_movies</span>
+            <i class="icon f7-icons ios-only">film</i>
+            <i class="icon f7-icons ios-only icon-ios-fill">film_fill</i>
+            <i class="icon material-icons md-only">local_movies</i>
             <span class="tabbar-label">Movies</span>
           </a>
           <a href="#view-results" class="tab-link">
-            <span class="icon f7-icons ios-only">list</span>
-            <span class="icon f7-icons ios-only icon-ios-fill">list_fill</span>
-            <span class="icon material-icons md-only">list</span>
+            <i class="icon f7-icons ios-only">list</i>
+            <i class="icon f7-icons ios-only icon-ios-fill">list_fill</i>
+            <i class="icon material-icons md-only">list</i>
             <span class="tabbar-label">Results</span>
           </a>
         </div>
@@ -52,7 +85,10 @@
             <div class="navbar-inner">
               <div class="title sliding">Filters</div>
               <div class="right">
-                <a href="#" class="link">Save</a>
+                <a href="#" class="link icon-only">
+                  <i class="icon f7-icons ios-only">more</i>
+                  <i class="icon material-icons md-only">more_vert</i>
+                </a>
               </div>
             </div>
           </div>
@@ -114,7 +150,10 @@
               </div>
               <div class="title sliding">Theaters</div>
               <div class="right">
-                <a href="#" class="link popup-open" data-popup=".popup-remember-theaters">Save</a>
+                <a href="#" class="link icon-only">
+                  <i class="icon f7-icons ios-only">more</i>
+                  <i class="icon material-icons md-only">more_vert</i>
+                </a>
               </div>
             </div>
           </div>
@@ -178,60 +217,6 @@
       </div>
     </div>
 
-    <div class="popup popup-remember-location">
-
-      <div class="block-title">Remember Location</div>
-
-      <div class="block">
-        <p>Use this location as your default?</p>
-        <p>Your list of default theaters will be lost.</p>
-      </div>
-
-      <div class="block">
-        <div class="row">
-          <button type="button" class="button button-large button-outline col cancel-remember popup-close"          >
-            Cancel
-          </button>
-          <button type="button" class="button button-large button-fill col confirm-remember popup-close">
-            Confirm
-          </button>
-        </div>
-
-        <div class="block block-tall">
-          <button type="button" class="button button-large button-outline color-red erase-remember popup-close">
-            Forget this location
-          </button>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="popup popup-remember-theaters">
-
-      <div class="block-title">Remember Theaters</div>
-
-      <div class="block">
-        <p>Use these theaters as your default?</p>
-      </div>
-
-      <div class="block">
-        <div class="row">
-          <button type="button" class="button button-large button-outline col cancel-remember popup-close">
-            Cancel
-          </button>
-          <button type="button" class="button button-large button-fill col confirm-remember popup-close">
-            Confirm
-          </button>
-        </div>
-      </div>
-
-      <div class="block block-tall">
-        <button type="button" class="button button-large button-outline color-red erase-remember popup-close">
-          Forget these theaters
-        </button>
-      </div>
-
-    </div>
   </div>
   <script type="text/javascript" src="lib/framework7/js/framework7.bundle.js"></script>
   <script type="module" src="js/index.js"></script>

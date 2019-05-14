@@ -225,35 +225,48 @@ function theatersInitialized() {
   return retval;
 }
 
-function saveLocationPopupHandler() {
-  const { framework7 } = context;
-  if (framework7.locationForm.reportValidity()) {
-    const popupEl = document.querySelector('.popup-remember-location');
-    const popup = framework7.popup.get(popupEl) || framework7.popup.create({ el: popupEl });
+function displayPanelList(listName) {
+  document.querySelector(`.panel-right .list.${listName}-list`).classList.add('active-list');
+  context.framework7.panel.open('right');
+}
 
-    popup.open(true);
+function locationPanelHandler() {
+  if (context.framework7.locationForm.reportValidity()) {
+    displayPanelList('filters');
   }
 }
 
+function theatersPanelHandler() { displayPanelList('theaters'); }
+
 document.addEventListener('DOMContentLoaded', async () => {
   initFramework7();
+  const { framework7 } = context;
+
+  framework7.panel.get('right').el.addEventListener(
+    'panel:closed',
+    () => document.querySelectorAll('.panel-right .list')
+      .forEach(listEl => listEl.classList.remove('active-list'))
+  );
 
   document.querySelector('#view-filters .button.get-info')
     .addEventListener('click', await handleGetInfo);
 
   document.querySelector('#view-filters .navbar .right .link')
-    .addEventListener('click', saveLocationPopupHandler);
+    .addEventListener('click', locationPanelHandler);
 
-  document.querySelector('.popup-remember-location .confirm-remember')
+  document.querySelector('.panel-right .filters-list .remember-link')
     .addEventListener('click', saveLocation);
 
-  document.querySelector('.popup-remember-location .erase-remember')
+  document.querySelector('.panel-right .filters-list .forget-link')
     .addEventListener('click', eraseLocation);
 
-  document.querySelector('.popup-remember-theaters .confirm-remember')
+  document.querySelector('#view-theaters .navbar .right .link')
+    .addEventListener('click', theatersPanelHandler);
+
+  document.querySelector('.panel-right .theaters-list .remember-link')
     .addEventListener('click', saveTheaters);
 
-  document.querySelector('.popup-remember-theaters .erase-remember')
+  document.querySelector('.panel-right .theaters-list .forget-link')
     .addEventListener('click', eraseTheaters);
 
   document.querySelectorAll('.selection-view')
@@ -266,13 +279,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   // * If we know the location and list of theaters, display the movies tab.
   // * If we only know the location, display the theaters tab.
   // * If nothing is stored, display the filters tab.
+  if (framework7.theaterList.hasSavedData()) {
+    document.querySelector('.tabbar a[href="#view-movies"]').click();
+  }
+  else if (framework7.locationForm.hasSavedData()) {
+    document.querySelector('.tabbar a[href="#view-theaters"]').click();
+  }
   if (await locationInitialized()) {
-    if (theatersInitialized()) {
-      document.querySelector('.tabbar a[href="#view-movies"]').click();
-    }
-    else {
-      document.querySelector('.tabbar a[href="#view-theaters"]').click();
-    }
+    theatersInitialized()
   }
   else {
     // TODO - if not stored, initialize location to current location.

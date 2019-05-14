@@ -47,12 +47,16 @@ export default class TheaterList extends SelectionList {
 
   load() {
     let retval = false;
-    const valueJSON = localStorage.getItem(this.storageKey);
-    if (valueJSON) {
-      this.setFromData(JSON.parse(valueJSON));
+    if (this.hasSavedData()) {
+      this.setFromData(JSON.parse(localStorage.getItem(this.storageKey)));
       retval = true;
     }
 
     return retval;
   }
+
+  hasSavedData() {
+    return localStorage.getItem(this.storageKey) ? true : false;
+  }
+
 }
