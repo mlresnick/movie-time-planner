@@ -39,5 +39,7 @@
     }
   }
   .list-note { display: none; }
-  ul li.no-more-showings {display: none;}
+  ul li.no-more-showings {
+    color: rgba(0, 0, 0, .5);
+  }
 }
