@@ -15,16 +15,8 @@
   }
 }
 
-.popup {
-  .block-title {
-    color: var(--f7-theme-color);
-    text-align: center;
-  }
-
-  .block.block-tall {
-    height: 100%;
-    .erase-remember { margin-top: 100%; }
-  }
+.panel-right .list:not(.active-list) {
+  display: none;
 }
 
 .view .navbar .mark-clear {
