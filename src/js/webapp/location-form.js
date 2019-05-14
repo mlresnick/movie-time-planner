@@ -59,9 +59,12 @@ export default class LocationForm {
   }
 
   load() {
-    const valueJSON = localStorage.getItem(this.storageKey);
-    if (valueJSON) {
-      this.setFromData(JSON.parse(valueJSON));
+    if (this.hasSavedData()) {
+      this.setFromData(JSON.parse(localStorage.getItem(this.storageKey)));
     }
+  }
+
+  hasSavedData() {
+    return localStorage.getItem(this.storageKey) ? true : false;
   }
 }
