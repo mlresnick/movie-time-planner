@@ -240,8 +240,9 @@ function theatersPanelHandler() { displayPanelList('theaters'); }
 
 document.addEventListener('DOMContentLoaded', async () => {
   initFramework7();
+  const { framework7 } = context;
 
-  context.framework7.panel.get('right').el.addEventListener(
+  framework7.panel.get('right').el.addEventListener(
     'panel:closed',
     () => document.querySelectorAll('.panel-right .list')
       .forEach(listEl => listEl.classList.remove('active-list'))
@@ -274,19 +275,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       viewEl.querySelector('.mark-clear').addEventListener('click', affectAllCheckboxes);
     });
 
-    // TODO See if we can select the tab before doing GetInfo().
-    //      Rather than cycling though each tab as we fill it in
   // Depending on what information is stored, display a tab:
   // * If we know the location and list of theaters, display the movies tab.
   // * If we only know the location, display the theaters tab.
   // * If nothing is stored, display the filters tab.
+  if (framework7.theaterList.hasSavedData()) {
+    document.querySelector('.tabbar a[href="#view-movies"]').click();
+  }
+  else if (framework7.locationForm.hasSavedData()) {
+    document.querySelector('.tabbar a[href="#view-theaters"]').click();
+  }
   if (await locationInitialized()) {
-    if (theatersInitialized()) {
-      document.querySelector('.tabbar a[href="#view-movies"]').click();
-    }
-    else {
-      document.querySelector('.tabbar a[href="#view-theaters"]').click();
-    }
+    theatersInitialized()
   }
   else {
     // TODO - if not stored, initialize location to current location.
