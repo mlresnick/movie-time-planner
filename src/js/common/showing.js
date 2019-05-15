@@ -5,6 +5,8 @@ import Showtime from './showtime.js';
 
 /**
  * The specific time for a movie at a given theater.
+ *
+ * Bascially, the tuple <kbd>{ showtime, movie, theater }</kbd>.
  */
 class Showing extends IdObject {
   /**
@@ -31,14 +33,14 @@ class Showing extends IdObject {
   }
 
   /**
-   * Compare two showing objects for sorting.
+   * Compare two Showing objects for sorting.
    *
    * @param {Showing} lhs - Left hand side of comparison.
    * @param {Showing} rhs - Right hand side of comparison.
    *
    * @returns {number} A negative value if <kbd>lhs</kbd> collates before <kbd>rhs</kbd>. A
-   *                   positive value if <kbd>lhs</kbd> collates after <kbd>rhs</kbd>. 0 if the
-   *                   two values are equal.
+   *                   positive value if <kbd>lhs</kbd> collates after <kbd>rhs</kbd>.
+   *                   <kbd>0</kbd> if the two values are equal.
    */
   static compare(lhs, rhs) { return Showtime.compare(lhs.showtime, rhs.showtime); }
 

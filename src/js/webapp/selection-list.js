@@ -1,7 +1,12 @@
 import context from '../common/context.js';
 import Util from '../common/util.js';
 
-export default class SelectionList {
+/**
+ * Base class API for tabs with selection lists.
+ *
+ * @param {string} listType - Either "movie" or "theater"
+ */
+class SelectionList {
   constructor(listType) {
     this.listType = listType;
     this.listName = `${listType}s`;
@@ -12,6 +17,7 @@ export default class SelectionList {
     this.selectedElSelector = `${this.viewName} .page-content .list li input[type="checkbox"]:checked`;
   }
 
+  /** Update the checkbox states based on selected <kbd>Showing</kbd> objects. */
   update() {
     const { el, listType } = this;
 
@@ -52,6 +58,14 @@ export default class SelectionList {
       .join('\n');
   }
 
+  /* eslint-disable jsdoc/require-returns-description */
+  /**
+   * Get an {@link Array} of elements based on a CSS selector.
+   *
+   * @param {string} selector - CSS selector
+   * @returns {Array.<HTMLElement>}
+   */
+  /* eslint-enable jsdoc/require-returns-description */
   static getEls(selector) { return Array.from(document.querySelectorAll(selector)); }
 
   static getValues(selector) { return new Set(SelectionList.getEls(selector).map(el => el.value)); }
@@ -72,3 +86,5 @@ export default class SelectionList {
 
   mark() { this.setAll(true); }
 }
+
+export default SelectionList;

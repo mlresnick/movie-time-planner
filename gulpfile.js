@@ -1,7 +1,8 @@
 import del from 'del';
 import gulp from 'gulp';
 import changed from 'gulp-changed';
-import documentation from 'gulp-documentation';
+// import documentation from 'gulp-documentation';
+import jsdoc from 'gulp-jsdoc3';
 import sass from 'gulp-sass';
 
 const { dest, src, parallel, series, watch } = gulp; // eslint-disable-line object-curly-newline
@@ -12,7 +13,8 @@ const scssSources = ['src/scss/**/*.scss', 'src/scss/**/*.css'];
 const webSources = 'src/*.*';
 
 const cssDestination = 'dist/css';
-const documentationDestination = 'documentation';
+// XXX
+// const documentation = 'documentation';
 const jsDestination = 'dist/js';
 const libDestination = 'dist/lib';
 const webDestination = 'dist';
@@ -27,11 +29,16 @@ function copyWebSources() { return copyChanged(webSources, webDestination); }
 function copyJsSources() { return copyChanged(jsSources, jsDestination); }
 function copyLib() { return copyChanged(libSources, libDestination); }
 
+// XXX
+// export function generateDocumentation() {
+//   return src(jsSources)
+//     .pipe(documentation('html', { 'sort-order': 'alpha' }))
+//     .pipe(dest(documentationDestination));
+// }
 
 export function generateDocumentation() {
-  return src(jsSources)
-    .pipe(documentation('html', { 'sort-order': 'alpha' }))
-    .pipe(dest(documentationDestination));
+  return src(jsSources, { read: false })
+    .pipe(jsdoc({ opts: { destination: './out' } }, () => {}));
 }
 
 function cleanDist() {

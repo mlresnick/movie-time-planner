@@ -2,7 +2,14 @@ import SelectionList from './selection-list.js';
 
 let instance = null;
 
-export default class TheaterList extends SelectionList {
+/**
+ * for the Theaters tab. It is a singleton object representing the list of theaters on that tab.
+ *
+ * @param {boolean} isInternal=false - Should only be called by the <kbd>getInstance</kbd> method.
+ *
+ * @extends SelectionList
+ */
+class TheaterList extends SelectionList {
   constructor(isInternal = false) {
     super('theater');
     if (isInternal) {
@@ -13,6 +20,11 @@ export default class TheaterList extends SelectionList {
     }
   }
 
+  /**
+   * Returns the singleton instance of this class.
+   *
+   * @returns {TheaterList} - the singleton object.
+   */
   static getInstance() {
     if (!instance) {
       instance = new TheaterList(/* isInternal */ true);
@@ -38,13 +50,16 @@ export default class TheaterList extends SelectionList {
    * Storage UI
    * TODO Make this a mixin that works inside event handlers.
    */
+  /** Storage API */
   save() { localStorage.setItem(this.storageKey, JSON.stringify(this.collectDataForStorage())); }
 
+  /** Storage API */
   erase() {
     localStorage.removeItem(this.storageKey);
     this.reset();
   }
 
+  /** Storage API */
   load() {
     let retval = false;
     if (this.hasSavedData()) {
@@ -55,8 +70,8 @@ export default class TheaterList extends SelectionList {
     return retval;
   }
 
-  hasSavedData() {
-    return localStorage.getItem(this.storageKey) ? true : false;
-  }
-
+  /** Storage API */
+  hasSavedData() { return !!localStorage.getItem(this.storageKey); }
 }
+
+export default TheaterList;

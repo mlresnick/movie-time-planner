@@ -1,6 +1,13 @@
 let instance = null;
 
-export default class LocationForm {
+/**
+ * Location form. A wrapper around the form element.
+ *
+ * @param {boolean} [isInternal=false]
+ *
+ * @class
+ */
+class LocationForm {
   constructor(isInternal = false) {
     if (isInternal) {
       this.el = document.getElementById('location-form');
@@ -13,6 +20,7 @@ export default class LocationForm {
     }
   }
 
+  /** */
   static getInstance() {
     if (!instance) {
       instance = new LocationForm(/* isInternal */ true);
@@ -20,14 +28,36 @@ export default class LocationForm {
     return instance;
   }
 
+  /**
+   * The value in the form.
+   *
+   * @type {string}
+   * @memberof LocationForm
+   */
   get zipCode() { return this.zipCodeEl.value; }
 
   set zipCode(value) { this.zipCodeEl.value = value; }
 
+  /**
+   * The value in the form.
+   *
+   * @type {number}
+   * @memberof LocationForm
+   */
   get maxDistance() { return this.maxDistanceEl.value; }
 
   set maxDistance(value) { this.maxDistanceEl.value = value; }
 
+  /**
+   * Get all form data in one object.
+   *
+   * @type {Object}
+   * @property {string} zipCode
+   * @property {number} maxDistance
+   *
+   * @readonly
+   * @memberof LocationForm
+   */
   get data() { return { zipCode: this.zipCode, maxDistance: this.maxDistance }; }
 
   // TODO add date/time fields to filters
@@ -35,36 +65,53 @@ export default class LocationForm {
   /*
    * Storage UI Callbacks
    */
+  /** Storage UI Callbacks */
   collectDataForStorage() { return this.data; }
 
+  /**
+   * Storage UI Callbacks
+   *
+   * @param {Object} data - object in <kbd>this.data</kbd>.
+   */
   setFromData(data) {
     const { zipCode, maxDistance } = data;
     this.zipCode = zipCode;
     this.maxDistance = maxDistance;
   }
 
+  /** Reset form */
   reset() { this.el.reset(); }
 
+  /**
+   * Validaate form. If there are any issue the for will be highlighted.
+   *
+   * @returns {boolean} - `true` if form is valid. `false` otherwise.
+   */
   reportValidity() { return this.el.reportValidity(); }
 
   /*
    * Storage UI
    * TODO Make this a mixin that works inside event handlers.
    */
+  /** Part of the Storage UI */
   save() { localStorage.setItem(this.storageKey, JSON.stringify(this.collectDataForStorage())); }
 
+  /** Part of the Storage UI */
   erase() {
     localStorage.removeItem(this.storageKey);
     this.reset();
   }
 
+  /** Part of the Storage UI */
   load() {
     if (this.hasSavedData()) {
       this.setFromData(JSON.parse(localStorage.getItem(this.storageKey)));
     }
   }
 
+  /** Part of the Storage UI */
   hasSavedData() {
-    return localStorage.getItem(this.storageKey) ? true : false;
+    return !!localStorage.getItem(this.storageKey);
   }
 }
+export default LocationForm;
