@@ -1,5 +1,7 @@
 /**
  * Miscellaneous methods used by more than one class.
+ *
+ * @hideconstructor
  */
 class Util {
   /**
@@ -10,9 +12,9 @@ class Util {
    * @param {string} lhs - Left-hand side of comparison.
    * @param {string} rhs - Right-hand side of comparison.
    *
-   * @returns {number} A negative value is `lhs` is before `rhs`, 0 if
-   *          `lhs` and `rhs` are equal, and a positive value if
-   *          `lhs` is after `rhs`.
+   * @returns {number} A negative value is <kbd>lhs</kbd> is before <kbd>rhs</kbd>, 0 if
+   *          <kbd>lhs</kbd> and <kbd>rhs</kbd> are equal, and a positive value if
+   *          <kbd>lhs</kbd> is after <kbd>rhs</kbd>.
    */
   static compareWOArticles(lhs, rhs) {
     const a = lhs.toLowerCase().replace(/^(an?|the)\s/i, '');
@@ -59,7 +61,8 @@ class Util {
    *   * **]** to indicate the upper end is inclusive/closed.
    *   * **)** or **[** to indicate the upper end is exclusive/open.
    *
-   * @returns {boolean} - A value of `true` if the value is wi thin the range. Otherwise, `false`.
+   * @returns {boolean} - A value of <kbd>true</kbd> if the value is wi thin the range. Otherwise,
+   *          <kbd>false</kbd>.
    */
   static isInInterval(value, interval) {
     const [, leftBracket, minString, maxString, rightBracket] = /([(\][])([+-]?\d+(?:\.\d+)?), *([+-]?\d+(?:\.\d+)?)([)[\]])/.exec(interval);

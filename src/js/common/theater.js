@@ -79,6 +79,13 @@ class Theater extends IdObject {
     this._distance = Number.parseFloat(this._distance, 10);
   }
 
+  /**
+   * Text to be displayed as a list item footer in the Theaters tab.
+   *
+   * @type {string}
+   * @readonly
+   * @memberof Movie
+   */
   get footer() { return `${this.distanceString} | ${this.phone}<br>${this.address}`; }
 }
 

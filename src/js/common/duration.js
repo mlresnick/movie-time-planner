@@ -23,8 +23,14 @@ const unitMap = {
 };
 /* eslint-enable no-multi-spaces,key-spacing */
 
-export default class Duration {
-  constructor(value) {
+/**
+ * @param {(number|string)} [value=0] - If a number, set as the number of milliseconds. If a string,
+ *                                      it is parsed by the <kbd>parse</kbd> method.
+ *
+ * @class
+ */
+class Duration {
+  constructor(value = 0) {
     if (value instanceof Duration) {
       return value;
     }
@@ -49,6 +55,25 @@ export default class Duration {
     }
   }
 
+  /* eslint-disable max-len */
+  /**
+   * <style> .duration-example i { font-family: Times New Roman, serif; }</style>
+   *
+   * @param {string} duration - in the form of
+   * <span class="duration-example">
+   *   <i>nn</i><b>w</b><i>nn</i><b>d</b><i>nn</i><b>h</b><i>nn</i><b>m</b><i>nn</i><b>s</b><i>nn</i><b>ms</b>
+   * </span>
+   * specfying any subset of
+   * <ul>
+   *   <li> <b>w</b>eeks </li>
+   *   <li> <b>d</b>ays </li>
+   *   <li> <b>h</b>ours </li>
+   *   <li> <b>m</b>inutes </li>
+   *   <li> <b>s</b>econds </li>
+   *   <li> <b>m</b>illi<b>s</b>econds </li>
+   * </ul>
+   */
+  /* eslint-enable max-len */
   static parse(duration) {
     if (duration === '0' || duration === '+0' || duration === '-0') {
       return new Duration(0);
@@ -88,10 +113,16 @@ export default class Duration {
     return new Duration(Math.floor(total) * sign);
   }
 
-  get hours() {
-    return Math.floor((this._milliseconds % day) / hour);
-  }
+  /**
+   * @type {number}
+   * @readonly
+   */
+  get hours() { return Math.floor((this._milliseconds % day) / hour); }
 
+  /**
+   * @type {number}
+   * @readonly
+   */
   get minutes() {
     return Math.floor((this._milliseconds % hour) / minute);
   }
@@ -139,3 +170,5 @@ export default class Duration {
     return this._milliseconds;
   }
 }
+
+export default Duration;

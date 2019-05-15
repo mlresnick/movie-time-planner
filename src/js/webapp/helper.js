@@ -1,5 +1,3 @@
-// const Duration = require('../../lib/js/duration.js');
-
 import context, { ContextMap } from '../common/context.js';
 import Duration from '../common/duration.js';
 import Listing from '../common/listing.js';
@@ -74,7 +72,24 @@ export function parseContext(contextJSON) {
   return localContext;
 }
 
+// TODO Should this maybe be moved to the ResultList class?
+/**
+ * Find showings for a set of selected movies and theaters.
+ *
+ * @param {Object} selected - URLs of selected items.
+ * @property {Set<Movie>} selected.movies - URLs of selected items.
+ * @property {Set<Theater>} selected.theaters - URLs of selected items.
+ * @returns {Array<Showing>} - list of filtered <kbd>Showing</kbd> objects.
+ */
 export function getRemainingShowings(selected) {
+  // TODO Should this mybe be moved to the Showing class?
+  /**
+   * Find a strict ordering for {@link Showing} objects.
+   *
+   * @param {Showing} lhs - left hand side
+   * @param {Showing} rhs - right hand side
+   * @returns {number} - Usual -1, 0, 1 comparison result.
+   */
   function compareShowings(lhs, rhs) {
     return Showtime.compare(lhs.showtime, rhs.showtime)
       || (rhs.theater.distance - rhs.theater.distance)

@@ -1,46 +1,46 @@
 
 /**
- * Debugging settings - to enable these values set `enableDebugging` to `true`. Optionally set
- * `nowDate` and `nowTime`.
+ * Debug settings - to enable these values set <kbd>debug.enableDebugging</kbd> to
+ * <kbd>true</kbd>.
  *
- * @property {?Object} nowValues - The six values passed to {@link Date}() and
- *           {@link Date} constructors.
- * @property {number[]} nowValues.date - Array of [year, month, date]
- * @property {number[]} nowValues.time - Array of [hours, minutes, seconds, milliseconds]
- * @property {?Date} now - The value created by using the {@link nowVals} property.
- * @property {?boolean} addDumpToArray - If true, a method called dump will be added to the
- *           {@link Array} prototype.
+ * <kbd>debug.nowDate</kbd> and <kbd>debug.nowTime</kbd> are input properties.
+ * <kbd>debug.now</kbd> is an output property.
+ *
+ * The <kbd>dump</kbd> method will be added to the {@link Array} prototype when debugging is
+ * turned on.
+ *
+ * @property {boolean} enableDebugging - If <kbd>true</kbd> the other properties in this object
+ *           will be used during execution.
+ * @property {Array<number>} nowDate - Array of [year, month, date]. Set this to force the date used
+ *           for "now" to a specific value.
+ * @property {Array<number>} nowTime - Array of [hours, minutes, seconds, milliseconds]. Set this to
+ *           force the time used for "now" to a specific value.
+ * @property {?Date} now - The value created by using the <kbd>nowDate</kbd> and
+ *           <kbd>nowTime</kbd> properties as arguments to the {@link Date} constructor.
  */
 const debug = { };
 
-/*
- * Turn on debugging and optionally set now values.
- */
-const enableDebugging = true;
-let nowDate = null;
-let nowTime = null; // eslint-disable-line prefer-const
-// nowDate = [2019, 4, 30];
-// nowTime = [23, 59, 0, 0];
+debug.enableDebugging = true;
+debug.nowDate = null;
+debug.nowTime = null;
+// debug.nowDate = [2019, 4, 30];
+// debug.nowTime = [23, 59, 0, 0];
 
-if (enableDebugging) {
-  debug.autoFillLists = true;
+if (debug.enableDebugging) {
   debug.now = null;
 
-  if (nowDate || nowTime) {
-    if (!nowDate) {
+  if (debug.nowDate || debug.nowTime) {
+    if (!debug.nowDate) {
       const now = new Date();
-      nowDate = [now.getFullYear(), now.getMonth(), now.getDate()];
+      debug.nowDate = [now.getFullYear(), now.getMonth(), now.getDate()];
     }
-    const dateArgs = nowDate.concat(nowTime);
+    const dateArgs = debug.nowDate.concat(debug.nowTime);
     debug.now = new Date(...dateArgs);
   }
 
   // eslint-disable jsdoc/check-examples
   /**
    * Within a chain of calls, dump the array in its current state.
-   *
-   * <em>This method is onooy available if {@link debug}.addDumpToArray
-   * is `true`.</em>
    *
    * <strong>This method should not be in production code.</strong>
    *
@@ -60,7 +60,7 @@ if (enableDebugging) {
    * //   after map ["mapped a", "mapped 2", "mapped iii"]
    * //
    *
-   * @memberof Array
+   * @memberof debug
    */
   // eslint-enable jsdoc/check-examples
   // eslint-disable-next-line no-extend-native

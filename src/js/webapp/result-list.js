@@ -54,7 +54,14 @@ function millisecondsToShowtime(entry) {
 }
 
 
-export default class ResultList {
+/**
+ * API for the Results tab. It is a singleton object representing the list of results on that tab.
+ *
+ * @param {boolean} isInternal=false - Should only be called by the <kbd>getInstance</kbd> method.
+ *
+ * @extends SelectionList
+ */
+class ResultList {
   constructor(isInternal = false) {
     if (isInternal) {
       this.el = document.querySelector('#view-results .list');
@@ -64,6 +71,11 @@ export default class ResultList {
     }
   }
 
+  /**
+   * Returns the singleton instance of this class.
+   *
+   * @returns {ResultList} - the singleton object.
+   */
   static getInstance() {
     if (!instance) {
       instance = new ResultList(/* isInternal */ true);
@@ -71,6 +83,8 @@ export default class ResultList {
     return instance;
   }
 
+  /**
+   * Update the entries in the Results tab list. */
   update() {
     const { framework7 } = context;
 
@@ -90,3 +104,5 @@ export default class ResultList {
     this.el.classList.toggle('no-more-showings', timeMap.size === 0);
   }
 }
+
+export default ResultList;
