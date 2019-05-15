@@ -65,6 +65,6 @@ export default class LocationForm {
   }
 
   hasSavedData() {
-    return localStorage.getItem(this.storageKey) ? true : false;
+    return !!localStorage.getItem(this.storageKey);
   }
 }
