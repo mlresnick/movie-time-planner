@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.querySelector('.tabbar a[href="#view-theaters"]').click();
   }
   if (await locationInitialized()) {
-    theatersInitialized()
+    theatersInitialized();
   }
   else {
     // TODO - if not stored, initialize location to current location.
