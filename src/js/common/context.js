@@ -52,7 +52,7 @@ export class ContextMap extends Map {
    *
    * @param {*}      element   - The current element being processed in the array.
    * @param {number} [index]   - The index of the current element being processed in the array.
-   * @param {*[]}    [array]   - The array `some()` was called upon.
+   * @param {Array<*>}    [array]   - The array `some()` was called upon.
    * @param {Object} [thisArg] - Value to use as `this` when executing `callback`.
    */
 
@@ -84,6 +84,8 @@ export class ContextMap extends Map {
  * @param  {...*} args - Either a list of elements or an array length.
  *
  * @returns {ContextArray} - Newly allocated object.
+ *
+ * @class
  */
 export function ContextArray(...args) {
   let contextArray = Object.create(Array.prototype);
@@ -105,9 +107,10 @@ export function ContextArray(...args) {
 
 /**
  * A singleton object used by various parts of the applicaton.
+ *
+ * @class
  */
 class Context {
-  /** @private */
   constructor() {
     if (!Context.instance) {
       /**
@@ -189,6 +192,11 @@ class Context {
   }
 }
 
+/**
+ * Global singleton context object.
+ *
+ * @type {Context}
+ */
 const context = new Context();
 
 export default context;

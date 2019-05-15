@@ -12,8 +12,10 @@ import Showtime from './showtime.js';
  *
    * @param {Theater} theater - Theater at which this listing is appearing.
    * @param {HTMLElement} movieListingEl - Movie listing from the web page.
+   *
+   * @extends IdObject
    */
-export default class Listing extends IdObject {
+class Listing extends IdObject {
   constructor(theater, movieListingEl) {
     super(theater);
 
@@ -23,7 +25,11 @@ export default class Listing extends IdObject {
      */
     this.movieURL = '';
 
-    /** @type {Showing[]} - List of showtimes for this.movie at this.theater. */
+    /**
+     * List of showtimes for this.movie at this.theater.
+     *
+     * @type {Showing[]}
+     */
     this.showings = [];
 
     if (typeof movieListingEl !== 'undefined') {
@@ -64,7 +70,7 @@ export default class Listing extends IdObject {
    *                   a {@link Movie}.
    *
    * @type Movie
-   * @instance
+   * @memberof Listing
    */
   get movie() { return context.movies.get(this.movieURL); }
 
@@ -100,6 +106,7 @@ export default class Listing extends IdObject {
    * @returns {Showing[]} - Filtered list of showings.
    *
    * @instance
+   * @memberof Listing
    */
   showingsAfter(showtime) {
     return this.showings
@@ -114,6 +121,7 @@ export default class Listing extends IdObject {
    * @returns {boolean} - `true` if there are any showings left. Otherwise `false`.
    *
    * @instance
+   * @memberof Listing
    */
   areShowingsAfter(showtime) { return this.showingsAfter(showtime).length !== 0; }
 
@@ -124,3 +132,5 @@ export default class Listing extends IdObject {
    */
   get id() { return `${this.theater.id},${this.movie.id}`; }
 }
+
+export default Listing;

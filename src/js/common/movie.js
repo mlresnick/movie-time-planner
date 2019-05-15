@@ -10,13 +10,10 @@ const titleExpr = new RegExp(
 
 /**
  * Information about a movie being shown.
+ *
+ * @param {HTMLElement} moviedataEl - Element scraped from a web page.
  */
-export default class Movie extends IdObject {
-  /**
-   * Collect information from an HTMLElement and put it into a more convenient format.
-   *
-   * @param {HTMLElement} moviedataEl - Element scraped from a web page.
-   */
+class Movie extends IdObject {
   constructor(moviedataEl) {
     super(null);
 
@@ -90,14 +87,21 @@ export default class Movie extends IdObject {
   get id() { return this.url; }
 
   /**
-   * @member {string} name - Synonym for {@linkcode title}.
+   * Synonym for {@linkcode title}.
+   *
+   * @type {string}
    * @memberof Movie
    * @instance
    */
   get name() { return this.title; }
 
-  set name(title) { this.title = title; }
-
+  /**
+   * Text to be displayed as a list item footer in the Movies tab.
+   *
+   * @type {string}
+   * @readonly
+   * @memberof Movie
+   */
   get footer() { return `${this.rating} | ${this.runningTimeString}`; }
 
   get runningTimeString() {
@@ -105,13 +109,10 @@ export default class Movie extends IdObject {
     return `${hours ? `${hours} hr ` : ''}${minutes} min`;
   }
 
-  /**
-   * Generate human readable versn of object.
-   *
-   * @returns {string} - A readable version of this object.
-   */
   toString() {
     const [, hours, minutes] = this.runningTime.toString().match(/^(\d+)h(\d+)m$/);
     return `${this.title} - ${hours}:${minutes.padStart(2, '0')} | ${this.rating}`;
   }
 }
+
+export default Movie;
