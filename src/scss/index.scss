@@ -1,5 +1,13 @@
   @import '../lib/framework7/css/framework7.bundle.css';
 
+  @media screen and (min-width: 700px) {
+    body {
+      width: 700px;
+      border: 1px solid black;
+      margin-left: 2em;
+    }
+ }
+
 .ios .tabbar-labels .tab-link {
   &:not(.tab-link-active) .icon-ios-fill,
   &.tab-link-active .icon:not(.icon-ios-fill) {
